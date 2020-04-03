@@ -233,10 +233,10 @@ const HTML = {
   // rewriteTopLevel
   rewriteHTMLBody: {
     before: `
-    <html><body><div><p><a href="">Wow how about that</a></p></div></body></html>
+    <html><body><div><p><a href="#">Wow how about that</a></p></div></body></html>
     `,
     after: `
-    <div><div><div><p><a href="">Wow how about that</a></p></div></div></div>
+    <div><div><div><p><a href="#">Wow how about that</a></p></div></div></div>
     `,
   },
 
@@ -469,15 +469,6 @@ const HTML = {
         <p>What do you think?</p>
         <p>
         </p>
-        <p>What do you think?</p>
-      </div>
-    `,
-    afterBrowser: `
-      <div score="5">
-        <p>What do you think?</p>
-        <p>
-        </p>
-        <p></p>
         <p>What do you think?</p>
       </div>
     `,

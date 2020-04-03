@@ -6,7 +6,6 @@
     "describe": true,
     "it": true,
     "fit": true,
-    "jasmine": true,
     "beforeEach": true,
     "beforeAll": true,
     "afterAll": true

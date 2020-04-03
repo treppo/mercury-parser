@@ -1,5 +1,4 @@
 import assert from 'assert';
-import cheerio from 'cheerio';
 import { getEncoding } from 'utils/text';
 
 import { record } from 'test-helpers';
@@ -116,20 +115,16 @@ describe('Resource', () => {
     });
 
     it('throws an error if the content has no children', () => {
-      // jquery's parser won't work this way, and this is
-      // an outside case
-      if (!cheerio.browser) {
-        const response = {
-          headers: {
-            'content-type': 'html',
-          },
-        };
-        const body = '';
+      const response = {
+        headers: {
+          'content-type': 'html',
+        },
+      };
+      const body = '';
 
-        assert.throws(() => {
-          Resource.generateDoc({ body, response });
-        }, /no children/i);
-      }
+      assert.throws(() => {
+        Resource.generateDoc({ body, response });
+      }, /no children/i);
     });
   });
 });

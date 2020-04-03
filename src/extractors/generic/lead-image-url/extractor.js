@@ -26,10 +26,8 @@ import {
 const GenericLeadImageUrlExtractor = {
   extract({ $, content, metaCache, html }) {
     let cleanUrl;
-    if (!$.browser && $('head').length === 0) {
-      $('*')
-        .first()
-        .prepend(html);
+    if ($('head').length === 0) {
+      $('*').first().prepend(html);
     }
 
     // Check to see if we have a matching meta tag that we can make use of.

@@ -7,8 +7,8 @@ var _objectSpread = _interopDefault(require('@babel/runtime-corejs2/helpers/obje
 var _objectWithoutProperties = _interopDefault(require('@babel/runtime-corejs2/helpers/objectWithoutProperties'));
 var _asyncToGenerator = _interopDefault(require('@babel/runtime-corejs2/helpers/asyncToGenerator'));
 var URL = _interopDefault(require('url'));
-var cheerio = _interopDefault(require('cheerio'));
 var TurndownService = _interopDefault(require('turndown'));
+var cheerio = _interopDefault(require('cheerio'));
 var iconv = _interopDefault(require('iconv-lite'));
 var _parseInt = _interopDefault(require('@babel/runtime-corejs2/core-js/parse-int'));
 var _slicedToArray = _interopDefault(require('@babel/runtime-corejs2/helpers/slicedToArray'));
@@ -195,7 +195,7 @@ function getEncoding(str) {
   return encoding;
 }
 
-var REQUEST_HEADERS = cheerio.browser ? {} : {
+var REQUEST_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
 }; // The number of milliseconds to attempt to fetch a resource before timing out.
 
@@ -576,17 +576,7 @@ function convertNodeTo$$1($node, $) {
     return "".concat(key, "=").concat(attrs[key]);
   }).join(' ');
 
-  var html;
-
-  if ($.browser) {
-    // In the browser, the contents of noscript tags aren't rendered, therefore
-    // transforms on the noscript tag (commonly used for lazy-loading) don't work
-    // as expected. This test case handles that
-    html = node.tagName.toLowerCase() === 'noscript' ? $node.text() : $node.html();
-  } else {
-    html = $node.contents();
-  }
-
+  var html = $node.contents();
   $node.replaceWith("<".concat(tag, " ").concat(attribString, ">").concat(html, "</").concat(tag, ">"));
   return $;
 }
@@ -1678,7 +1668,7 @@ var Resource = {
     var decodedContent = iconv.decode(content, encoding);
     var $ = cheerio.load(decodedContent); // after first cheerio.load, check to see if encoding matches
 
-    var contentTypeSelector = cheerio.browser ? 'meta[http-equiv=content-type]' : 'meta[http-equiv=content-type i]';
+    var contentTypeSelector = 'meta[http-equiv=content-type i]';
     var metaContentType = $(contentTypeSelector).attr('content') || $('meta[charset]').attr('charset');
     var properEncoding = getEncoding(metaContentType); // if encodings in the header/body dont match, use the one in the body
 
@@ -1801,8 +1791,8 @@ var NYMagExtractor = {
       // Convert h1s to h2s
       h1: 'h2',
       // Convert lazy-loaded noscript images to figures
-      noscript: function noscript($node, $) {
-        var $children = $.browser ? $($node.text()) : $node.children();
+      noscript: function noscript($node) {
+        var $children = $node.children();
 
         if ($children.length === 1 && $children.get(0) !== undefined && $children.get(0).tagName.toLowerCase() === 'img') {
           return 'figure';
@@ -1888,13 +1878,13 @@ var TwitterExtractor = {
 var NYTimesExtractor = {
   domain: 'www.nytimes.com',
   title: {
-    selectors: ['h1.g-headline', 'h1[itemprop="headline"]', 'h1.headline']
+    selectors: ['h1.g-headline', 'h1[itemprop="headline"]', 'h1.headline', 'h1 .balancedHeadline']
   },
   author: {
-    selectors: [['meta[name="author"]', 'value'], '.g-byline', '.byline']
+    selectors: [['meta[name="author"]', 'value'], '.g-byline', '.byline', ['meta[name="byl"]', 'value']]
   },
   content: {
-    selectors: ['div.g-blocks', 'article#story'],
+    selectors: ['div.g-blocks', 'section[name="articleBody"]', 'article#story'],
     transforms: {
       'img.g-lazy': function imgGLazy($node) {
         var src = $node.attr('src');
@@ -6636,7 +6626,7 @@ var GenericLeadImageUrlExtractor = {
         html = _ref.html;
     var cleanUrl;
 
-    if (!$.browser && $('head').length === 0) {
+    if ($('head').length === 0) {
       $('*').first().prepend(html);
     } // Check to see if we have a matching meta tag that we can make use of.
     // Moving this higher because common practice is now to use large
@@ -7626,20 +7616,11 @@ var Mercury = {
           switch (_context.prev = _context.next) {
             case 0:
               _ref = _args.length > 1 && _args[1] !== undefined ? _args[1] : {}, html = _ref.html, opts = _objectWithoutProperties(_ref, ["html"]);
-              _opts$fetchAllPages = opts.fetchAllPages, fetchAllPages = _opts$fetchAllPages === void 0 ? true : _opts$fetchAllPages, _opts$fallback = opts.fallback, fallback = _opts$fallback === void 0 ? true : _opts$fallback, _opts$contentType = opts.contentType, contentType = _opts$contentType === void 0 ? 'html' : _opts$contentType, _opts$headers = opts.headers, headers = _opts$headers === void 0 ? {} : _opts$headers, extend = opts.extend, customExtractor = opts.customExtractor; // if no url was passed and this is the browser version,
-              // set url to window.location.href and load the html
-              // from the current page
-
-              if (!url && cheerio.browser) {
-                url = window.location.href; // eslint-disable-line no-undef
-
-                html = html || cheerio.html();
-              }
-
+              _opts$fetchAllPages = opts.fetchAllPages, fetchAllPages = _opts$fetchAllPages === void 0 ? true : _opts$fetchAllPages, _opts$fallback = opts.fallback, fallback = _opts$fallback === void 0 ? true : _opts$fallback, _opts$contentType = opts.contentType, contentType = _opts$contentType === void 0 ? 'html' : _opts$contentType, _opts$headers = opts.headers, headers = _opts$headers === void 0 ? {} : _opts$headers, extend = opts.extend, customExtractor = opts.customExtractor;
               parsedUrl = URL.parse(url);
 
               if (validateUrl(parsedUrl)) {
-                _context.next = 6;
+                _context.next = 5;
                 break;
               }
 
@@ -7648,21 +7629,21 @@ var Mercury = {
                 message: 'The url parameter passed does not look like a valid URL. Please check your URL and try again.'
               });
 
-            case 6:
-              _context.next = 8;
+            case 5:
+              _context.next = 7;
               return Resource.create(url, html, parsedUrl, headers);
 
-            case 8:
+            case 7:
               $ = _context.sent;
 
               if (!$.failed) {
-                _context.next = 11;
+                _context.next = 10;
                 break;
               }
 
               return _context.abrupt("return", $);
 
-            case 11:
+            case 10:
               // Add custom extractor via cli.
               if (customExtractor) {
                 addExtractor(customExtractor);
@@ -7703,11 +7684,11 @@ var Mercury = {
               _result = result, title = _result.title, next_page_url = _result.next_page_url; // Fetch more pages if next_page_url found
 
               if (!(fetchAllPages && next_page_url)) {
-                _context.next = 25;
+                _context.next = 24;
                 break;
               }
 
-              _context.next = 22;
+              _context.next = 21;
               return collectAllPages({
                 Extractor: Extractor,
                 next_page_url: next_page_url,
@@ -7719,18 +7700,18 @@ var Mercury = {
                 url: url
               });
 
-            case 22:
+            case 21:
               result = _context.sent;
-              _context.next = 26;
+              _context.next = 25;
               break;
 
-            case 25:
+            case 24:
               result = _objectSpread({}, result, {
                 total_pages: 1,
                 rendered_pages: 1
               });
 
-            case 26:
+            case 25:
               if (contentType === 'markdown') {
                 turndownService = new TurndownService();
                 result.content = turndownService.turndown(result.content);
@@ -7740,7 +7721,7 @@ var Mercury = {
 
               return _context.abrupt("return", _objectSpread({}, result, extendedTypes));
 
-            case 28:
+            case 27:
             case "end":
               return _context.stop();
           }
@@ -7754,7 +7735,6 @@ var Mercury = {
 
     return parse;
   }(),
-  browser: !!cheerio.browser,
   // A convenience method for getting a resource
   // to work with, e.g., for custom extractor generator
   fetchResource: function fetchResource(url) {

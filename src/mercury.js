@@ -1,5 +1,4 @@
 import URL from 'url';
-import cheerio from 'cheerio';
 import TurndownService from 'turndown';
 
 import Resource from 'resource';
@@ -19,14 +18,6 @@ const Mercury = {
       extend,
       customExtractor,
     } = opts;
-
-    // if no url was passed and this is the browser version,
-    // set url to window.location.href and load the html
-    // from the current page
-    if (!url && cheerio.browser) {
-      url = window.location.href; // eslint-disable-line no-undef
-      html = html || cheerio.html();
-    }
 
     const parsedUrl = URL.parse(url);
 
@@ -111,8 +102,6 @@ const Mercury = {
 
     return { ...result, ...extendedTypes };
   },
-
-  browser: !!cheerio.browser,
 
   // A convenience method for getting a resource
   // to work with, e.g., for custom extractor generator

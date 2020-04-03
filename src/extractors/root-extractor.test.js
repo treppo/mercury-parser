@@ -100,8 +100,8 @@ describe('transformElements($content, $, { transforms })', () => {
     `;
     const opts = {
       transforms: {
-        noscript: ($node, $) => {
-          const $children = $.browser ? $($node.text()) : $node.children();
+        noscript: $node => {
+          const $children = $node.children();
           if (
             $children.length === 1 &&
             $children.get(0) !== undefined &&

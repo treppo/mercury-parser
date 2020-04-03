@@ -18,8 +18,8 @@ export const NYMagExtractor = {
       h1: 'h2',
 
       // Convert lazy-loaded noscript images to figures
-      noscript: ($node, $) => {
-        const $children = $.browser ? $($node.text()) : $node.children();
+      noscript: $node => {
+        const $children = $node.children();
         if (
           $children.length === 1 &&
           $children.get(0) !== undefined &&

@@ -34,7 +34,6 @@ jobs:
           at: ~/project
       - checkout
       - run: 'yarn install'
-      - run: 'yarn add karma-cli --dev'
       - run: 'yarn test:web --maxWorkers=4'
       - run: 'yarn build:web:ci --maxWorkers=4'
 

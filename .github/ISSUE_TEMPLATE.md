@@ -16,7 +16,6 @@ problem, keeping it as simple and free of external dependencies as you are able.
 - **Platform**:
 - **Mercury Parser Version**:
 - **Node Version (if a Node bug)**:
-- **Browser Version (if a browser bug)**:
 
 ## Expected Behavior
 

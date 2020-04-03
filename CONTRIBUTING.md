@@ -105,7 +105,7 @@ Mercury is a test-driven application; each component has its own test file. Test
 For new code to be accepted, all tests must pass in both environments. To run the required tests for local development, execute the following commands:
 
 ```bash
-# Run the full test suite once, for both node and the browser
+# Run the full test suite once
 yarn test
 
 # Run the tests for node build only

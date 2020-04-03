@@ -15,9 +15,7 @@ describe('markToKeep($)', () => {
 
     assert.equal(result('iframe.mercury-parser-keep').length, 2);
 
-    if (!$.browser) {
-      assertClean(result.html(), HTML.marksYouTube.after);
-    }
+    assertClean(result.html(), HTML.marksYouTube.after);
   });
 
   it('marks same-domain elements to keep', () => {

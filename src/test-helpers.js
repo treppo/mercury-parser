@@ -1,7 +1,6 @@
 import assert from 'assert';
 import nock from 'nock'; // eslint-disable-line import/no-extraneous-dependencies
 import path from 'path';
-import cheerio from 'cheerio';
 
 // const fs = require('fs');
 
@@ -28,7 +27,6 @@ export function record(name, options = {}) {
 
   return {
     before: () => {
-      if (cheerio.browser) return;
       if (!has_fixtures) {
         try {
           require(`../${fp}`); // eslint-disable-line global-require, import/no-dynamic-require, max-len
@@ -47,7 +45,7 @@ export function record(name, options = {}) {
     },
 
     after: done => {
-      if (!has_fixtures && !cheerio.browser) {
+      if (!has_fixtures) {
         has_fixtures = nock.recorder.play();
         // eslint-disable-next-line no-console
         console.log(

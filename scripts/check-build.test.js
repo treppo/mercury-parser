@@ -1,8 +1,7 @@
 /* eslint-disable global-require, no-undef */
 import assert from 'assert';
-import cheerio from 'cheerio';
 
-let urls = [
+const urls = [
   {
     url: 'http://www.cnn.com/2016/11/05/middleeast/iraq-mosul-isis-offensive/',
     title: 'Iraqi troops storm town south of Mosul',
@@ -16,13 +15,7 @@ let urls = [
 ];
 
 // don't run this on CI b/c we want to avoid network requests
-if (
-  process.env.CI ||
-  (typeof __karma__ !== 'undefined' && __karma__.config.args[0] === '--CI')
-) {
-  if (cheerio.browser) {
-    require('../dist/mercury.web');
-  }
+if (process.env.CI) {
   // eslint-disable-next-line no-unused-expressions
   typeof Mercury === 'undefined' && require('../dist/mercury');
   describe('Tests', () => {
@@ -31,20 +24,10 @@ if (
     });
   });
 } else {
-  if (cheerio.browser) {
-    require('../dist/mercury.web');
-  }
   const Merc =
     typeof Mercury === 'undefined' ? require('../dist/mercury') : Mercury;
 
   describe('Is Mercury build working', () => {
-    if (Merc.browser) {
-      const proxyUrl = 'http://localhost:3000/';
-      urls = urls.map(article => ({
-        title: article.title,
-        url: proxyUrl + article.url,
-      }));
-    }
     urls.map(article =>
       it(`gets this title right ${article.title}`, done => {
         Merc.parse(article.url)

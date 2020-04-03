@@ -3,7 +3,7 @@ import cheerio from 'cheerio';
 
 import HTML from './fixtures/html';
 
-import { getScore, findTopCandidate, scoreContent } from './index';
+import { findTopCandidate, getScore, scoreContent } from './index';
 
 const fs = require('fs');
 
@@ -39,12 +39,7 @@ describe('findTopCandidate($)', () => {
 
     const $topCandidate = findTopCandidate($);
 
-    // browser won't allow body tag to be placed
-    // arbitrarily/loaded on the page, so we tranform
-    // it in cheerio-query, so this test would fail.
-    if (!$.browser) {
-      assert.equal($topCandidate.get(0).tagName, 'body');
-    }
+    assert.equal($topCandidate.get(0).tagName, 'body');
   });
 
   it('appends a sibling with a good enough score', () => {

@@ -14,8 +14,6 @@ describe('rewriteTopLevel(node, $)', () => {
     assert.equal(result('html').length, 0);
     assert.equal(result('body').length, 0);
 
-    if (!cheerio.browser) {
-      assertClean(result.html(), HTML.rewriteHTMLBody.after);
-    }
+    assertClean(result.html(), HTML.rewriteHTMLBody.after);
   });
 });
