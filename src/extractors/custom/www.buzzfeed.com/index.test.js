@@ -29,7 +29,7 @@ describe('BuzzfeedExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -39,8 +39,7 @@ describe('BuzzfeedExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'People Are Calling Out This Edited Picture Of Demi Lovato For Body-Shaming Her'
       );
     });
@@ -52,7 +51,7 @@ describe('BuzzfeedExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Ikran Dahir');
+      expect(author).toEqual('Ikran Dahir');
     });
 
     it('returns the lead_image_url', async () => {
@@ -62,8 +61,7 @@ describe('BuzzfeedExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://img.buzzfeed.com/buzzfeed-static/static/2016-10/3/12/social_promotion/buzzfeed-prod-fastlane01/facebook-social-promotion-17757-1475512210-1.jpg'
       );
     });
@@ -77,17 +75,11 @@ describe('BuzzfeedExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'A few months ago, Vladimir Serbanescu, a 17-year-old artist from Romania, drew this'
       );
     });
@@ -110,12 +102,9 @@ describe('BuzzfeedExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const imgSrc = $('img')
-        .first()
-        .attr('src');
+      const imgSrc = $('img').first().attr('src');
 
-      assert.equal(
-        imgSrc,
+      expect(imgSrc).toEqual(
         'https://img.buzzfeed.com/buzzfeed-static/static/2016-11/21/10/enhanced/buzzfeed-prod-fastlane03/longform-original-25748-1479741827-5.jpg'
       );
     });
@@ -125,20 +114,15 @@ describe('BuzzfeedExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const imgSrc = $('figure img')
-        .first()
-        .attr('src');
-      const figcaption = $('figure figcaption')
-        .first()
-        .text();
+      const imgSrc = $('figure img').first().attr('src');
+      const figcaption = $('figure figcaption').first().text();
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        imgSrc,
+      expect(imgSrc).toEqual(
         'https://img.buzzfeed.com/buzzfeed-static/static/2016-11/21/10/enhanced/buzzfeed-prod-fastlane03/longform-original-25748-1479741827-5.jpg'
       );
-      assert.equal(figcaption, 'Adam Maida for BuzzFeed News');
+      expect(figcaption).toEqual('Adam Maida for BuzzFeed News');
     });
   });
 });

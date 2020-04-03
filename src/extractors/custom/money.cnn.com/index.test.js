@@ -25,7 +25,7 @@ describe('MoneyCnnComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,8 +35,7 @@ describe('MoneyCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Hundreds of Chicago O'Hare airport workers go on strike"
       );
     });
@@ -48,7 +47,7 @@ describe('MoneyCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Julia Horowitz');
+      expect(author).toEqual('Julia Horowitz');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +57,7 @@ describe('MoneyCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-11-29T03:33:08.000Z');
+      expect(date_published).toEqual('2016-11-29T03:33:08.000Z');
     });
 
     it('returns the dek', async () => {
@@ -68,8 +67,7 @@ describe('MoneyCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         "Heads up, travelers: Hundreds of workers are striking at Chicago O'Hare International Airport on Tuesday."
       );
     });
@@ -81,8 +79,7 @@ describe('MoneyCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://i2.cdn.turner.com/money/dam/assets/161118102423-ohare-airport-strike-780x439.jpg'
       );
     });
@@ -96,17 +93,11 @@ describe('MoneyCnnComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Janitors, baggage handlers, cabin cleaners and wheelchair attendants are asking for a $15'
       );
     });

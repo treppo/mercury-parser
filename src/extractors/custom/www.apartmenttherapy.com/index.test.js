@@ -27,7 +27,7 @@ describe('ApartmentTherapyExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -37,7 +37,7 @@ describe('ApartmentTherapyExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'A Light Filled LA Loft');
+      expect(title).toEqual('A Light Filled LA Loft');
     });
 
     it('returns the author', async () => {
@@ -47,7 +47,7 @@ describe('ApartmentTherapyExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Apartment Therapy Submissions');
+      expect(author).toEqual('Apartment Therapy Submissions');
     });
 
     it('returns the date_published', async () => {
@@ -57,7 +57,7 @@ describe('ApartmentTherapyExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-10-13T21:00:00.000Z');
+      expect(date_published).toEqual('2016-10-13T21:00:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -67,8 +67,7 @@ describe('ApartmentTherapyExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://atmedia.imgix.net/9332fdca908b1fcc5c9a6891b458820718239950?w=1500&fit=max'
       );
     });
@@ -82,17 +81,11 @@ describe('ApartmentTherapyExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Name: Ashley Location: Downtown — Los Angeles, California Welcome to our sunny and'
       );
     });

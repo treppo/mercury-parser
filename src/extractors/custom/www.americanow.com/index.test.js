@@ -26,7 +26,7 @@ describe('WwwAmericanowComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('WwwAmericanowComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Kellyanne Conway Named Counselor To Trump');
+      expect(title).toEqual('Kellyanne Conway Named Counselor To Trump');
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('WwwAmericanowComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Ray Brown');
+      expect(author).toEqual('Ray Brown');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('WwwAmericanowComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T14:22:19.000Z');
+      expect(date_published).toEqual('2016-12-22T14:22:19.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -66,8 +66,7 @@ describe('WwwAmericanowComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://images.americanow.com:8080/ovi/catalog/downloads/preview/rndr_670x377//2016/12/conway-1482422231.JPG/rndr_670x377.jpg'
       );
     });
@@ -81,17 +80,11 @@ describe('WwwAmericanowComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'President-elect Donald Trump has named Kellyanne Conway, the campaign manager who helped him'
       );
     });

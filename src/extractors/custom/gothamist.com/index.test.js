@@ -25,7 +25,7 @@ describe('GothamistComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,8 +35,7 @@ describe('GothamistComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Helter Shelter: NYC's Fallout Shelters Basically Don't Exist Anymore"
       );
     });
@@ -48,7 +47,7 @@ describe('GothamistComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Nathan Tempey');
+      expect(author).toEqual('Nathan Tempey');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +57,7 @@ describe('GothamistComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-03-09T15:15:00.000Z');
+      expect(date_published).toEqual('2017-03-09T15:15:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -68,7 +67,7 @@ describe('GothamistComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -78,8 +77,7 @@ describe('GothamistComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://gothamist.com/assets_c/2017/03/030717FalloutShelter80NY-5-thumb-640xauto-989222.jpg'
       );
     });
@@ -93,17 +91,11 @@ describe('GothamistComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The basement at 80 New York Avenue in Crown Heights is one of'
       );
     });

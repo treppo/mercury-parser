@@ -26,7 +26,7 @@ describe('WwwNationalgeographicComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('WwwNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, "How Today's Toys May Be Harming Your Daughter");
+      expect(title).toEqual("How Today's Toys May Be Harming Your Daughter");
     });
 
     it('returns the date_published', async () => {
@@ -46,7 +46,7 @@ describe('WwwNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-15T16:39:00.000Z');
+      expect(date_published).toEqual('2016-12-15T16:39:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -56,8 +56,7 @@ describe('WwwNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'The long history of separate toys for girls and boys shows that marketing by gender has a profound impact on children.'
       );
     });
@@ -69,8 +68,7 @@ describe('WwwNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://www.nationalgeographic.com/content/dam/magazine/rights-exempt/2017/01/Departments/gendertoys/gendertoysOG.ngsversion.1481823676336.png'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwNationalgeographicComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'This story appears in the January 2017 issue of National Geographic magazine. Read'
       );
     });

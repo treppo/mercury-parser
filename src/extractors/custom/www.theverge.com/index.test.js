@@ -26,7 +26,7 @@ describe('WwwThevergeComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwThevergeComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'AT&T just declared war on an open internet (and us)'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwThevergeComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'T.C. Sottek');
+      expect(author).toEqual('T.C. Sottek');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwThevergeComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-11-29T15:00:19.000Z');
+      expect(date_published).toEqual('2016-11-29T15:00:19.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,7 +68,7 @@ describe('WwwThevergeComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, '‘Mobilizing Your World’ sounds like a threat now');
+      expect(dek).toEqual('‘Mobilizing Your World’ sounds like a threat now');
     });
 
     it('returns the lead_image_url', async () => {
@@ -79,8 +78,7 @@ describe('WwwThevergeComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://cdn0.vox-cdn.com/thumbor/v7kU2cISjo-wm6XceGk_kBuMBlA=/0x16:1024x592/1600x900/cdn0.vox-cdn.com/uploads/chorus_image/image/52042639/vrg_tc_attarmy_1024.1480431618.jpeg'
       );
     });
@@ -94,20 +92,14 @@ describe('WwwThevergeComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Last year we won the open internet back, but the new regulations had'
       );
-      assert.equal($('.e-image--hero').length, 1);
+      expect($('.e-image--hero').length).toEqual(1);
     });
   });
   it('returns the content from a feature', async () => {
@@ -125,17 +117,11 @@ describe('WwwThevergeComExtractor', () => {
 
     const $ = cheerio.load(content || '');
 
-    const first13 = excerptContent(
-      $('*')
-        .first()
-        .text(),
-      13
-    );
+    const first13 = excerptContent($('*').first().text(), 13);
 
     // Update these values with the expected values from
     // the article.
-    assert.equal(
-      first13,
+    expect(first13).toEqual(
       'Microsoft’s Surface PCs are known for their hinges. From the first, launched alongside'
     );
   });

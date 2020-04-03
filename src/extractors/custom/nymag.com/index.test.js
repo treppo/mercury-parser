@@ -14,8 +14,8 @@ describe('NYMagExtractor', () => {
     const actualDek =
       'How Fox News women took down the most powerful, and predatory, man in media.';
 
-    assert.equal(dek, actualDek);
-    assert.equal(title, 'The Revenge of Roger’s Angels');
-    assert.equal(author, 'Gabriel Sherman');
+    expect(dek).toEqual(actualDek);
+    expect(title).toEqual('The Revenge of Roger’s Angels');
+    expect(author).toEqual('Gabriel Sherman');
   });
 });

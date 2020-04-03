@@ -9,27 +9,27 @@ describe('extractFromSelectors($, selectors, maxChildren, textOnly)', () => {
     const $ = cheerio.load(HTML.simpleSelector.test);
     const result = extractFromSelectors($, ['.author']);
 
-    assert.equal(result, HTML.simpleSelector.result);
+    expect(result).toEqual(HTML.simpleSelector.result);
   });
 
   it('ignores comments', () => {
     const $ = cheerio.load(HTML.insideComment.test);
     const result = extractFromSelectors($, ['.author']);
 
-    assert.equal(result, HTML.insideComment.result);
+    expect(result).toEqual(HTML.insideComment.result);
   });
 
   it('skips a selector if it matches multiple nodes', () => {
     const $ = cheerio.load(HTML.multiMatch.test);
     const result = extractFromSelectors($, ['.author']);
 
-    assert.equal(result, HTML.multiMatch.result);
+    expect(result).toEqual(HTML.multiMatch.result);
   });
 
   it('skips a node with too many children', () => {
     const $ = cheerio.load(HTML.manyChildren.test);
     const result = extractFromSelectors($, ['.author']);
 
-    assert.equal(result, HTML.manyChildren.result);
+    expect(result).toEqual(HTML.manyChildren.result);
   });
 });

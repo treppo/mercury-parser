@@ -26,7 +26,7 @@ describe('WwwInquisitrComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwInquisitrComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Donald Trump Has Skipped Nearly All Intelligence Briefings? President-Elect’s Reasoning Is ‘Well, I Get It When I Need It’'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwInquisitrComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Patrick Frye');
+      expect(author).toEqual('Patrick Frye');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwInquisitrComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-12T16:07:20.000Z');
+      expect(date_published).toEqual('2016-12-12T16:07:20.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwInquisitrComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://cdn.inquisitr.com/wp-content/uploads/2016/12/Donald_Trump_Annual_President_Salary-1-900x440.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwInquisitrComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Republican President-elect Donald Trump is facing increasing scrutiny for blowing-off security and intelligence'
       );
     });

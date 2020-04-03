@@ -8,13 +8,13 @@ describe('validateUrl(parsedUrl)', () => {
     const url = URL.parse('example.com');
     const valid = validateUrl(url);
 
-    assert.equal(valid, false);
+    expect(valid).toEqual(false);
   });
 
   it('returns true if url is valid', () => {
     const url = URL.parse('http://example.com');
     const valid = validateUrl(url);
 
-    assert.equal(valid, true);
+    expect(valid).toEqual(true);
   });
 });

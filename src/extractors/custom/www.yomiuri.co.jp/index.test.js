@@ -28,7 +28,7 @@ describe('WwwYomiuriCoJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,7 +38,7 @@ describe('WwwYomiuriCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `バルセロナ、マンＵに先勝…ＣＬ準々決勝第１戦`);
+      expect(title).toEqual(`バルセロナ、マンＵに先勝…ＣＬ準々決勝第１戦`);
     });
 
     it('returns the author', async () => {
@@ -48,7 +48,7 @@ describe('WwwYomiuriCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +58,7 @@ describe('WwwYomiuriCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-04-11T13:22:00.000Z`);
+      expect(date_published).toEqual(`2019-04-11T13:22:00.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -68,7 +68,7 @@ describe('WwwYomiuriCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -78,8 +78,7 @@ describe('WwwYomiuriCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://www.yomiuri.co.jp/media/2019/04/20190411-OYT1I50076-1.jpg?type=ogp`
       );
     });
@@ -93,17 +92,11 @@ describe('WwwYomiuriCoJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '先制点が決まり、喜ぶバルセロナのメッシ（左）とスアレス＝ロイター'
       );
     });

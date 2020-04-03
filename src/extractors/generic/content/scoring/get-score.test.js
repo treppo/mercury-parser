@@ -8,14 +8,14 @@ describe('Scoring utils', () => {
     it('returns null if the node has no score set', () => {
       const $ = cheerio.load('<p>Foo</p>');
       const $node = $('p').first();
-      assert.equal(getScore($node), null);
+      expect(getScore($node)).toEqual(null);
     });
 
     it('returns 25 if the node has a score attr of 25', () => {
       const $ = cheerio.load('<p score="25">Foo</p>');
       const $node = $('p').first();
-      assert.equal(typeof getScore($node), 'number');
-      assert.equal(getScore($node), 25);
+      expect(typeof getScore($node)).toEqual('number');
+      expect(getScore($node)).toEqual(25);
     });
   });
 });

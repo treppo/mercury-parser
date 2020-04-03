@@ -14,7 +14,7 @@ describe('GenericTitleExtractor', () => {
         metaCache: ['dc.title', 'something-else'],
       });
 
-      assert.equal(result, HTML.dcTitle.result);
+      expect(result).toEqual(HTML.dcTitle.result);
     });
 
     it('pulls title from selectors lacking string meta', () => {
@@ -25,7 +25,7 @@ describe('GenericTitleExtractor', () => {
         metaCache: ['og:title', 'something-else'],
       });
 
-      assert.equal(result, HTML.ogTitle.result);
+      expect(result).toEqual(HTML.ogTitle.result);
     });
 
     it('then falls back to weak meta title tags', () => {
@@ -36,7 +36,7 @@ describe('GenericTitleExtractor', () => {
         metaCache: ['og:title', 'something-else'],
       });
 
-      assert.equal(result, HTML.ogTitle.result);
+      expect(result).toEqual(HTML.ogTitle.result);
     });
   });
 
@@ -44,6 +44,6 @@ describe('GenericTitleExtractor', () => {
     const $ = cheerio.load(HTML.weakTitleSelector.test);
     const result = GenericTitleExtractor.extract({ $, url: '', metaCache: [] });
 
-    assert.equal(result, HTML.weakTitleSelector.result);
+    expect(result).toEqual(HTML.weakTitleSelector.result);
   });
 });

@@ -24,7 +24,7 @@ describe('WwwNprOrgExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -34,8 +34,7 @@ describe('WwwNprOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Jury Finds Dylann Roof Guilty In S.C. Church Shooting'
       );
     });
@@ -47,7 +46,7 @@ describe('WwwNprOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Rebecca Hersher');
+      expect(author).toEqual('Rebecca Hersher');
     });
 
     it('returns the date_published', async () => {
@@ -57,7 +56,7 @@ describe('WwwNprOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-15T20:33:00.000Z');
+      expect(date_published).toEqual('2016-12-15T20:33:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -67,8 +66,7 @@ describe('WwwNprOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://media.npr.org/assets/img/2016/12/15/ap_16342669033405_wide-e76ba54ba052acbbbe4b9bd73bd429e8d5ca58c7.jpg?s=1400'
       );
     });
@@ -82,17 +80,11 @@ describe('WwwNprOrgExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Dylann Roof is escorted from the Shelby Police Department in Shelby, N.C., on'
       );
     });

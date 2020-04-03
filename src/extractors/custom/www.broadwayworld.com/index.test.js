@@ -28,7 +28,7 @@ describe('CustomExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('CustomExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'American Theatre Wing Launches Andrew Lloyd Webber Training Scholarships'
       );
     });
@@ -51,7 +50,7 @@ describe('CustomExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'BWW News Desk');
+      expect(author).toEqual('BWW News Desk');
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +60,7 @@ describe('CustomExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-10-13T19:35:00.000Z');
+      expect(date_published).toEqual('2016-10-13T19:35:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -71,8 +70,7 @@ describe('CustomExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://images.bwwstatic.com/columnpic7/7B5FD766-A644-E386-19DE07017A3AD79C.jpg'
       );
     });
@@ -86,17 +84,11 @@ describe('CustomExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The American Theatre Wing announced today that their Andrew Lloyd Webber Initiative has'
       );
     });

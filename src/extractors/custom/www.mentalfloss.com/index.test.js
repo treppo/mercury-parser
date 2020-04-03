@@ -26,7 +26,7 @@ describe('WwwMentalflossComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwMentalflossComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "It's Not Too Late to Holiday Shop With These Amazon Deals"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwMentalflossComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Smart Shopping Team');
+      expect(author).toEqual('Smart Shopping Team');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwMentalflossComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-19T17:29:00.000Z');
+      expect(date_published).toEqual('2016-12-19T17:29:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwMentalflossComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://images.mentalfloss.com/sites/default/files/35hk53jh53.png'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwMentalflossComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'As a recurring feature, our team combs the Web and shares some amazing'
       );
     });

@@ -13,7 +13,7 @@ describe('getOrInitScore(node, $)', () => {
 
       const score = getOrInitScore(node, $);
 
-      assert.equal(score, 40);
+      expect(score).toEqual(40);
     });
   });
 
@@ -25,7 +25,7 @@ describe('getOrInitScore(node, $)', () => {
 
       const score = getOrInitScore(node, $);
 
-      assert.equal(score, 0);
+      expect(score).toEqual(0);
     });
 
     it('returns score if no class/id and has commas/length', () => {
@@ -34,7 +34,7 @@ describe('getOrInitScore(node, $)', () => {
 
       const score = getOrInitScore(node, $);
 
-      assert.equal(score, 19);
+      expect(score).toEqual(19);
     });
 
     it('returns greater score if weighted class/id is set', () => {
@@ -43,7 +43,7 @@ describe('getOrInitScore(node, $)', () => {
 
       const score = getOrInitScore(node, $);
 
-      assert.equal(score, 44);
+      expect(score).toEqual(44);
     });
 
     it('gives 1/4 of its score to its parent', () => {
@@ -52,7 +52,7 @@ describe('getOrInitScore(node, $)', () => {
 
       getOrInitScore(node, $);
 
-      assert.equal(getScore(node.parent()), 16);
+      expect(getScore(node.parent())).toEqual(16);
     });
   });
 });

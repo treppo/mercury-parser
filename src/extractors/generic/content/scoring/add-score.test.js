@@ -10,7 +10,7 @@ describe('Scoring utils', () => {
       let $node = $('p').first();
 
       $node = addScore($node, $, 25);
-      assert.equal(getScore($node), 50);
+      expect(getScore($node)).toEqual(50);
     });
 
     it('adds score if score not yet set (assumes score is 0)', () => {
@@ -18,7 +18,7 @@ describe('Scoring utils', () => {
       let $node = $('p').first();
 
       $node = addScore($node, $, 25);
-      assert.equal(getScore($node), 25);
+      expect(getScore($node)).toEqual(25);
     });
   });
 });

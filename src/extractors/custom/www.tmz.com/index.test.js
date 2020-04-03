@@ -23,7 +23,7 @@ describe('WwwTmzComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -33,8 +33,7 @@ describe('WwwTmzComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Prince -- Woman Warns Estate ... Step Aside, I'm His Wife!"
       );
     });
@@ -46,7 +45,7 @@ describe('WwwTmzComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'TMZ STAFF');
+      expect(author).toEqual('TMZ STAFF');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwTmzComExtractor', () => {
       // Note: This is actually wrong, but the error is from TMZ's very bad
       // markup. Currently the parser will get it close but not the correct
       // timezone. This could be fixed by better markup)
-      assert.equal(date_published, '2016-11-28T11:00:00.000Z');
+      expect(date_published).toEqual('2016-11-28T11:00:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwTmzComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://ll-media.tmz.com/2016/11/28/1128-prince-getty-03-1200x630.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwTmzComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Prince was married when he died and wanted all of his money to'
       );
     });

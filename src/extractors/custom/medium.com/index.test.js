@@ -26,31 +26,31 @@ describe('MediumExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
       const { title } = await result;
 
-      assert.equal(title, 'WTF? What’s The Future?');
+      expect(title).toEqual('WTF? What’s The Future?');
     });
 
     it('returns the author', async () => {
       const { author } = await result;
 
-      assert.equal(author, "Tim O'Reilly");
+      expect(author).toEqual("Tim O'Reilly");
     });
 
     it('returns the date_published', async () => {
       const { date_published } = await result;
 
-      assert.equal(date_published, '2016-10-19T14:30:56.529Z');
+      expect(date_published).toEqual('2016-10-19T14:30:56.529Z');
     });
 
     it('returns the dek', async () => {
       const { dek } = await result;
 
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -60,8 +60,7 @@ describe('MediumExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://miro.medium.com/max/540/1*3Gzaug9mRc8vvx1cuQWkog.png'
       );
     });
@@ -71,15 +70,9 @@ describe('MediumExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Last Thursday, I had the honor to be one of the warmup acts'
       );
     });
@@ -102,8 +95,7 @@ describe('MediumExtractor', () => {
 
       const first13 = excerptContent($.text(), 13);
 
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'I’m sure you have seen something like the following line very often while'
       );
     });

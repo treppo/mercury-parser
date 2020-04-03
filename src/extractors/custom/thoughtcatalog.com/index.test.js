@@ -26,7 +26,7 @@ describe('ThoughtcatalogComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('ThoughtcatalogComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'One Day You Will Meet Someone Who Will Change Your Life For Good'
       );
     });
@@ -49,7 +48,7 @@ describe('ThoughtcatalogComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Lauren Jarvis-Gibson');
+      expect(author).toEqual('Lauren Jarvis-Gibson');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('ThoughtcatalogComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-16T18:05:39.000Z');
+      expect(date_published).toEqual('2016-12-16T18:05:39.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('ThoughtcatalogComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://thoughtcatalog.files.wordpress.com/2016/12/31565018766_4494e5f335_o.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('ThoughtcatalogComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'herzblut One day you are going to meet someone in your life, that'
       );
     });

@@ -28,7 +28,7 @@ describe('JapanZdnetComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,7 +38,7 @@ describe('JapanZdnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `Raspberry Pi競合--Ubuntuが動く「UP Core」を見る`);
+      expect(title).toEqual(`Raspberry Pi競合--Ubuntuが動く「UP Core」を見る`);
     });
 
     it('returns the author', async () => {
@@ -48,7 +48,7 @@ describe('JapanZdnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, `ZDNet Japan Staff`);
+      expect(author).toEqual(`ZDNet Japan Staff`);
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +58,7 @@ describe('JapanZdnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-04-27T23:00:00.000Z`);
+      expect(date_published).toEqual(`2019-04-27T23:00:00.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -68,7 +68,7 @@ describe('JapanZdnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -78,8 +78,7 @@ describe('JapanZdnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://japan.zdnet.com/storage/2019/04/26/97670c9f883bf3f9e11a492df245717c/190426_original_1280x960.jpg`
       );
     });
@@ -93,17 +92,11 @@ describe('JapanZdnetComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '2017年にリリース予定の低価格ポケットサイズコンピュータは、「Android'
       );
     });

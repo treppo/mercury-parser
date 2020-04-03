@@ -26,7 +26,7 @@ describe('IciRadioCanadaCaExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('IciRadioCanadaCaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Affaire KPMG: un juge se récuse');
+      expect(title).toEqual('Affaire KPMG: un juge se récuse');
     });
 
     it('returns the author', async () => {
@@ -46,8 +46,7 @@ describe('IciRadioCanadaCaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        author,
+      expect(author).toEqual(
         'Zone Justice et faits divers - ICI.Radio-Canada.ca'
       );
     });
@@ -59,7 +58,7 @@ describe('IciRadioCanadaCaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-03-13T23:18:00.000Z');
+      expect(date_published).toEqual('2017-03-13T23:18:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +68,7 @@ describe('IciRadioCanadaCaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         "Un juge de la cour de l'impôt se récuse d'un dossier mettant en cause un stratagème du cabinet comptable KPMG. Selon les émissions Enquête et the fifth estate, le juge Bocock avait participé à une soirée cocktail organisée par un cabinet d'avocats lié à l'affaire."
       );
     });
@@ -82,8 +80,7 @@ describe('IciRadioCanadaCaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://images.radio-canada.ca/w_635,h_357/v1/ici-info/16x9/randall-bocock-juge.jpg'
       );
     });
@@ -97,17 +94,11 @@ describe('IciRadioCanadaCaExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "Le juge Randall Bocock se retire d'une cause liée à KPMG Photo :"
       );
     });

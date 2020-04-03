@@ -28,7 +28,7 @@ describe('LittleThingsExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('LittleThingsExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Snip The Stems Off Plastic Spoons To Make A Quirky Pineapple Lamp'
       );
     });
@@ -51,7 +50,7 @@ describe('LittleThingsExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Laura Caseley');
+      expect(author).toEqual('Laura Caseley');
     });
 
     it('returns the lead_image_url', async () => {
@@ -61,8 +60,7 @@ describe('LittleThingsExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://cdn1.littlethings.com/app/uploads/2016/09/pineapple-b-thumb-1.jpg'
       );
     });
@@ -76,17 +74,11 @@ describe('LittleThingsExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Every room needs light, and so lamps are pretty much a necessity for'
       );
     });

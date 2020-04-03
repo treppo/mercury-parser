@@ -26,7 +26,7 @@ describe('WwwTodayComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwTodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Take a tour inside Zsa Zsa Gabor's former Palm Springs retreat — it's for sale!"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwTodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Melissa Allison');
+      expect(author).toEqual('Melissa Allison');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwTodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T15:36:00.000Z');
+      expect(date_published).toEqual('2016-12-22T15:36:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwTodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://media1.s-nbcnews.com/i/newscms/2016_51/1183946/zsa-zsa-pool-2-today-161222-tease_ef3cb1c171786baa69a3f5db09f3da06.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwTodayComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '“I am a marvelous housekeeper. Every time I leave a man, I keep'
       );
     });

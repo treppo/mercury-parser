@@ -29,7 +29,7 @@ describe('YahooExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -39,7 +39,7 @@ describe('YahooExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Clinton Cancels Joint Events with Sanders');
+      expect(title).toEqual('Clinton Cancels Joint Events with Sanders');
     });
 
     it('returns the author', async () => {
@@ -49,7 +49,7 @@ describe('YahooExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Fox Nation');
+      expect(author).toEqual('Fox Nation');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +59,7 @@ describe('YahooExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-10-03T05:00:00.000Z');
+      expect(date_published).toEqual('2016-10-03T05:00:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +69,7 @@ describe('YahooExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://s.yimg.com/uu/api/res/1.2/tE8CoXSgHD15n5p8wUwGJA--/aD0zMDA7dz02MjQ7c209MTthcHBpZD15dGFjaHlvbg--/http://slingstone.zenfs.com/offnetwork/218c3f97f0b7e1598b6dc9fd10126e22'
       );
     });
@@ -84,17 +83,11 @@ describe('YahooExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The Hillary Clinton campaign has canceled joint appearances with former primary opponent Bernie'
       );
     });

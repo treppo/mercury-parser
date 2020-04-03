@@ -11,25 +11,25 @@ describe('getExtractor(url)', () => {
       cheerio.load('<div />')
     );
 
-    assert.equal(extractor.domain, '*');
+    expect(extractor.domain).toEqual('*');
   });
 
   it('returns a custom extractor if found', () => {
     const extractor = getExtractor('https://nymag.com');
 
-    assert.equal(extractor.domain, 'nymag.com');
+    expect(extractor.domain).toEqual('nymag.com');
   });
 
   it('falls back to base domain if subdomain not found', () => {
     const extractor = getExtractor('https://googleblog.blogspot.com');
 
-    assert.equal(extractor.domain, 'blogspot.com');
+    expect(extractor.domain).toEqual('blogspot.com');
   });
 
   it('falls back to base domain if subdomain not found', () => {
     const extractor = getExtractor('https://en.m.wikipedia.org');
 
-    assert.equal(extractor.domain, 'wikipedia.org');
+    expect(extractor.domain).toEqual('wikipedia.org');
   });
 
   it('returns a custom extractor based on detectors', () => {
@@ -38,6 +38,6 @@ describe('getExtractor(url)', () => {
     const $ = cheerio.load(html);
     const extractor = getExtractor('http://foo.com', null, $);
 
-    assert.equal(extractor.domain, 'medium.com');
+    expect(extractor.domain).toEqual('medium.com');
   });
 });

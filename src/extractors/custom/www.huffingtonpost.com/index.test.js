@@ -26,7 +26,7 @@ describe('WwwHuffingtonpostComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwHuffingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Trump Has Shown Receptiveness To Obama's Agenda. Does He Actually Mean It?"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwHuffingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Sam Stein');
+      expect(author).toEqual('Sam Stein');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwHuffingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-11-28T21:23:00.000Z');
+      expect(date_published).toEqual('2016-11-28T21:23:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +68,7 @@ describe('WwwHuffingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         "The $1 million question: Can you change the president-elect's worldview or is this all for show?"
       );
     });
@@ -82,8 +80,7 @@ describe('WwwHuffingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://img.huffingtonpost.com/asset/2000_1000/583c90681a00002500cca17a.jpeg'
       );
     });
@@ -97,17 +94,11 @@ describe('WwwHuffingtonpostComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'ASSOCIATED PRESS Donald Trump has had several conversations with President Obama. How much'
       );
     });

@@ -24,7 +24,7 @@ describe('WwwCnnComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -34,7 +34,7 @@ describe('WwwCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, "Why Donald Trump won't change");
+      expect(title).toEqual("Why Donald Trump won't change");
     });
 
     it('returns the author', async () => {
@@ -44,7 +44,7 @@ describe('WwwCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Stephen Collinson, CNN');
+      expect(author).toEqual('Stephen Collinson, CNN');
     });
 
     it('returns the date_published', async () => {
@@ -54,7 +54,7 @@ describe('WwwCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-11-29T10:39:35.000Z');
+      expect(date_published).toEqual('2016-11-29T10:39:35.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -64,8 +64,7 @@ describe('WwwCnnComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://i2.cdn.cnn.com/cnnnext/dam/assets/161128072443-01-trump-1128-super-tease.jpg'
       );
     });
@@ -79,20 +78,14 @@ describe('WwwCnnComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "(CNN)Winning the presidency didn't change Donald Trump -- and it's increasingly clear that"
       );
-      assert.equal($('.media__video--thumbnail').length, 1);
+      expect($('.media__video--thumbnail').length).toEqual(1);
     });
   });
 });

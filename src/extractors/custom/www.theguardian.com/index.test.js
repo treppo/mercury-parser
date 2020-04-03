@@ -26,7 +26,7 @@ describe('WwwTheguardianComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwTheguardianComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Standing Rock protesters hold out against extraordinary police violence'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwTheguardianComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Julia Carrie Wong and Sam Levin');
+      expect(author).toEqual('Julia Carrie Wong and Sam Levin');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwTheguardianComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-11-29T20:26:06.000Z');
+      expect(date_published).toEqual('2016-11-29T20:26:06.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +68,7 @@ describe('WwwTheguardianComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Apprehension and distrust pervade North Dakota protest site as promises from state that there are no plans to forcibly remove people does little to assuage fears'
       );
     });
@@ -82,8 +80,7 @@ describe('WwwTheguardianComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://i.guim.co.uk/img/media/fc64982c5ab7b3ea7d5d38f3f74483c84c60b372/0_225_3500_2100/master/3500.jpg?w=1200&h=630&q=55&auto=format&usm=12&fit=crop&bm=normal&ba=bottom%2Cleft&blend64=aHR0cHM6Ly91cGxvYWRzLmd1aW0uY28udWsvMjAxNi8wNS8yNS9vdmVybGF5LWxvZ28tMTIwMC05MF9vcHQucG5n&s=034d7b3573a47c5ba3501a9e9e253a8f'
       );
     });
@@ -97,17 +94,11 @@ describe('WwwTheguardianComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Police violence against Standing Rock protesters in North Dakota has risen to extraordinary'
       );
     });

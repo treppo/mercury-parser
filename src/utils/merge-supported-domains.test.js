@@ -14,7 +14,7 @@ describe('mergeSupportedDomains(extractor, domains)', () => {
     };
 
     const result = mergeSupportedDomains(extractor);
-    assert.deepEqual(result, expected);
+    expect(result).toEqual(expected);
   });
 
   it('returns an object w/single domain if no supportedDomains', () => {
@@ -26,6 +26,6 @@ describe('mergeSupportedDomains(extractor, domains)', () => {
     };
 
     const result = mergeSupportedDomains(extractor);
-    assert.deepEqual(result, expected);
+    expect(result).toEqual(expected);
   });
 });

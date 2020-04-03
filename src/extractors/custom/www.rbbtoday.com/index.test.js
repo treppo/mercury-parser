@@ -28,7 +28,7 @@ describe('WwwRbbtodayComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('WwwRbbtodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `小さいのに高性能！Ankerのモバイルプロジェクターで我が家がホームシアターに`
       );
     });
@@ -51,7 +50,7 @@ describe('WwwRbbtodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '《KT》');
+      expect(author).toEqual('《KT》');
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +60,7 @@ describe('WwwRbbtodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-04-19T00:39:34.000Z`);
+      expect(date_published).toEqual(`2019-04-19T00:39:34.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -71,8 +70,7 @@ describe('WwwRbbtodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'もっぱら映画は映画館で見る派の筆者だが、最近、HuluやNetflixなどの映像配信サービスで魅力的なドラマや映画、それもオリジナル作品が増えてきているように思う。'
       );
     });
@@ -84,8 +82,7 @@ describe('WwwRbbtodayComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://www.rbbtoday.com/imgs/ogp_f/634815.jpg`
       );
     });
@@ -99,17 +96,11 @@ describe('WwwRbbtodayComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'もっぱら映画は映画館で見る派の筆者だが、最近、HuluやNetflixなどの映像配信サービスで魅力的なドラマや映画、それもオリジナル作品が増えてきているように思う。'
       );
     });

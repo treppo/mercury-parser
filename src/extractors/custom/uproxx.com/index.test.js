@@ -23,7 +23,7 @@ describe('UproxxComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -33,8 +33,7 @@ describe('UproxxComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Rudy Giuliani Is No Longer In The Running To Become Donald Trump’s Secretary Of State'
       );
     });
@@ -46,7 +45,7 @@ describe('UproxxComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Andrew Husband');
+      expect(author).toEqual('Andrew Husband');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +55,7 @@ describe('UproxxComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-09T22:51:26.000Z');
+      expect(date_published).toEqual('2016-12-09T22:51:26.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -66,8 +65,7 @@ describe('UproxxComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://uproxx.files.wordpress.com/2016/12/rudy-giuliani-not-secretary-of-state.jpg?quality=90&w=650'
       );
     });
@@ -81,17 +79,11 @@ describe('UproxxComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Getty Image Longtime Donald Trump advocate Rudy Giuliani has reportedly removed himself from'
       );
     });

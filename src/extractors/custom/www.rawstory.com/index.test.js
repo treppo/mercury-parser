@@ -26,7 +26,7 @@ describe('WwwRawstoryComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwRawstoryComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'These 6 celebrities are refusing to play Trump’s inauguration as team scrambles to secure talent'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwRawstoryComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Tana Ganeva');
+      expect(author).toEqual('Tana Ganeva');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwRawstoryComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T19:27:00.000Z');
+      expect(date_published).toEqual('2016-12-22T19:27:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwRawstoryComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://www.rawstory.com/wp-content/uploads/2016/12/Donald-Trump11-800x430.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwRawstoryComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'As Inauguration Day approaches, Donald Trump’s team is reportedly having such a hard'
       );
     });

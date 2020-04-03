@@ -10,8 +10,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<img data-src="http://example.com/foo.jpg" src="http://example.com/foo.jpg">'
     );
   });
@@ -22,8 +21,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<img data-srcset="http://example.com/foo.jpg 2x" srcset="http://example.com/foo.jpg 2x">'
     );
   });
@@ -35,8 +33,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<img data-srcset="http://example.com/foo.jpg?w=400 2x, http://example.com/foo.jpg?w=600 3x" srcset="http://example.com/foo.jpg?w=400 2x, http://example.com/foo.jpg?w=600 3x">'
     );
   });
@@ -48,8 +45,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<img data-src="http://example.com/foo.jpg" data-srcset="http://example.com/foo.jpg 2x" src="http://example.com/foo.jpg" srcset="http://example.com/foo.jpg 2x">'
     );
   });
@@ -62,7 +58,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(result, '<img data-src="foo.jpg">');
+    expect(result).toEqual('<img data-src="foo.jpg">');
   });
 
   it('does nothing when value is not an image', () => {
@@ -71,7 +67,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(result, '<img data-src="http://example.com">');
+    expect(result).toEqual('<img data-src="http://example.com">');
   });
 
   it('does not change a correct img with src', () => {
@@ -80,7 +76,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(result, '<img src="http://example.com/foo.jpg">');
+    expect(result).toEqual('<img src="http://example.com/foo.jpg">');
   });
 
   it('does not replace an img src with srcset value', () => {
@@ -90,8 +86,7 @@ describe('convertLazyLoadedImages($)', () => {
 
     const result = convertLazyLoadedImages($).html();
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<img src="http://example.com/foo.jpg" srcset="http://example.com/foo2x.jpg 2x, http://example.com/foo.jpg">'
     );
   });

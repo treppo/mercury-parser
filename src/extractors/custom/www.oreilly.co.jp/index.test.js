@@ -28,7 +28,7 @@ describe('WwwOreillyCoJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('WwwOreillyCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `Head First はじめてのプログラミング――頭とからだで覚えるPythonプログラミング入門`
       );
     });
@@ -51,7 +50,9 @@ describe('WwwOreillyCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Eric Freeman　著、嶋田 健志　監訳、木下 哲也　訳');
+      expect(author).toEqual(
+        'Eric Freeman　著、嶋田 健志　監訳、木下 哲也　訳'
+      );
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +62,7 @@ describe('WwwOreillyCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-04-25T15:00:00.000Z');
+      expect(date_published).toEqual('2019-04-25T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -71,7 +72,7 @@ describe('WwwOreillyCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -81,8 +82,7 @@ describe('WwwOreillyCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://www.oreilly.co.jp/books/images/picture_large978-4-87311-874-1.jpeg`
       );
     });
@@ -96,17 +96,11 @@ describe('WwwOreillyCoJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        8
-      );
+      const first13 = excerptContent($('*').first().text(), 8);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Eric Freeman 著、嶋田 健志 監訳、木下 哲也 訳 2019年04月'
       );
     });

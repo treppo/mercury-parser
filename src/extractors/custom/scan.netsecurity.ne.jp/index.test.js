@@ -28,7 +28,7 @@ describe('ScanNetsecurityNeJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('ScanNetsecurityNeJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `パスワードロック未実施のUSBメモリを電車内で紛失の可能性（阪南大学）`
       );
     });
@@ -51,7 +50,7 @@ describe('ScanNetsecurityNeJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +60,7 @@ describe('ScanNetsecurityNeJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-03-04T23:15:11.000Z`);
+      expect(date_published).toEqual(`2019-03-04T23:15:11.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -71,8 +70,7 @@ describe('ScanNetsecurityNeJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         '阪南大学は3月4日、同学の専任教員が学生情報等を保存したUSBメモリを紛失したことが判明したと発表した。'
       );
     });
@@ -84,8 +82,7 @@ describe('ScanNetsecurityNeJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://scan.netsecurity.ne.jp/imgs/ogp_f/26698.jpg`
       );
     });
@@ -99,17 +96,11 @@ describe('ScanNetsecurityNeJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        2
-      );
+      const first13 = excerptContent($('*').first().text(), 2);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '公式サイト リリース（個人情報を含むUSBメモリ紛失のお詫びとお知らせ）'
       );
     });

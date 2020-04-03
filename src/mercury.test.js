@@ -14,7 +14,9 @@ describe('Mercury', () => {
     it('returns an error if a malformed url is passed', async () => {
       const error = await Mercury.parse('foo.com');
 
-      assert(/does not look like a valid URL/i.test(error.message));
+      expect(
+        /does not look like a valid URL/i.test(error.message)
+      ).toBeTruthy();
     });
 
     it('does the whole thing', async () => {
@@ -22,8 +24,8 @@ describe('Mercury', () => {
         'http://deadspin.com/remember-when-donald-trump-got-booed-for-butchering-ta-1788216229'
       );
 
-      assert.equal(typeof result, 'object');
-      assert.equal(result.content.indexOf('score="') === -1, true);
+      expect(typeof result).toEqual('object');
+      expect(result.content.indexOf('score="') === -1).toEqual(true);
     });
 
     it('returns an error on non-200 responses', async () => {
@@ -31,7 +33,7 @@ describe('Mercury', () => {
         'https://www.thekitchn.com/instant-pot-chicken-pesto-pasta-eating-instantly-267141'
       );
 
-      assert(/instructed to reject non-200/i.test(error.message));
+      expect(/instructed to reject non-200/i.test(error.message)).toBeTruthy();
     });
 
     it('returns an error on invalid content types', async () => {
@@ -39,7 +41,9 @@ describe('Mercury', () => {
         'https://upload.wikimedia.org/wikipedia/commons/5/52/Spacer.gif'
       );
 
-      assert(/content-type for this resource/i.test(error.message));
+      expect(
+        /content-type for this resource/i.test(error.message)
+      ).toBeTruthy();
     });
 
     it('does wikipedia', async () => {
@@ -47,7 +51,7 @@ describe('Mercury', () => {
         'https://en.wikipedia.org/wiki/Brihadeeswarar_Temple_fire'
       );
 
-      assert.equal(typeof result, 'object');
+      expect(typeof result).toEqual('object');
     });
 
     it('does washingtonpost', async () => {
@@ -55,10 +59,9 @@ describe('Mercury', () => {
         'https://www.washingtonpost.com/news/opinions/wp/2018/10/29/enough-platitudes-lets-name-names/'
       );
 
-      assert.equal(typeof result, 'object');
-      assert.equal(result.total_pages, 1);
-      assert.equal(
-        result.url,
+      expect(typeof result).toEqual('object');
+      expect(result.total_pages).toEqual(1);
+      expect(result.url).toEqual(
         'https://www.washingtonpost.com/news/opinions/wp/2018/10/29/enough-platitudes-lets-name-names/'
       );
     });
@@ -68,8 +71,8 @@ describe('Mercury', () => {
         'http://www.nytimes.com/2016/08/16/upshot/the-state-of-the-clinton-trump-race-is-it-over.html?_r=0'
       );
 
-      assert.equal(typeof result, 'object');
-      assert.equal(result.total_pages, 1);
+      expect(typeof result).toEqual('object');
+      expect(result.total_pages).toEqual(1);
     });
 
     it('does ars pagination', async () => {
@@ -79,10 +82,10 @@ describe('Mercury', () => {
 
       const { total_pages, pages_rendered } = result;
 
-      assert.equal(total_pages, 3);
-      assert.equal(pages_rendered, 3);
+      expect(total_pages).toEqual(3);
+      expect(pages_rendered).toEqual(3);
 
-      assert.equal(result.next_page_url, `${url}2`);
+      expect(result.next_page_url).toEqual(`${url}2`);
     });
   });
 
@@ -97,7 +100,7 @@ describe('Mercury', () => {
 
     const htmlRe = /<[a-z][\s\S]*>/g;
 
-    assert.equal(htmlRe.test(content), false);
+    expect(htmlRe.test(content)).toEqual(false);
   });
 
   it('returns markdown if markdown is passed as contentType', async () => {
@@ -115,8 +118,8 @@ describe('Mercury', () => {
     const htmlRe = /<[a-z][\s\S]*>/;
     const markdownRe = /\[[\w\s]+\]\(.*\)/;
 
-    assert.equal(htmlRe.test(content), false);
-    assert.equal(markdownRe.test(content), true);
+    expect(htmlRe.test(content)).toEqual(false);
+    expect(markdownRe.test(content)).toEqual(true);
   });
 
   it('returns custom elements if an extend object is passed', async () => {
@@ -135,9 +138,9 @@ describe('Mercury', () => {
         },
       },
     });
-    assert.ok(sites);
-    assert.equal(sites.length, 8);
-    assert.equal(sites[0], 'NYMag.com');
+    expect(sites).toBeTruthy();
+    expect(sites.length).toEqual(8);
+    expect(sites[0]).toEqual('NYMag.com');
   });
 
   it('returns an array if a single element matches a custom extend', async () => {
@@ -156,8 +159,8 @@ describe('Mercury', () => {
         },
       },
     });
-    assert.ok(sites);
-    assert.equal(sites.length, 1);
+    expect(sites).toBeTruthy();
+    expect(sites.length).toEqual(1);
   });
 
   it('returns custom attributes if an extend object is passed', async () => {
@@ -176,9 +179,9 @@ describe('Mercury', () => {
         },
       },
     });
-    assert.ok(sites);
-    assert.equal(sites.length, 8);
-    assert.equal(sites[1], 'http://nymag.com/daily/intelligencer/');
+    expect(sites).toBeTruthy();
+    expect(sites.length).toEqual(8);
+    expect(sites[1]).toEqual('http://nymag.com/daily/intelligencer/');
   });
 
   it('is able to use custom extractors (with extension) added via api', async () => {
@@ -210,10 +213,10 @@ describe('Mercury', () => {
     Mercury.addExtractor(customExtractor);
 
     const result = await Mercury.parse(url, { html });
-    assert.equal(typeof result, 'object');
-    assert.equal(result.author, 'Jennifer Van Grove');
-    assert.equal(result.domain, 'www.sandiegouniontribune.com');
-    assert.equal(result.total_pages, 1);
-    assert.equal(result.testContent, 'Growth & Development');
+    expect(typeof result).toEqual('object');
+    expect(result.author).toEqual('Jennifer Van Grove');
+    expect(result.domain).toEqual('www.sandiegouniontribune.com');
+    expect(result.total_pages).toEqual(1);
+    expect(result.testContent).toEqual('Growth & Development');
   });
 });

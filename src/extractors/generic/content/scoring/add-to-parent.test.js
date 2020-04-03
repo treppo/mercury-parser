@@ -12,8 +12,8 @@ describe('Scoring utils', () => {
 
       $node = addToParent($node, $, 40);
 
-      assert.equal(getScore($node.parent()), 35);
-      assert.equal(getScore($node), 40);
+      expect(getScore($node.parent())).toEqual(35);
+      expect(getScore($node)).toEqual(40);
     });
   });
 });

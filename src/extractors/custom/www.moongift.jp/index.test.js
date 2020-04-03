@@ -29,7 +29,7 @@ describe('WwwMoongiftJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -39,7 +39,7 @@ describe('WwwMoongiftJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `wasm-module - RustのWebAssemblyの中でDOMを扱う`);
+      expect(title).toEqual(`wasm-module - RustのWebAssemblyの中でDOMを扱う`);
     });
 
     it('returns the author', async () => {
@@ -49,7 +49,7 @@ describe('WwwMoongiftJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +59,7 @@ describe('WwwMoongiftJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-04-03T15:00:00.000Z');
+      expect(date_published).toEqual('2019-04-03T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +69,7 @@ describe('WwwMoongiftJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'wasm-module - RustのWebAssemblyの中でDOMを扱うの使い方、日本語情報はMOONGIFTでチェック。個人的にWebAssemblyには強く期待しており、その中でもGoが有力だと感じています。それはGoのWebAssemblyではDOMやJavaScript APIが使えるからです。駆使すればWebアプリケーション全体のコードをGoで書けるのです。これがRustにもないのが残念でした。しかしwasm-moduleが新し...。MOONGIFTはオープンソース・ソフトウェアを毎日紹介'
       );
     });
@@ -82,8 +81,7 @@ describe('WwwMoongiftJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://s3-ap-northeast-1.amazonaws.com/moongift/attaches/16931/list.?1553229736`
       );
     });
@@ -97,17 +95,11 @@ describe('WwwMoongiftJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '個人的にWebAssemblyには強く期待しており、その中でもGoが有力だと感じています。それはGoのWebAssemblyではDOMやJavaScript'
       );
     });

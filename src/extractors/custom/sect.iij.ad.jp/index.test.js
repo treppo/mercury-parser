@@ -25,7 +25,7 @@ describe('SectIijAdJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,7 +35,7 @@ describe('SectIijAdJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `Masscan と ZMap によるスキャンの違い`);
+      expect(title).toEqual(`Masscan と ZMap によるスキャンの違い`);
     });
 
     it('returns the author', async () => {
@@ -45,7 +45,7 @@ describe('SectIijAdJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '│2019年02月13日 Masafumi Negishi│');
+      expect(author).toEqual('│2019年02月13日 Masafumi Negishi│');
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +55,7 @@ describe('SectIijAdJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-02-12T15:00:00.000Z');
+      expect(date_published).toEqual('2019-02-12T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -65,7 +65,7 @@ describe('SectIijAdJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -75,8 +75,7 @@ describe('SectIijAdJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://sect.iij.ad.jp/images/logo_iij_sect.gif`
       );
     });
@@ -90,17 +89,11 @@ describe('SectIijAdJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'インターネット上の全アドレス空間を高速にスキャンするツールとして、Masscan'
       );
     });

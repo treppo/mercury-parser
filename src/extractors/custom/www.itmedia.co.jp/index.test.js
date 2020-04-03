@@ -28,7 +28,7 @@ describe('WwwItmediaCoJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('WwwItmediaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `さらば平成、さらば水冷、いくぜNUC：Intel NUCで最新SSDを比較してみた (1/2)`
       );
     });
@@ -51,7 +50,7 @@ describe('WwwItmediaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '[田中宏昌，ITmedia]');
+      expect(author).toEqual('[田中宏昌，ITmedia]');
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +60,7 @@ describe('WwwItmediaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-02-22T05:37:03.000Z');
+      expect(date_published).toEqual('2019-02-22T05:37:03.000Z');
     });
 
     it('returns the dek', async () => {
@@ -71,8 +70,7 @@ describe('WwwItmediaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Intelの超小型PC「NUC」を手に入れたとあるユーザーが、ほぼ5年ぶりにPCを自作。今回は完成したNUCを使ってNVMe SSDの最新モデルをチェックしてみました。'
       );
     });
@@ -84,8 +82,7 @@ describe('WwwItmediaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://image.itmedia.co.jp/pcuser/articles/1902/22/cover_news089.jpg`
       );
     });
@@ -99,17 +96,11 @@ describe('WwwItmediaCoJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'とある自作PCユーザーが平成最後の年にふと目覚め、ほぼ5年ぶりにPCを新調した経緯をまとめた本連載。前回の記事では、Intelが提唱したNext'
       );
     });

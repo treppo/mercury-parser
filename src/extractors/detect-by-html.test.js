@@ -9,7 +9,7 @@ describe('detectByHtml', () => {
 
     const $ = cheerio.load(html);
 
-    assert.equal(detectByHtml($).domain, 'medium.com');
+    expect(detectByHtml($).domain).toEqual('medium.com');
   });
 
   it('returns nothing if no match is found', () => {
@@ -17,6 +17,6 @@ describe('detectByHtml', () => {
 
     const $ = cheerio.load(html);
 
-    assert.equal(detectByHtml($), null);
+    expect(detectByHtml($)).toBeUndefined();
   });
 });

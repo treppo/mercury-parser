@@ -23,7 +23,7 @@ describe('GithubComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -33,7 +33,7 @@ describe('GithubComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `steventroughtonsmith/marzipanify`);
+      expect(title).toEqual(`steventroughtonsmith/marzipanify`);
     });
 
     it('returns the author', async () => {
@@ -43,7 +43,7 @@ describe('GithubComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -53,7 +53,7 @@ describe('GithubComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-03-04T12:37:07.000Z');
+      expect(date_published).toEqual('2019-03-04T12:37:07.000Z');
     });
 
     it('returns the dek', async () => {
@@ -63,8 +63,7 @@ describe('GithubComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Convert an iOS Simulator app bundle to an iOSMac (Marzipan) one (Unsupported & undocumented, WIP)'
       );
     });
@@ -76,8 +75,7 @@ describe('GithubComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://avatars0.githubusercontent.com/u/45212?s=400&v=4`
       );
     });
@@ -91,17 +89,11 @@ describe('GithubComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'marzipanify is an unsupported commandline tool to take an existing iOS Simulator binary'
       );
     });

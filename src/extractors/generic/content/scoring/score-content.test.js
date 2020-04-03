@@ -15,14 +15,14 @@ describe('scoreContent($, weightNodes)', () => {
     const $ = cheerio.load(HTML.hNews.before);
     scoreContent($);
 
-    assert.equal(getScore($('div').first()), 140);
+    expect(getScore($('div').first())).toEqual(140);
   });
 
   it('is so-so about non-hNews content', () => {
     const $ = cheerio.load(HTML.nonHNews.before);
     scoreContent($).html();
 
-    assert.equal(getScore($('div').first()), 65);
+    expect(getScore($('div').first())).toEqual(65);
   });
 
   it('scores this Wired article the same', () => {
@@ -30,7 +30,7 @@ describe('scoreContent($, weightNodes)', () => {
     const $ = cheerio.load(html);
     scoreContent($).html();
 
-    assert.equal(getScore($('article').first()), 65.5);
+    expect(getScore($('article').first())).toEqual(65.5);
   });
 
   it('scores this Vulture article', () => {
@@ -38,11 +38,11 @@ describe('scoreContent($, weightNodes)', () => {
     let $ = cheerio.load(html);
     $ = scoreContent($);
 
-    assert.equal($('p[score]').length, 62);
+    expect($('p[score]').length).toEqual(62);
     const itemprop = $('[itemprop=articleBody]').first();
 
     // fuzzines of test below addressing minor
-    assert.equal(getScore(itemprop) > 500, true);
+    expect(getScore(itemprop) > 500).toEqual(true);
   });
 
   it('gives its parent all of the children scores', () => {
@@ -75,7 +75,7 @@ describe('scoreContent($, weightNodes)', () => {
     let $ = cheerio.load(html);
     $ = scoreContent($);
 
-    assert.equal($('p').first().attr('score'), '5');
-    assert.equal($('div div').attr('score'), '30');
+    expect($('p').first().attr('score')).toEqual('5');
+    expect($('div div').attr('score')).toEqual('30');
   });
 });

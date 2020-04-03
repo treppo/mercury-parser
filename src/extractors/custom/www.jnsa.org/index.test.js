@@ -25,7 +25,7 @@ describe('WwwJnsaOrgExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,8 +35,7 @@ describe('WwwJnsaOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `NSF 2019 in Kansai 「早期発見、早期対処」のセキュリティ\n～守りのセキュリティから攻めのセキュリティへ～`
       );
     });
@@ -48,7 +47,7 @@ describe('WwwJnsaOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +57,7 @@ describe('WwwJnsaOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, null);
+      expect(date_published).toEqual(null);
     });
 
     it('returns the dek', async () => {
@@ -68,7 +67,7 @@ describe('WwwJnsaOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the excerpt', async () => {
@@ -78,8 +77,7 @@ describe('WwwJnsaOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        excerpt,
+      expect(excerpt).toEqual(
         'WannacryといったランサムウェアやMirai、SatoriといったIoTを狙ったマルウェア攻撃が増加しています。そして、今後、制御システムや工場のIIoTなどにも攻撃が増加し、広範囲にリスクが広がると見られており、行政、メディア、また各ベンダーから、「危ない！」、「対策を！」という声が多く出されています。しかし、今、こういうときだからこそ、冷静に地に足がついたセキュリティを考えてみませんか。サイバー攻撃は大きな脅威ですが、それ以前にヒューマンエラーやアップデートといった、基本的な運用に取り組んでいるのか、自組織が本当にさらされているリスクは何か、経営者はリスクを把握したうえで情報セキュリティへの投資につなげることができているのか、そのためにはどうすれば良いのか、といったことを考える機会を提供し、情報セキュリティ対策に関心を持って頂きたいと考えております。ぜひ多くの方の御参加をお待ちしております。'
       );
     });
@@ -91,8 +89,7 @@ describe('WwwJnsaOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://www.jnsa.org/images/obj/img_thumb_seminar-event.png`
       );
     });
@@ -106,17 +103,11 @@ describe('WwwJnsaOrgExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        2
-      );
+      const first13 = excerptContent($('*').first().text(), 2);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '情報セキュリティ対策を予防、防御、検知、回復と分類すると、これまでは防御に重きをおいてきたのではないでしょうか。 システム設計には経営目標を実現し、インシデントが発生しても早期発見、早期対処をするための仕組みを盛り込むことが重要です。'
       );
     });

@@ -19,7 +19,7 @@ describe('GenericContentExtractor', () => {
         })
       );
 
-      assert(typeof result, 'string');
+      expect(typeof result).toBeTruthy();
     });
   });
 });

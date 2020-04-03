@@ -26,7 +26,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'The Obama Administration Digital Transition: Moving Forward'
       );
     });
@@ -49,7 +48,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Kori Schulman');
+      expect(author).toEqual('Kori Schulman');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-01-17T23:08:47.000Z');
+      expect(date_published).toEqual('2017-01-17T23:08:47.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,11 +68,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek
-          .split(/\s/)
-          .slice(0, 4)
-          .join(' '),
+      expect(dek.split(/\s/).slice(0, 4).join(' ')).toEqual(
         "Summary: Here's the latest"
       );
     });
@@ -85,8 +80,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://obamawhitehouse.archives.gov/sites/obamawhitehouse.archives.gov/files/digitaltransition.jpeg'
       );
     });
@@ -100,17 +94,11 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Over the past eight years, the President, the First Lady, and the Obama'
       );
     });
@@ -133,7 +121,7 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      assert.equal($('iframe[src*="youtube"]').length, 1);
+      expect($('iframe[src*="youtube"]').length).toEqual(1);
     });
   });
 
@@ -154,20 +142,14 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'In this week’s address, the President and the First Lady wished all Americans'
       );
-      assert.equal($('iframe[src*="youtube"]').length, 1);
+      expect($('iframe[src*="youtube"]').length).toEqual(1);
     });
   });
 
@@ -188,15 +170,9 @@ describe('ObamawhitehouseArchivesGovExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'September 11th has been designated as a National Day of Service and Remembrance.'
       );
     });

@@ -26,7 +26,7 @@ describe('WwwRollingstoneComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwRollingstoneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "'La La Land': How a Young Filmmaker Resurrected the Hollywood Musical"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwRollingstoneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'David Fear');
+      expect(author).toEqual('David Fear');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwRollingstoneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-09T05:00:00.000Z');
+      expect(date_published).toEqual('2016-12-09T05:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +68,7 @@ describe('WwwRollingstoneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Inside the story of how director Damien Chazelle and two movie stars attempted to modernize the genre – and made the movie of the year'
       );
     });
@@ -82,8 +80,7 @@ describe('WwwRollingstoneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://img.wennermedia.com/social/rs-la-la-land-3d3a431a-8329-4539-b953-51e2d61a396c.jpg'
       );
     });
@@ -97,17 +94,11 @@ describe('WwwRollingstoneComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "Inside: 'La La Land': How a young filmmaker, his best-friend composer and two"
       );
     });

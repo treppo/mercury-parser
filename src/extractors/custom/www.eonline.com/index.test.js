@@ -26,7 +26,7 @@ describe('WwwEonlineComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwEonlineComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Ryan Gosling's Feelings About Fatherhood Will Make Your Heart Sing"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwEonlineComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Zach Johnson');
+      expect(author).toEqual('Zach Johnson');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwEonlineComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-12T06:00:00.000Z');
+      expect(date_published).toEqual('2016-12-12T06:00:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwEonlineComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://akns-images.eonline.com/eol_images/Entire_Site/2016117/rs_300x300-161207101544-600.ryan-gosling-gq.12716.jpg?downsize=600:*&crop=600:315;left,top'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwEonlineComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "Ryan Gosling's most cherished role won't win him any Hollywood awards.With his musical"
       );
     });

@@ -13,7 +13,7 @@ describe('Scoring utils', () => {
       $node = setScore($node, $, newScore);
 
       const score = getScore($node);
-      assert(score, newScore);
+      expect(score).toBeTruthy();
     });
   });
 });

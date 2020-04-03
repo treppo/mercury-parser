@@ -13,7 +13,7 @@ describe('markToKeep($)', () => {
 
     const result = markToKeep($('*').first(), $);
 
-    assert.equal(result('iframe.mercury-parser-keep').length, 2);
+    expect(result('iframe.mercury-parser-keep').length).toEqual(2);
 
     assertClean(result.html(), HTML.marksYouTube.after);
   });

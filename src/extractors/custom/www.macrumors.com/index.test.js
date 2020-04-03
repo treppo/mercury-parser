@@ -25,7 +25,7 @@ describe('WwwMacrumorsComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,8 +35,7 @@ describe('WwwMacrumorsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Second-Generation Apple Pencil Rumored for March of 2017'
       );
     });
@@ -48,7 +47,7 @@ describe('WwwMacrumorsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Juli Clover');
+      expect(author).toEqual('Juli Clover');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +57,7 @@ describe('WwwMacrumorsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-01-18T19:44:00.000Z');
+      expect(date_published).toEqual('2017-01-18T19:44:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -68,8 +67,7 @@ describe('WwwMacrumorsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Apple may be planning to introduce a second-generation Apple Pencil this year, according to rumors out of the Asian supply chain. The new Apple...'
       );
     });
@@ -81,8 +79,7 @@ describe('WwwMacrumorsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://cdn.macrumors.com/article-new/2015/11/ipad-pro-apple-pencil-screen-800x471.jpg?retina'
       );
     });
@@ -96,17 +93,11 @@ describe('WwwMacrumorsComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Apple may be planning to introduce a second-generation Apple Pencil this year, according'
       );
     });

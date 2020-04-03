@@ -18,7 +18,7 @@ describe('GenericLeadImageUrlExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, HTML.og.result);
+      expect(result).toEqual(HTML.og.result);
     });
 
     it('returns twitter:image', () => {
@@ -32,7 +32,7 @@ describe('GenericLeadImageUrlExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, HTML.twitter.result);
+      expect(result).toEqual(HTML.twitter.result);
     });
 
     it('finds images based on scoring', () => {
@@ -46,7 +46,7 @@ describe('GenericLeadImageUrlExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, HTML.scoring.result);
+      expect(result).toEqual(HTML.scoring.result);
     });
 
     it('returns image based on selectors', () => {
@@ -60,7 +60,7 @@ describe('GenericLeadImageUrlExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, HTML.selectors.result);
+      expect(result).toEqual(HTML.selectors.result);
     });
   });
 });

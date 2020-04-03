@@ -13,7 +13,7 @@ describe('Scoring utils', () => {
 
       const score = scoreParagraph(node);
 
-      assert.equal(score, 0);
+      expect(score).toEqual(0);
     });
 
     it('returns 1 if text is > 25 chars and has 0 commas', () => {
@@ -22,7 +22,7 @@ describe('Scoring utils', () => {
 
       const score = scoreParagraph(node);
 
-      assert.equal(score, 1);
+      expect(score).toEqual(1);
     });
 
     it('returns 3 if text is > 25 chars and has 2 commas', () => {
@@ -31,7 +31,7 @@ describe('Scoring utils', () => {
 
       const score = scoreParagraph(node);
 
-      assert.equal(score, 3);
+      expect(score).toEqual(3);
     });
 
     it('returns 19 if text has 15 commas, ~600 chars', () => {
@@ -40,7 +40,7 @@ describe('Scoring utils', () => {
 
       const score = scoreParagraph(node);
 
-      assert.equal(score, 19);
+      expect(score).toEqual(19);
     });
   });
 });

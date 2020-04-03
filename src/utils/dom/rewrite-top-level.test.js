@@ -11,8 +11,8 @@ describe('rewriteTopLevel(node, $)', () => {
     const $ = cheerio.load(HTML.rewriteHTMLBody.before);
     const result = rewriteTopLevel($('html').first(), $);
 
-    assert.equal(result('html').length, 0);
-    assert.equal(result('body').length, 0);
+    expect(result('html').length).toEqual(0);
+    expect(result('body').length).toEqual(0);
 
     assertClean(result.html(), HTML.rewriteHTMLBody.after);
   });

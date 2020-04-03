@@ -12,7 +12,7 @@ export function clean(string) {
 }
 
 export function assertClean(a, b) {
-  assert.equal(clean(a), clean(b));
+  expect(clean(a)).toEqual(clean(b));
 }
 
 // using this from https://www.ctl.io/developers/blog/post/http-apis-test-code

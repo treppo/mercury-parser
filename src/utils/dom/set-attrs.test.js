@@ -19,7 +19,7 @@ describe('setAttrs(node, attrs)', () => {
     const domNode = new MockDomNode();
     const node = setAttrs(domNode, attrs);
 
-    assert.deepEqual(node.attributes, postAttrs);
+    expect(node.attributes).toEqual(postAttrs);
   });
 
   it('sets attrs for a raw cheerio node', () => {
@@ -37,6 +37,6 @@ describe('setAttrs(node, attrs)', () => {
 
     const node = setAttrs(cheerioNode, attrs);
 
-    assert.deepEqual(node.attribs, attrs);
+    expect(node.attribs).toEqual(attrs);
   });
 });

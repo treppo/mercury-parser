@@ -26,7 +26,7 @@ describe('twofortysevensportsComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('twofortysevensportsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Breaking: Houston hires Major Applewhite as head coach'
       );
     });
@@ -49,7 +48,7 @@ describe('twofortysevensportsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Travis Haney');
+      expect(author).toEqual('Travis Haney');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('twofortysevensportsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-09T09:13:00.000Z');
+      expect(date_published).toEqual('2016-12-09T09:13:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('twofortysevensportsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://s3media.247sports.com/Uploads/Assets/149/971/26_4971149.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('twofortysevensportsComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '(Photo: Brett Davis, USA TODAY Sports) Houston has promoted offensive coordinator Major Applewhite'
       );
     });

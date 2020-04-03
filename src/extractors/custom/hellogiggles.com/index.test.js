@@ -25,7 +25,7 @@ describe('HellogigglesComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,7 +35,7 @@ describe('HellogigglesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Your comfy-chic holiday outfit, illustrated');
+      expect(title).toEqual('Your comfy-chic holiday outfit, illustrated');
     });
 
     it('returns the author', async () => {
@@ -45,7 +45,7 @@ describe('HellogigglesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Cindy Mangomini');
+      expect(author).toEqual('Cindy Mangomini');
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +55,7 @@ describe('HellogigglesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T00:05:23.000Z');
+      expect(date_published).toEqual('2016-12-22T00:05:23.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -65,8 +65,7 @@ describe('HellogigglesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://images.hellogiggles.com/uploads/2016/12/21073729/HG-Xmas-NY-Cindy-Mangomini1.jpg'
       );
     });
@@ -80,17 +79,11 @@ describe('HellogigglesComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'It’s almost that time! The time to quietly panic and throw all the'
       );
     });

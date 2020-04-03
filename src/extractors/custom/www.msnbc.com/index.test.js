@@ -26,7 +26,7 @@ describe('WwwMsnbcComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwMsnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'A bizarre election ends with a bizarre Electoral College tally'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwMsnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Steve Benen');
+      expect(author).toEqual('Steve Benen');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwMsnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-20T13:00:06.000Z');
+      expect(date_published).toEqual('2016-12-20T13:00:06.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwMsnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://www.msnbc.com/sites/msnbc/files/styles/ratio--1_91-1--1200x630/public/trump.jpeg-99fbe.jpg?itok=2azRDj-y'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwMsnbcComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'On Election Day, Donald Trump earned 306 electoral votes to Hillary Clinton’s 232,'
       );
     });

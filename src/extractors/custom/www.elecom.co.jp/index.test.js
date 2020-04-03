@@ -28,7 +28,7 @@ describe('WwwElecomCoJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('WwwElecomCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `[News] サクサク軽い打ち心地を実現し、キー入力がはかどる！従来比約18%も軽量化した薄型キーボード、接続タイプ/サイズ/マウス付きなどで選べる6モデルを発売`
       );
     });
@@ -51,7 +50,7 @@ describe('WwwElecomCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +60,7 @@ describe('WwwElecomCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-03-04T15:00:00.000Z');
+      expect(date_published).toEqual('2019-03-04T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -71,7 +70,7 @@ describe('WwwElecomCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -81,7 +80,7 @@ describe('WwwElecomCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(lead_image_url, null);
+      expect(lead_image_url).toEqual(null);
     });
 
     it('returns the content', async () => {
@@ -93,17 +92,11 @@ describe('WwwElecomCoJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        3
-      );
+      const first13 = excerptContent($('*').first().text(), 3);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'EL34-194 2019.03.05 サクサク軽い打ち心地を実現し、キー入力がはかどる！'
       );
     });

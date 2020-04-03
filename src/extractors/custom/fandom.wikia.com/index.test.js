@@ -28,7 +28,7 @@ describe('WikiaExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,7 +38,7 @@ describe('WikiaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Box Office: It’s Good to Be ‘Peculiar’');
+      expect(title).toEqual('Box Office: It’s Good to Be ‘Peculiar’');
     });
 
     it('returns the author', async () => {
@@ -48,7 +48,7 @@ describe('WikiaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Drew Dietsch');
+      expect(author).toEqual('Drew Dietsch');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +58,7 @@ describe('WikiaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-10-03T02:30:57.000Z');
+      expect(date_published).toEqual('2016-10-03T02:30:57.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -68,8 +68,7 @@ describe('WikiaExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://fandom.wikia.com/wp-content/uploads/2016/10/box-office-peculiar-feature-hero.jpg'
       );
     });
@@ -83,17 +82,11 @@ describe('WikiaExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Tim Burton once again claimed the top spot at the box office. Miss'
       );
     });

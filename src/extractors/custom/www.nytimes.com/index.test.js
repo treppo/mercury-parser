@@ -28,7 +28,7 @@ describe('NYTimesExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('NYTimesExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Ahmad Khan Rahami Is Arrested in Manhattan and New Jersey Bombings'
       );
     });
@@ -51,8 +50,7 @@ describe('NYTimesExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        author,
+      expect(author).toEqual(
         'Marc Santora, William K. Rashbaum, Al Baker and Adam Goldman'
       );
     });
@@ -64,7 +62,7 @@ describe('NYTimesExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-09-19T11:46:01.000Z');
+      expect(date_published).toEqual('2016-09-19T11:46:01.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -74,8 +72,7 @@ describe('NYTimesExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://static01.nyt.com/images/2016/09/20/nyregion/Manhunt/Manhunt-facebookJumbo-v2.jpg'
       );
     });
@@ -89,17 +86,11 @@ describe('NYTimesExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The man who the police said sowed terror across two states, setting off'
       );
     });
@@ -114,17 +105,11 @@ describe('NYTimesExtractor', () => {
 
     const { content, title, author } = await Mercury.parse(uri, { html });
     const $ = cheerio.load(content);
-    const text = excerptContent(
-      $('*')
-        .first()
-        .text(),
-      13
-    );
+    const text = excerptContent($('*').first().text(), 13);
 
-    assert.equal(title, 'I, Too, Sing America');
-    assert.equal(author, 'The New York Times');
-    assert.equal(
-      text,
+    expect(title).toEqual('I, Too, Sing America');
+    expect(author).toEqual('The New York Times');
+    expect(text).toEqual(
       'T he Smithsonian’s National Museum of African American History and Culture opens on'
     );
   });
@@ -138,8 +123,7 @@ describe('NYTimesExtractor', () => {
 
     const { title } = await Mercury.parse(uri, { html });
 
-    assert.equal(
-      title,
+    expect(title).toEqual(
       'Nikki Haley to Resign as Trump’s Ambassador to the U.N.'
     );
   });

@@ -12,7 +12,7 @@ describe('convertNodeTo(node, $)', () => {
     const result = convertNodeTo(node, $).html();
     const after = '<p>Should become a p</p>';
 
-    assert.equal(result, after);
+    expect(result).toEqual(after);
   });
 
   it('retains attributes on conversion', () => {
@@ -23,7 +23,7 @@ describe('convertNodeTo(node, $)', () => {
     const result = convertNodeTo(node, $, 'div').html();
     const after = '<div class="foo" score="100">Should keep its attrs</div>';
 
-    assert.equal(result, after);
+    expect(result).toEqual(after);
   });
 
   it('does nothing if node.get returns null', () => {
@@ -35,6 +35,6 @@ describe('convertNodeTo(node, $)', () => {
 
     const result = convertNodeTo(node, $, 'div').html();
 
-    assert.equal(result, html);
+    expect(result).toEqual(html);
   });
 });

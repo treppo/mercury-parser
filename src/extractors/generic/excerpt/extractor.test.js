@@ -23,7 +23,7 @@ describe('GenericExcerptExtractor', () => {
         metaCache,
       });
 
-      assert.equal(excerpt, actualExcerpt);
+      expect(excerpt).toEqual(actualExcerpt);
     });
 
     it('returns twitter:description', () => {
@@ -44,7 +44,7 @@ describe('GenericExcerptExtractor', () => {
         metaCache,
       });
 
-      assert.equal(excerpt, actualExcerpt);
+      expect(excerpt).toEqual(actualExcerpt);
     });
 
     it('falls back to the content', () => {
@@ -65,7 +65,7 @@ describe('GenericExcerptExtractor', () => {
         metaCache,
       });
 
-      assert.equal(excerpt, 'Wow this is going to be something good.');
+      expect(excerpt).toEqual('Wow this is going to be something good.');
     });
   });
 });
@@ -88,6 +88,6 @@ describe('clean(text)', () => {
     `;
     shouldBe = shouldBe.replace(/[\s\n]+/g, ' ').trim();
 
-    assert.equal(text, shouldBe);
+    expect(text).toEqual(shouldBe);
   });
 });

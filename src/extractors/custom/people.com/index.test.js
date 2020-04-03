@@ -23,7 +23,7 @@ describe('PeopleComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -33,8 +33,7 @@ describe('PeopleComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Jennifer Aniston on Leaving the Tags on Her Celine Coat: ‘I Wore It Four Times and Didn’t Notice!’'
       );
     });
@@ -46,7 +45,7 @@ describe('PeopleComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Emily Kirkpatrick');
+      expect(author).toEqual('Emily Kirkpatrick');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +55,7 @@ describe('PeopleComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-09T15:40:20.000Z');
+      expect(date_published).toEqual('2016-12-09T15:40:20.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -66,8 +65,7 @@ describe('PeopleComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://i2.wp.com/peopledotcom.files.wordpress.com/2016/12/jennifer-aniston5.jpg?crop=0px%2C0px%2C1500px%2C1125px&resize=660%2C495&ssl=1'
       );
     });
@@ -81,17 +79,11 @@ describe('PeopleComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'People who don’t chronicle every item of clothing worn by the rich and'
       );
     });

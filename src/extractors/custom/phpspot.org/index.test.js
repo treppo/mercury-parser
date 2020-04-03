@@ -26,7 +26,7 @@ describe('PhpspotOrgExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('PhpspotOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `マインドマップ風のツリーを描画できる「Treeviz」`);
+      expect(title).toEqual(`マインドマップ風のツリーを描画できる「Treeviz」`);
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('PhpspotOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('PhpspotOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-04-03T15:00:00.000Z');
+      expect(date_published).toEqual('2019-04-03T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -66,7 +66,7 @@ describe('PhpspotOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -76,7 +76,7 @@ describe('PhpspotOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(lead_image_url, null);
+      expect(lead_image_url).toEqual(null);
     });
 
     it('returns the content', async () => {
@@ -88,17 +88,11 @@ describe('PhpspotOrgExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        2
-      );
+      const first13 = excerptContent($('*').first().text(), 2);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Treeviz マインドマップ風のツリーを描画できる「Treeviz」'
       );
     });

@@ -9,7 +9,7 @@ describe('setAttr(node, attr, val)', () => {
 
     const node = setAttr(domNode, 'class', 'foo');
 
-    assert.equal(node.attributes[0].value, 'foo');
+    expect(node.attributes[0].value).toEqual('foo');
   });
 
   it('sets attrs for a raw cheerio node', () => {
@@ -22,6 +22,6 @@ describe('setAttr(node, attr, val)', () => {
 
     const node = setAttr(cheerioNode, 'class', 'foo');
 
-    assert.equal(node.attribs.class, 'foo');
+    expect(node.attribs.class).toEqual('foo');
   });
 });

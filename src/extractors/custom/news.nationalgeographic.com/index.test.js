@@ -26,7 +26,7 @@ describe('NewsNationalgeographicComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('NewsNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Here’s Why Your Office May Be Too Hot or Cold: Gender Bias'
       );
     });
@@ -49,7 +48,7 @@ describe('NewsNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2015-08-03T17:45:00.000Z');
+      expect(date_published).toEqual('2015-08-03T17:45:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -59,8 +58,7 @@ describe('NewsNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Do you argue about the temperature in your office or home? Find out what often decides it, and tell us your preference.'
       );
     });
@@ -72,8 +70,7 @@ describe('NewsNationalgeographicComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://news.nationalgeographic.com/content/dam/news/2015/08/03/temperaturegenderbias/02tempgenderbias.ngsversion.1438795800319.jpg'
       );
     });
@@ -87,17 +84,11 @@ describe('NewsNationalgeographicComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Many couples fight about it at home. No, it’s not money, sex, or'
       );
     });

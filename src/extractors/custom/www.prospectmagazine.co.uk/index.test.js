@@ -26,7 +26,7 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'The Anglosphere: new enthusiasm for an old dream');
+      expect(title).toEqual('The Anglosphere: new enthusiasm for an old dream');
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Duncan Bell');
+      expect(author).toEqual('Duncan Bell');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-01-19T17:00:00.000Z');
+      expect(date_published).toEqual('2017-01-19T17:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -66,8 +66,7 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Having cut Britain adrift of Europe, Brexiters are indulging in an old fantasy about a new national role in the world—as the hub of a far-flung Anglosphere'
       );
     });
@@ -79,8 +78,7 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://www.prospectmagazine.co.uk/wp-content/uploads/2017/01/64344_web.jpg'
       );
     });
@@ -94,17 +92,11 @@ describe('WwwProspectmagazineCoUkExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Leading Brexiteers proposed Britain should reinforce its relationship with “natural allies” Australia, Canada'
       );
     });

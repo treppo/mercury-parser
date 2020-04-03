@@ -5,16 +5,16 @@ import clean from './lead-image-url';
 describe('clean(leadImageUrl)', () => {
   it('returns the url if valid', () => {
     const url = 'https://example.com';
-    assert.equal(clean(url), url);
+    expect(clean(url)).toEqual(url);
   });
 
   it('returns null if the url is not valid', () => {
     const url = 'this is not a valid url';
-    assert.equal(clean(url), null);
+    expect(clean(url)).toEqual(null);
   });
 
   it('trims whitespace', () => {
     const url = '  https://example.com/foo/bar.jpg';
-    assert.equal(clean(url), url.trim());
+    expect(clean(url)).toEqual(url.trim());
   });
 });

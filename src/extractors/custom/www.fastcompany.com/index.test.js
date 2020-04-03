@@ -26,7 +26,7 @@ describe('WwwFastcompanyComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwFastcompanyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'The Only Five Email Folders Your Inbox Will Ever Need'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwFastcompanyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Zach Hanlon');
+      expect(author).toEqual('Zach Hanlon');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwFastcompanyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published.split('T')[0], '2017-01-09');
+      expect(date_published.split('T')[0]).toEqual('2017-01-09');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +68,7 @@ describe('WwwFastcompanyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Stop “organizing” your emails by subject and start thinking of them in terms of deadlines.'
       );
     });
@@ -82,8 +80,7 @@ describe('WwwFastcompanyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://images.fastcompany.net/image/upload/w_1280,f_auto,q_auto,fl_lossy/fc/3067012-poster-p-1-the-only-five-email-folders-your-inbox-will-ever-need.jpg'
       );
     });
@@ -97,17 +94,11 @@ describe('WwwFastcompanyComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'For years, my approach to email was like slaying a hydra. For every'
       );
     });

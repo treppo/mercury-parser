@@ -28,7 +28,7 @@ describe('WeeklyAsciiJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('WeeklyAsciiJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `普通に使える手のひらサイズの超小型スマホ「Palm Phone」の実機チェック`
       );
     });
@@ -51,7 +50,7 @@ describe('WeeklyAsciiJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, `文●オカモト／ASCII編集部`);
+      expect(author).toEqual(`文●オカモト／ASCII編集部`);
     });
 
     it('returns the date_published', async () => {
@@ -61,7 +60,7 @@ describe('WeeklyAsciiJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-04-21T03:00:00.000Z');
+      expect(date_published).toEqual('2019-04-21T03:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -71,7 +70,7 @@ describe('WeeklyAsciiJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -81,8 +80,7 @@ describe('WeeklyAsciiJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://ascii.jp/elem/000/001/848/1848427/00-01_1024x1024.jpg`
       );
     });
@@ -96,17 +94,11 @@ describe('WeeklyAsciiJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'FOXが国内販売代理店となり、同社ECサイトやプラススタイルのほか、ヨドバシカメラ、ビックカメラ、Amazon.co.jpなどで、24日から販売される手のひらサイズのAndroidスマートフォン「Palm'
       );
     });

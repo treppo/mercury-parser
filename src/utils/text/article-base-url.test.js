@@ -7,13 +7,13 @@ describe('articleBaseUrl(url, parsedUrl)', () => {
     const url = 'http://example.com/foo/bar/wow-cool/page=10';
     const cleaned = 'http://example.com/foo/bar/wow-cool';
 
-    assert.equal(articleBaseUrl(url), cleaned);
+    expect(articleBaseUrl(url)).toEqual(cleaned);
   });
 
   it('returns same url if url has no pagination info', () => {
     const url = 'http://example.com/foo/bar/wow-cool/';
     const cleaned = 'http://example.com/foo/bar/wow-cool';
 
-    assert.equal(articleBaseUrl(url), cleaned);
+    expect(articleBaseUrl(url)).toEqual(cleaned);
   });
 });

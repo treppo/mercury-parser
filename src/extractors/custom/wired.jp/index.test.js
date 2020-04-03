@@ -26,7 +26,7 @@ describe('WiredJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WiredJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `あの有名フォント「Helvetica」は、こうしてデジタル時代に生まれ変わった`
       );
     });
@@ -49,8 +48,7 @@ describe('WiredJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        author,
+      expect(author).toEqual(
         'TEXT BY ARIELLE PARDES\nTRANSLATION BY CHIHIRO OKA WIRED(US)'
       );
     });
@@ -62,7 +60,7 @@ describe('WiredJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-04-25T16:00:25.000Z`);
+      expect(date_published).toEqual(`2019-04-25T16:00:25.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -72,8 +70,7 @@ describe('WiredJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         '世界で最も多く使われているであろうフォントのひとつ「Helvetica」が、このほどリニューアルを遂げた。まるで水のように生活に浸透しているフォントのデザインは、いかに伝統を守りながら、デジタル時代に合わせて最適化されたのか。'
       );
     });
@@ -85,8 +82,7 @@ describe('WiredJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://wired.jp/wp-content/uploads/2019/04/190315_Helvetica_Now_Device_AS-1024x768.jpg`
       );
     });
@@ -100,17 +96,11 @@ describe('WiredJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '世界で最も多く使われているであろうフォントのひとつ「Helvetica」が、このほどリニューアルを遂げた。まるで水のように生活に浸透しているフォントのデザインは、いかに伝統を守りながら、デジタル時代に合わせて最適化されたのか。'
       );
     });

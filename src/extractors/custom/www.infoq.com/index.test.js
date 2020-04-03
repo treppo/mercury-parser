@@ -28,7 +28,7 @@ describe('WwwInfoqComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,7 +38,7 @@ describe('WwwInfoqComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `Google ChromeのNever-Slow Mode`);
+      expect(title).toEqual(`Google ChromeのNever-Slow Mode`);
     });
 
     it('returns the author', async () => {
@@ -48,7 +48,7 @@ describe('WwwInfoqComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '作者： Diogo Carleto 翻訳者 中村 真子');
+      expect(author).toEqual('作者： Diogo Carleto 翻訳者 中村 真子');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +58,7 @@ describe('WwwInfoqComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-02-26T15:00:00.000Z');
+      expect(date_published).toEqual('2019-02-26T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -68,8 +68,7 @@ describe('WwwInfoqComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'GoogleはNever-Slow Modeと呼ばれるプロトタイプ機能に取り組んでいる。このプロトタイプ機能はChromium プロジェクトでコミット作業進行中であり、ユーザーエクスペリエンスの向上、一貫性のある迅速なブラウジングの提供を目的としている。'
       );
     });
@@ -81,8 +80,7 @@ describe('WwwInfoqComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://cdn.infoq.com/statics_s2_20190403-0313/styles/i/logo-big.jpg`
       );
     });
@@ -96,17 +94,11 @@ describe('WwwInfoqComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        2
-      );
+      const first13 = excerptContent($('*').first().text(), 2);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '原文(投稿日：2019/02/16)へのリンク GoogleはNever-Slow'
       );
     });

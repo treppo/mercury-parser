@@ -25,7 +25,7 @@ describe('NewsMynaviJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,8 +35,7 @@ describe('NewsMynaviJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `人気の圧縮・解凍ソフト「WinRAR」に脆弱性、アップデートを`
       );
     });
@@ -48,7 +47,7 @@ describe('NewsMynaviJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '後藤大地');
+      expect(author).toEqual('後藤大地');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +57,7 @@ describe('NewsMynaviJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-02-22T08:23:44.000Z`);
+      expect(date_published).toEqual(`2019-02-22T08:23:44.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -68,8 +67,7 @@ describe('NewsMynaviJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Check Point Software Technologiesは2月20日(米国時間)、人気の高い圧縮・解凍ソフトウェアであるWinRARに長年にわたって脆弱性が存在していると伝えた。この脆弱性の影響で、細工されたファイルを展開する段階でマルウェアに感染させられる可能性があるという。'
       );
     });
@@ -81,8 +79,7 @@ describe('NewsMynaviJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://news.mynavi.jp/article/20190222-775563/index_images/index.jpg`
       );
     });
@@ -96,17 +93,11 @@ describe('NewsMynaviJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Check Point Software Technologiesは2月20日(米国時間)、「Extracting a 19 Year Old Code Execution from WinRAR -'
       );
     });

@@ -13,7 +13,7 @@ describe('findTopCandidate($)', () => {
 
     const $$topCandidate = findTopCandidate($);
 
-    assert.equal(getScore($$topCandidate), 100);
+    expect(getScore($$topCandidate)).toEqual(100);
   });
 
   it('finds the top candidate from a nested case', () => {
@@ -23,7 +23,7 @@ describe('findTopCandidate($)', () => {
 
     // this is wrapped in a div so checking
     // the score of the first child
-    assert.equal(getScore($$topCandidate.first()), 50);
+    expect(getScore($$topCandidate.first())).toEqual(50);
   });
 
   it('ignores tags like BR', () => {
@@ -31,7 +31,7 @@ describe('findTopCandidate($)', () => {
 
     const $topCandidate = findTopCandidate($);
 
-    assert.equal(getScore($topCandidate), 50);
+    expect(getScore($topCandidate)).toEqual(50);
   });
 
   it('returns BODY if no candidates found', () => {
@@ -39,7 +39,7 @@ describe('findTopCandidate($)', () => {
 
     const $topCandidate = findTopCandidate($);
 
-    assert.equal($topCandidate.get(0).tagName, 'body');
+    expect($topCandidate.get(0).tagName).toEqual('body');
   });
 
   it('appends a sibling with a good enough score', () => {
@@ -49,6 +49,6 @@ describe('findTopCandidate($)', () => {
     $ = scoreContent($);
 
     const $topCandidate = findTopCandidate($);
-    assert.equal($($topCandidate).text().length, 3652);
+    expect($($topCandidate).text().length).toEqual(3652);
   });
 });

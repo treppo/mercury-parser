@@ -25,7 +25,7 @@ describe('WwwSanwaCoJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,8 +35,7 @@ describe('WwwSanwaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `指紋認証でWindows 10にサインインできる指紋認証機能付きマウスを発売`
       );
     });
@@ -48,7 +47,7 @@ describe('WwwSanwaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +57,7 @@ describe('WwwSanwaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-03-07T15:00:00.000Z');
+      expect(date_published).toEqual('2019-03-07T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -68,8 +67,7 @@ describe('WwwSanwaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Windows 10のサインインを指紋により簡単・安全に行える指紋認証機能付きUSB有線マウス「MA-IRFP139BK」を発売しました。'
       );
     });
@@ -81,8 +79,7 @@ describe('WwwSanwaCoJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://www.sanwa.co.jp/product/syohin_img/M/MA-IRFP139BK_MDX.jpg`
       );
     });
@@ -96,17 +93,11 @@ describe('WwwSanwaCoJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        3
-      );
+      const first13 = excerptContent($('*').first().text(), 3);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'サンワサプライ株式会社（本社：岡山市北区田町1-10-1、代表取締役社長 山田哲也)は、指紋によりWindows 10のサインインを簡単・安全に行える指紋認証機能付きUSB有線マウス「MA-IRFP139BK」を発売しました。'
       );
     });

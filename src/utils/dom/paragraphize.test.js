@@ -14,7 +14,7 @@ describe('Generic Extractor Utils', () => {
       // note: result here is not valid html; will handle elsewhere
       const result = paragraphize(node, $, true).html();
 
-      assert.equal(clean(result), clean(HTML.paragraphize.after));
+      expect(clean(result)).toEqual(clean(HTML.paragraphize.after));
     });
 
     it('conversts a BR into P and stops when block element hit', () => {
@@ -24,7 +24,7 @@ describe('Generic Extractor Utils', () => {
       // note: result here is not valid html; will handle elsewhere
       const result = paragraphize(node, $, true).html();
 
-      assert.equal(clean(result), clean(HTML.paragraphizeBlock.after));
+      expect(clean(result)).toEqual(clean(HTML.paragraphizeBlock.after));
     });
   });
 });

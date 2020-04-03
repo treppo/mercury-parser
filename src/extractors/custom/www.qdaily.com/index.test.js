@@ -25,7 +25,7 @@ describe('WwwQdailyComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,7 +35,7 @@ describe('WwwQdailyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, '这个约会软件，想用你和对方的相似好恶来帮你找对象');
+      expect(title).toEqual('这个约会软件，想用你和对方的相似好恶来帮你找对象');
     });
 
     it('returns the author', async () => {
@@ -45,7 +45,7 @@ describe('WwwQdailyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '谢若含');
+      expect(author).toEqual('谢若含');
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +55,7 @@ describe('WwwQdailyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-03-01T06:27:02.000Z');
+      expect(date_published).toEqual('2017-03-01T06:27:02.000Z');
     });
 
     it('returns the dek', async () => {
@@ -65,7 +65,7 @@ describe('WwwQdailyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, '人们对于讨厌的事物总是能很有共同话题...');
+      expect(dek).toEqual('人们对于讨厌的事物总是能很有共同话题...');
     });
 
     it('returns the lead_image_url', async () => {
@@ -75,8 +75,7 @@ describe('WwwQdailyComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://img.qdaily.com/article/article_show/20170228225314Dh4XvM63TzkWPNHJ.png?imageMogr2/auto-orient/thumbnail/!755x450r/gravity/Center/crop/755x450/quality/85/format/jpg/ignore-error/1'
       );
     });
@@ -90,17 +89,11 @@ describe('WwwQdailyComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first3 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        3
-      );
+      const first3 = excerptContent($('*').first().text(), 3);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first3,
+      expect(first3).toEqual(
         '无法忍受乡村音乐？ 对某某明星迷之厌恶？ 讨厌特朗普？不爱自拍？'
       );
     });

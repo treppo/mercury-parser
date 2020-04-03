@@ -26,7 +26,7 @@ describe('WwwWashingtonpostComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('WwwWashingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Enough platitudes: Let’s name names');
+      expect(title).toEqual('Enough platitudes: Let’s name names');
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('WwwWashingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Jennifer Rubin');
+      expect(author).toEqual('Jennifer Rubin');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('WwwWashingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2018-10-29T15:15:00.000Z');
+      expect(date_published).toEqual('2018-10-29T15:15:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -66,8 +66,7 @@ describe('WwwWashingtonpostComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://www.washingtonpost.com/resizer/E6j9aM5bx4fpPedpdl2KxcSIci4=/1484x0/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/GRLSHYNYVQZJBAUBKSFA26NTO4.jpg'
       );
     });
@@ -81,17 +80,11 @@ describe('WwwWashingtonpostComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Pittsburgh Mayor Bill Peduto on Sunday near the Tree of Life synagogue in'
       );
     });

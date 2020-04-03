@@ -23,7 +23,7 @@ describe('DeadspinExtractor', () => {
 
     it('is selected properly', async () => {
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -32,8 +32,7 @@ describe('DeadspinExtractor', () => {
       // Update these values with the expected values from
       // the article.
       const { title } = await result;
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'The Nationals Are Stuck With Danny Espinosa Tonight, Unless They Opt For The Only Thing Worse'
       );
     });
@@ -45,7 +44,7 @@ describe('DeadspinExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Chris Thompson');
+      expect(author).toEqual('Chris Thompson');
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +54,7 @@ describe('DeadspinExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-10-13T16:34:00.000Z');
+      expect(date_published).toEqual('2016-10-13T16:34:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -65,8 +64,7 @@ describe('DeadspinExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://i.kinja-img.com/gawker-media/image/upload/s--SUEXWZgf--/c_fill,fl_progressive,g_center,h_450,q_80,w_800/vmeayd7lteyycwzcdlju.jpg'
       );
     });
@@ -80,17 +78,11 @@ describe('DeadspinExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Photo credit: Rob Carr/Getty Washington’s Danny Espinosa problem is inextricably linked to its'
       );
     });
@@ -113,6 +105,6 @@ describe('DeadspinExtractor', () => {
 
     // Update these values with the expected values from
     // the article.
-    assert.equal(youtube.length, 1);
+    expect(youtube.length).toEqual(1);
   });
 });

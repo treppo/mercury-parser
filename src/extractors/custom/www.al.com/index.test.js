@@ -24,7 +24,7 @@ describe('WwwAlComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -34,8 +34,7 @@ describe('WwwAlComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Two arrested in multi-state debit card skimming scheme'
       );
     });
@@ -47,7 +46,7 @@ describe('WwwAlComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Mike Cason | mcason@al.com');
+      expect(author).toEqual('Mike Cason | mcason@al.com');
     });
 
     it('returns the date_published', async () => {
@@ -57,7 +56,7 @@ describe('WwwAlComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T19:47:00.000Z');
+      expect(date_published).toEqual('2016-12-22T19:47:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -67,8 +66,7 @@ describe('WwwAlComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://image.al.com/home/bama-media/width620/img/news_birmingham_impact/photo/21753198-standard.jpg'
       );
     });
@@ -82,17 +80,11 @@ describe('WwwAlComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "Jake Frith, special agent with the Alabama Attorney General's office, talks about an"
       );
     });

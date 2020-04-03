@@ -17,7 +17,7 @@ describe('getAttrs(node)', () => {
       class: 'foo bar',
     };
 
-    assert.deepEqual(getAttrs(domNode), attrs);
+    expect(getAttrs(domNode)).toEqual(attrs);
   });
 
   it('returns attrs for a raw cheerio node', () => {
@@ -28,6 +28,6 @@ describe('getAttrs(node)', () => {
       },
     };
 
-    assert.deepEqual(getAttrs(cheerioNode), cheerioNode.attribs);
+    expect(getAttrs(cheerioNode)).toEqual(cheerioNode.attribs);
   });
 });

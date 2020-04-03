@@ -26,7 +26,7 @@ describe('WwwFoolComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwFoolComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Why Amazon and Activision Blizzard Are Betting on eSports As Gaming's Next Big Thing"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwFoolComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Keith Noonan');
+      expect(author).toEqual('Keith Noonan');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwFoolComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2017-01-09T15:05:00.000Z');
+      expect(date_published).toEqual('2017-01-09T15:05:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -69,8 +68,7 @@ describe('WwwFoolComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         "Some of tech's biggest players see huge potential in the global reach and accessibility of eSports."
       );
     });
@@ -82,8 +80,7 @@ describe('WwwFoolComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F420446%2Fgettyimages-502549392-1.jpg&h=630&w=1200&op=resize'
       );
     });
@@ -97,17 +94,11 @@ describe('WwwFoolComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Image source: Getty Images. The idea that video games are on track to'
       );
     });

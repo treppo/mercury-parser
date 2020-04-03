@@ -1,4 +1,3 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
 import makeLinksAbsolute from './make-links-absolute';
@@ -11,8 +10,7 @@ describe('makeLinksAbsolute($)', () => {
 
     const result = $.html(makeLinksAbsolute($content, $, 'http://example.com'));
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<div><a href="http://example.com/#foo">bar</a></div>'
     );
   });
@@ -26,8 +24,7 @@ describe('makeLinksAbsolute($)', () => {
       makeLinksAbsolute($content, $, 'http://example.com/baz/bat')
     );
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<div><a href="http://example.com/baz/foo/bar">bar</a></div>'
     );
   });
@@ -41,8 +38,7 @@ describe('makeLinksAbsolute($)', () => {
       makeLinksAbsolute($content, $, 'http://example.com/baz/bat')
     );
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<div><a href="http://example.com/foo/bar">bar</a></div>'
     );
   });
@@ -54,7 +50,7 @@ describe('makeLinksAbsolute($)', () => {
 
     const result = $.html(makeLinksAbsolute($content, $, 'http://example.com'));
 
-    assert.equal(result, '<div><img src="http://example.com/#foo"></div>');
+    expect(result).toEqual('<div><img src="http://example.com/#foo"></div>');
   });
 
   describe('makes relative srcsets absolute', () => {
@@ -95,17 +91,14 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'http://example.com')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <picture>
           <source srcset="http://example.com/assets/images/rhythm/076.jpg,assets/images/rhythm/076@2x.jpg 2x" media="(max-width: 450px)">
           <source srcset="http://example.com/assets/images/rhythm/120@2x.jpg 2x, http://example.com/assets/images/rhythm/120.jpg,assets/images/rhythm/120@3x.jpg 3x" media="(max-width: 900px)">
           <source srcset="http://example.com/assets/images/rhythm/240.jpg,assets/images/rhythm/240@2x.jpg 2x, http://example.com/assets/images/rhythm/240@3x.jpg 3x" media="(min-width: 901px)">
           <img src="http://example.com/assets/images/rhythm/120.jpg" alt="Vertical and horizontal rhythm">
         </picture>
-      </div>`
-      );
+      </div>`);
     });
 
     it('ignores empty srcset or srcset with just whitespace', () => {
@@ -123,16 +116,13 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'http://example.com')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <picture>
           <source srcset media="(max-width: 450px)">
           <source srcset=" ">
           <img src="http://example.com/assets/images/rhythm/076.jpg" alt="Vertical and horizontal rhythm">
         </picture>
-      </div>`
-      );
+      </div>`);
     });
 
     it('handles comma separated (with whitespace) srcset files with device-pixel-ratio descriptors', () => {
@@ -150,16 +140,13 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'http://example.com')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <picture>
           <source srcset="http://example.com/assets/images/rhythm/076.jpg 2x, http://example.com/assets/images/rhythm/076.jpg" media="(max-width: 450px)">
           <source srcset="http://example.com/assets/images/rhythm/076@2x.jpg 2x, http://example.com/assets/images/rhythm/076.jpg">
           <img src="http://example.com/assets/images/rhythm/076.jpg" alt="Vertical and horizontal rhythm">
         </picture>
-      </div>`
-      );
+      </div>`);
     });
 
     it('handles comma separated (without whitespace) srcset files with device-pixel-ratio descriptors', () => {
@@ -177,16 +164,13 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'http://example.com')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <picture>
           <source srcset="http://example.com/assets/images/rhythm/076.jpg 2x, http://example.com/assets/images/rhythm/076.jpg" media="(max-width: 450px)">
           <source srcset="http://example.com/assets/images/rhythm/076@2x.jpg 2x, http://example.com/assets/images/rhythm/076.jpg">
           <img src="http://example.com/assets/images/rhythm/076.jpg" alt="Vertical and horizontal rhythm">
         </picture>
-      </div>`
-      );
+      </div>`);
     });
 
     it('handles comma separated (with whitespace) srcset files with width descriptors', () => {
@@ -200,12 +184,9 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'http://example.com')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <img srcset="http://example.com/elva-fairy-320w.jpg 320w, http://example.com/elva-fairy-480w.jpg 480w, http://example.com/elva-fairy-800w.jpg 800w" sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px" src="http://example.com/elva-fairy-800w.jpg" alt="Elva dressed as a fairy">
-      </div>`
-      );
+      </div>`);
     });
 
     it('handles multiline comma separated srcset files with width descriptors', () => {
@@ -221,12 +202,9 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'http://example.com')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <img srcset="http://example.com/elva-fairy-320w.jpg 320w, http://example.com/elva-fairy-480w.jpg 480w, http://example.com/elva-fairy-800w.jpg 800w" sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px" src="http://example.com/elva-fairy-800w.jpg" alt="Elva dressed as a fairy">
-      </div>`
-      );
+      </div>`);
     });
 
     it('handles URLs that contain a comma', () => {
@@ -240,12 +218,9 @@ describe('makeLinksAbsolute($)', () => {
         makeLinksAbsolute($content, $, 'https://media.newyorker.com/')
       );
 
-      assert.equal(
-        result,
-        `<div>
+      expect(result).toEqual(`<div>
         <picture><source media="(min-width: 768px)" srcset="https://media.newyorker.com/cartoons/5bbfca021e40b62d6cc418ea/master/w_280,c_limit/181022_a22232.jpg, https://media.newyorker.com/cartoons/5bbfca021e40b62d6cc418ea/master/w_560,c_limit/181022_a22232.jpg 2x"><source srcset="https://media.newyorker.com/cartoons/5bbfca021e40b62d6cc418ea/master/w_727,c_limit/181022_a22232.jpg, https://media.newyorker.com/cartoons/5bbfca021e40b62d6cc418ea/master/w_1454,c_limit/181022_a22232.jpg 2x"><img src="https://media.newyorker.com/cartoons/5bbfca021e40b62d6cc418ea/master/w_727,c_limit/181022_a22232.jpg"></picture>
-      </div>`
-      );
+      </div>`);
     });
   });
 });

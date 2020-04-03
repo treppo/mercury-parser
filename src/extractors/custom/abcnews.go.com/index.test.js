@@ -26,7 +26,7 @@ describe('AbcnewsGoComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('AbcnewsGoComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Hillary Clinton: Putin's Alleged Involvement in Democratic Hack Stems From Longtime Grudge"
       );
     });
@@ -49,7 +48,7 @@ describe('AbcnewsGoComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Josh Haskell David Caplan PATRICK REEVELL');
+      expect(author).toEqual('Josh Haskell David Caplan PATRICK REEVELL');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('AbcnewsGoComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-16T17:37:00.000Z');
+      expect(date_published).toEqual('2016-12-16T17:37:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('AbcnewsGoComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://a.abcnews.com/images/Politics/AP-hillary-clinton-01-as-161216_16x9_992.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('AbcnewsGoComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "Hillary Clinton has an explanation for Vladimir Putin's alleged involvement in the hacking"
       );
     });

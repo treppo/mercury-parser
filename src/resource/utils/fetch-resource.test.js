@@ -14,7 +14,7 @@ describe('fetchResource(url)', () => {
     const url = 'http://www.nytimes.com/500';
     const { error } = await fetchResource(url);
 
-    assert.equal(error, true);
+    expect(error).toEqual(true);
   });
 
   it('passes custom headers in requests', async () => {
@@ -27,8 +27,7 @@ describe('fetchResource(url)', () => {
     const result = await fetchResource(url, parsedUrl, headers);
     const body = JSON.parse(result.body.toString());
 
-    assert.equal(
-      body.headers['my-custom-header'],
+    expect(body.headers['my-custom-header']).toEqual(
       'Lorem ipsum dolor sit amet'
     );
   });
@@ -38,7 +37,7 @@ describe('fetchResource(url)', () => {
       'http://www.nytimes.com/2016/08/16/upshot/the-state-of-the-clinton-trump-race-is-it-over.html?_r=0';
     const result = await fetchResource(url);
 
-    assert.equal(typeof result.body, 'object');
+    expect(typeof result.body).toEqual('object');
   });
 
   it('fetches nyt', async () => {
@@ -46,14 +45,14 @@ describe('fetchResource(url)', () => {
       'http://www.nytimes.com/2016/08/16/upshot/the-state-of-the-clinton-trump-race-is-it-over.html?_r=0';
     const { response } = await fetchResource(url);
 
-    assert.equal(response.statusCode, 200);
+    expect(response.statusCode).toEqual(200);
   });
 
   it('fetches domains', async () => {
     const url = 'http://theconcourse.deadspin.com/1786177057';
     const { response } = await fetchResource(url);
 
-    assert.equal(response.statusCode, 200);
+    expect(response.statusCode).toEqual(200);
   });
 
   it('fetches nyt', async () => {
@@ -61,7 +60,7 @@ describe('fetchResource(url)', () => {
       'http://www.nytimes.com/2016/08/16/upshot/the-state-of-the-clinton-trump-race-is-it-over.html?_r=0';
     const { response } = await fetchResource(url);
 
-    assert.equal(response.statusCode, 200);
+    expect(response.statusCode).toEqual(200);
   });
 
   it('handles this gzip error', async () => {
@@ -69,7 +68,7 @@ describe('fetchResource(url)', () => {
       'http://www.redcross.ca/blog/2016/11/photo-of-the-day--one-year-anniversary-of-the-end-of-ebola-in-sierra-leone';
     const { response } = await fetchResource(url);
 
-    assert.equal(response.statusCode, 200);
+    expect(response.statusCode).toEqual(200);
   });
 });
 
@@ -84,15 +83,15 @@ describe('validateResponse(response)', () => {
       },
     };
 
-    assert.equal(validateResponse(validResponse), true);
+    expect(validateResponse(validResponse)).toEqual(true);
   });
 
   it('throws an error if there is no status code', () => {
     const invalidResponse = {};
 
-    assert.throws(() => {
+    expect(() => {
       validateResponse(invalidResponse);
-    }, /unable to fetch content/i);
+    }).toThrow();
   });
 
   it('throws an error if response code is not 200', () => {
@@ -100,9 +99,9 @@ describe('validateResponse(response)', () => {
       statusCode: 500,
     };
 
-    assert.throws(() => {
+    expect(() => {
       validateResponse(invalidResponse);
-    }, /instructed to reject non-200/i);
+    }).toThrow();
   });
 
   it('throws an error if response has bad content-type', () => {
@@ -115,9 +114,9 @@ describe('validateResponse(response)', () => {
       },
     };
 
-    assert.throws(() => {
+    expect(() => {
       validateResponse(invalidResponse);
-    }, /content-type for this resource/i);
+    }).toThrow();
   });
 
   it('throws an error if response length is > max', () => {
@@ -130,9 +129,9 @@ describe('validateResponse(response)', () => {
       },
     };
 
-    assert.throws(() => {
+    expect(() => {
       validateResponse(invalidResponse);
-    }, /Content for this resource was too large/i);
+    }).toThrow();
   });
 });
 
@@ -141,13 +140,13 @@ describe('baseDomain(parsedUrl)', () => {
     const url = 'https://www.npmjs.com/package/request#streaming';
     const parsedUrl = URL.parse(url);
 
-    assert.equal(baseDomain(parsedUrl), 'npmjs.com');
+    expect(baseDomain(parsedUrl)).toEqual('npmjs.com');
   });
 
   it('returns the base domain as is if no subdomain', () => {
     const url = 'https://npmjs.com/package/request#streaming';
     const parsedUrl = URL.parse(url);
 
-    assert.equal(baseDomain(parsedUrl), 'npmjs.com');
+    expect(baseDomain(parsedUrl)).toEqual('npmjs.com');
   });
 });

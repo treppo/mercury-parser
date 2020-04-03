@@ -29,7 +29,7 @@ describe('TakagihiromitsuJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -39,8 +39,7 @@ describe('TakagihiromitsuJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `■ 改正NICT法がプチ炎上、工場出荷時共通初期パスワードが識別符号に当たらないことが理解されていない`
       );
     });
@@ -52,7 +51,7 @@ describe('TakagihiromitsuJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '高木浩光');
+      expect(author).toEqual('高木浩光');
     });
 
     it('returns the date_published', async () => {
@@ -63,7 +62,7 @@ describe('TakagihiromitsuJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(newDatePublished.split('T')[0], '2019-02-17');
+      expect(newDatePublished.split('T')[0]).toEqual('2019-02-17');
     });
 
     it('returns the dek', async () => {
@@ -73,7 +72,7 @@ describe('TakagihiromitsuJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -83,7 +82,7 @@ describe('TakagihiromitsuJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(lead_image_url, null);
+      expect(lead_image_url).toEqual(null);
     });
 
     it('returns the content', async () => {
@@ -95,16 +94,11 @@ describe('TakagihiromitsuJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(first13, '先月のこと、NHKニュースが「総務省');
+      expect(first13).toEqual('先月のこと、NHKニュースが「総務省');
     });
   });
 });

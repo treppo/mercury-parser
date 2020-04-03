@@ -26,7 +26,7 @@ describe('WwwLatimesComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwLatimesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Report on L.A. school shutdown shows confusion over who was in charge, technology shortcomings'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwLatimesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Howard Blume');
+      expect(author).toEqual('Howard Blume');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwLatimesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-16T22:05:00.000Z');
+      expect(date_published).toEqual('2016-12-16T22:05:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwLatimesComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://www.trbimg.com/img-5854652f/turbine/la-me-edu-report-on-la-school-shutdown-20161216'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwLatimesComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "An internal report on last year's unprecedented one-day shutdown of Los Angeles schools"
       );
     });

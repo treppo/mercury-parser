@@ -23,7 +23,7 @@ describe('BuzzapJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -33,8 +33,7 @@ describe('BuzzapJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `【？】「消費増税の軽減税率は高所得者ほどお得！」総務省が謎仕様であることを認める`
       );
     });
@@ -46,7 +45,7 @@ describe('BuzzapJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, null);
+      expect(author).toEqual(null);
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +55,7 @@ describe('BuzzapJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-03-02T09:18:32.000Z`);
+      expect(date_published).toEqual(`2019-03-02T09:18:32.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -66,7 +65,7 @@ describe('BuzzapJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -76,8 +75,7 @@ describe('BuzzapJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://buzzap.net/images/2018/11/29/consumption-tax-opportunistic-price-hike/top.jpg`
       );
     });
@@ -91,17 +89,11 @@ describe('BuzzapJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        1
-      );
+      const first13 = excerptContent($('*').first().text(), 1);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '家計の負担を和らげるための軽減税率のはずでしたが、低所得者ほど恩恵が薄いことを総務省が公式に認めました。詳細は以下から。'
       );
     });

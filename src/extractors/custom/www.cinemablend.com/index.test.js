@@ -26,7 +26,7 @@ describe('WwwCinemablendComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwCinemablendComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'To 3D Or Not To 3D: Buy The Right Passengers Ticket'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwCinemablendComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Mike Reyes');
+      expect(author).toEqual('Mike Reyes');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwCinemablendComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T02:46:48.000Z');
+      expect(date_published).toEqual('2016-12-22T02:46:48.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwCinemablendComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://img.cinemablend.com/quill/6/a/4/e/4/0/6a4e40e4aad46eb7b27810ce5a9fccff01c03c19.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwCinemablendComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'What happens when you put two beautiful people together in the black of'
       );
     });

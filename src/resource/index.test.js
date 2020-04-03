@@ -14,14 +14,14 @@ describe('Resource', () => {
       const url = 'http://theconcourse.deadspin.com/1786177057';
       const $ = await Resource.create(url);
 
-      assert.equal(typeof $, 'function');
+      expect(typeof $).toEqual('function');
     });
 
     it('returns an error message if the url is malformed', async () => {
       const url = 'http://nytimes.com/500';
       const error = await Resource.create(url);
 
-      assert(/instructed to reject non-200/i.test(error.message));
+      expect(/instructed to reject non-200/i.test(error.message)).toBeTruthy();
     });
 
     it('fetches with different encoding on body', async () => {
@@ -30,11 +30,11 @@ describe('Resource', () => {
       const $ = await Resource.create(url);
       const metaContentType = $('meta[http-equiv=content-type]').attr('value');
 
-      assert.equal(getEncoding(metaContentType), 'iso-8859-1');
+      expect(getEncoding(metaContentType)).toEqual('iso-8859-1');
       const encodedU = /&#xFC;/g;
 
-      assert.equal(encodedU.test($.html()), true);
-      assert.equal(typeof $, 'function');
+      expect(encodedU.test($.html())).toEqual(true);
+      expect(typeof $).toEqual('function');
     });
 
     it('fetches with different encoding and case insensitive regex', async () => {
@@ -45,12 +45,12 @@ describe('Resource', () => {
         'value'
       );
 
-      assert.equal(getEncoding(metaContentType), 'windows-1251');
+      expect(getEncoding(metaContentType)).toEqual('windows-1251');
 
       const badEncodingRe = /&#xFFFD;/g;
 
-      assert.equal(badEncodingRe.test($.html()), false);
-      assert.equal(typeof $, 'function');
+      expect(badEncodingRe.test($.html())).toEqual(false);
+      expect(typeof $).toEqual('function');
     });
 
     it('fetches with different encoding and HTML5 charset tag', async () => {
@@ -59,12 +59,12 @@ describe('Resource', () => {
       const $ = await Resource.create(url);
       const metaContentType = $('meta[charset]').attr('charset');
 
-      assert.equal(getEncoding(metaContentType), 'windows-1250');
+      expect(getEncoding(metaContentType)).toEqual('windows-1250');
 
       const badEncodingRe = /&#xFFFD;/g;
 
-      assert.equal(badEncodingRe.test($.html()), false);
-      assert.equal(typeof $, 'function');
+      expect(badEncodingRe.test($.html())).toEqual(false);
+      expect(typeof $).toEqual('function');
     });
 
     it('handles special encoding', async () => {
@@ -74,8 +74,8 @@ describe('Resource', () => {
 
       const badEncodingRe = /�/g;
 
-      assert.equal(badEncodingRe.test($.html()), false);
-      assert.equal(typeof $, 'function');
+      expect(badEncodingRe.test($.html())).toEqual(false);
+      expect(typeof $).toEqual('function');
     });
   });
 
@@ -91,9 +91,9 @@ describe('Resource', () => {
       };
       const body = '';
 
-      assert.throws(() => {
+      expect(() => {
         Resource.generateDoc({ body, response });
-      }, /content does not appear to be text/i);
+      }).toThrow();
     });
 
     it('throws an error if the response has no Content-Type header', () => {
@@ -104,14 +104,9 @@ describe('Resource', () => {
 
       // This assertion is more elaborate than the others to be sure that we're
       // throwing an `Error` and not raising a runtime exception.
-      assert.throws(
-        () => {
-          Resource.generateDoc({ body, response });
-        },
-        err =>
-          err instanceof Error &&
-          /content does not appear to be text/i.test(err)
-      );
+      expect(() => {
+        Resource.generateDoc({ body, response });
+      }).toThrow();
     });
 
     it('throws an error if the content has no children', () => {
@@ -122,9 +117,9 @@ describe('Resource', () => {
       };
       const body = '';
 
-      assert.throws(() => {
+      expect(() => {
         Resource.generateDoc({ body, response });
-      }, /no children/i);
+      }).toThrow();
     });
   });
 });

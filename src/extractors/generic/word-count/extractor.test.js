@@ -15,7 +15,7 @@ describe('GenericWordCountExtractor', () => {
 
       const wordCount = GenericWordCountExtractor.extract({ content });
 
-      assert.equal(wordCount, 12);
+      expect(wordCount).toEqual(12);
     });
   });
 });

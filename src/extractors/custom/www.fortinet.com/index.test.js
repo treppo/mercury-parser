@@ -26,7 +26,7 @@ describe('WwwFortinetComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwFortinetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'How-to Guide: Defeating an Android Packer with FRIDA'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwFortinetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Dario Durando');
+      expect(author).toEqual('Dario Durando');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwFortinetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2018-11-02T07:00:00.000Z');
+      expect(date_published).toEqual('2018-11-02T07:00:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwFortinetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://www.fortinet.com/content/dam/fortinet-blog/article-images/defeating_an_android_packer_with_frida/frida_02.png'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwFortinetComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'A FortiGuard Labs How-To Guide for Cybersecurity Threat Researchers Here at FortiGuard Labs'
       );
     });
@@ -109,8 +101,8 @@ describe('WwwFortinetComExtractor', () => {
 
       // there were six lazy-loaded images
       // noscript tags should be replaced by figures
-      assert.equal($lazyImages.length, 0);
-      assert.equal($figures.length, 6);
+      expect($lazyImages.length).toEqual(0);
+      expect($figures.length).toEqual(6);
     });
   });
 });

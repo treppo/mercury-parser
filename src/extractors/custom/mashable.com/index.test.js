@@ -26,7 +26,7 @@ describe('MashableComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('MashableComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Mysterious plane circling Manhattan sparks concern and intrigue'
       );
     });
@@ -49,7 +48,7 @@ describe('MashableComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Nicole Gallucci');
+      expect(author).toEqual('Nicole Gallucci');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('MashableComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-13T22:33:06.000Z');
+      expect(date_published).toEqual('2016-12-13T22:33:06.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('MashableComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://a.amz.mshcdn.com/media/ZgkyMDE2LzEyLzEzL2UxL2xpbGlzYW1zbWFzaGFibGU1XzcyMC4wMWZkOS5qcGcKcAl0aHVtYgkxMjAweDYzMAplCWpwZw/29e123a7/0e0/lili-sams-mashable-5_720.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('MashableComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'A large military-style plane, which looked remarkably like a C-130, circled Manhattan for'
       );
     });

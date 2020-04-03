@@ -25,7 +25,7 @@ describe('WwwNbcnewsComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,7 +35,7 @@ describe('WwwNbcnewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, "What's the Hold-Up at SpaceX?");
+      expect(title).toEqual("What's the Hold-Up at SpaceX?");
     });
 
     it('returns the author', async () => {
@@ -45,7 +45,7 @@ describe('WwwNbcnewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Alyssa Newcomb');
+      expect(author).toEqual('Alyssa Newcomb');
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +55,7 @@ describe('WwwNbcnewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-13T18:06:00.000Z');
+      expect(date_published).toEqual('2016-12-13T18:06:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -65,8 +65,7 @@ describe('WwwNbcnewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://media1.s-nbcnews.com/j/newscms/2016_45/1792226/161110-nasa-spacex-mbe-430p_ea6b06bb8c83e70502b6de93ee91c78a.nbcnews-fp-1200-800.jpg'
       );
     });
@@ -80,17 +79,11 @@ describe('WwwNbcnewsComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "If it's any small comfort, 2016 probably wasn't the most enjoyable year for"
       );
     });

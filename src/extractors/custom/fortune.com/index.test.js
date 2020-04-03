@@ -23,7 +23,7 @@ describe('FortuneComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -33,8 +33,7 @@ describe('FortuneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Here Are 6 Can’t-Miss Gadgets Powered by Amazon’s Alexa Assistant'
       );
     });
@@ -46,7 +45,7 @@ describe('FortuneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'John Patrick Pullen, TIME');
+      expect(author).toEqual('John Patrick Pullen, TIME');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +55,7 @@ describe('FortuneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-15T14:57:00.000Z');
+      expect(date_published).toEqual('2016-12-15T14:57:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -66,8 +65,7 @@ describe('FortuneComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://fortunedotcom.files.wordpress.com/2016/05/amazon-echo-2.jpg?w=720'
       );
     });
@@ -81,17 +79,11 @@ describe('FortuneComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The Amazon Echo Dot, the retailer’s puck-shaped smart speaker, is is killing it'
       );
     });

@@ -28,7 +28,7 @@ describe('MSNExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,8 +38,7 @@ describe('MSNExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'This Is Your Brain On Sad Movies; Plus 5 Films To Cry To'
       );
     });
@@ -51,7 +50,7 @@ describe('MSNExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Lizette Borreli');
+      expect(author).toEqual('Lizette Borreli');
     });
 
     it('returns the date_published', async () => {
@@ -62,7 +61,7 @@ describe('MSNExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(newDatePublished.split('T')[0], '2016-09-21');
+      expect(newDatePublished.split('T')[0]).toEqual('2016-09-21');
     });
 
     it('returns the lead_image_url', async () => {
@@ -72,7 +71,7 @@ describe('MSNExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(lead_image_url, null);
+      expect(lead_image_url).toEqual(null);
     });
 
     it('returns the content', async () => {
@@ -84,17 +83,11 @@ describe('MSNExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The psychological reason why we love to watch sad movies is linked to'
       );
     });

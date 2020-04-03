@@ -12,7 +12,7 @@ describe('normalizeMetaTags($)', () => {
 
     const result = normalizeMetaTags($).html();
 
-    assert.equal(result, test);
+    expect(result).toEqual(test);
   });
 
   it('replaces "property" attributes with "name"', () => {
@@ -23,6 +23,6 @@ describe('normalizeMetaTags($)', () => {
 
     const result = normalizeMetaTags($).html();
 
-    assert.equal(result, test);
+    expect(result).toEqual(test);
   });
 });

@@ -16,7 +16,7 @@ describe('GenericDatePublishedExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, HTML.datePublishedMeta.result.toISOString());
+      expect(result).toEqual(HTML.datePublishedMeta.result.toISOString());
     });
 
     it('extracts datePublished from selectors', () => {
@@ -28,7 +28,7 @@ describe('GenericDatePublishedExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, HTML.datePublishedMeta.result.toISOString());
+      expect(result).toEqual(HTML.datePublishedMeta.result.toISOString());
     });
 
     it('extracts from url formatted /2012/08/01/etc', () => {
@@ -41,7 +41,7 @@ describe('GenericDatePublishedExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, new Date('2012/08/01').toISOString());
+      expect(result).toEqual(new Date('2012/08/01').toISOString());
     });
 
     it('extracts from url formatted /2020-01-01', () => {
@@ -54,7 +54,7 @@ describe('GenericDatePublishedExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, moment('2020-01-01', 'YYYY-MM-DD').toISOString());
+      expect(result).toEqual(moment('2020-01-01', 'YYYY-MM-DD').toISOString());
     });
 
     it('extracts from url formatted /2020/jan/01', () => {
@@ -67,7 +67,7 @@ describe('GenericDatePublishedExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, moment(new Date('2020 jan 01')).toISOString());
+      expect(result).toEqual(moment(new Date('2020 jan 01')).toISOString());
     });
 
     it('returns null if no date can be found', () => {
@@ -79,7 +79,7 @@ describe('GenericDatePublishedExtractor', () => {
         metaCache,
       });
 
-      assert.equal(result, null);
+      expect(result).toEqual(null);
     });
   });
 });

@@ -26,7 +26,7 @@ describe('OtrsComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('OtrsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `Silver Society – The young old people`);
+      expect(title).toEqual(`Silver Society – The young old people`);
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('OtrsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'André Mindermann');
+      expect(author).toEqual('André Mindermann');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('OtrsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-03-18T09:00:11.000Z`);
+      expect(date_published).toEqual(`2019-03-18T09:00:11.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -66,8 +66,7 @@ describe('OtrsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'Older workers are often considered less efficient, less innovative in their thinking and not open to change. Is that true or do we have to change our attitude?'
       );
     });
@@ -79,8 +78,7 @@ describe('OtrsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://otrs.com/wp-content/uploads/john-moeses-bauan-687723-unsplash-1-e1552668096960.jpg`
       );
     });
@@ -94,17 +92,11 @@ describe('OtrsComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Older workers are often considered less efficient, less innovative in their thinking and'
       );
     });

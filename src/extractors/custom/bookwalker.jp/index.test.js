@@ -28,7 +28,7 @@ describe('BookwalkerJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -38,7 +38,9 @@ describe('BookwalkerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `異世界おもいで食堂 ～偉人と和食のあったかゴハン～`);
+      expect(title).toEqual(
+        `異世界おもいで食堂 ～偉人と和食のあったかゴハン～`
+      );
     });
 
     it('returns the author', async () => {
@@ -48,7 +50,7 @@ describe('BookwalkerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '著者 お米ゴハン イラスト 汐街コナ');
+      expect(author).toEqual('著者 お米ゴハン イラスト 汐街コナ');
     });
 
     it('returns the date_published', async () => {
@@ -58,7 +60,7 @@ describe('BookwalkerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2019-03-04T15:00:00.000Z');
+      expect(date_published).toEqual('2019-03-04T15:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -68,7 +70,7 @@ describe('BookwalkerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -78,8 +80,7 @@ describe('BookwalkerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://c.bookwalker.jp/7775823/t_700x780.jpg`
       );
     });
@@ -93,17 +94,11 @@ describe('BookwalkerJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        9
-      );
+      const first13 = excerptContent($('*').first().text(), 9);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         '電子書籍（ラノベ） 著者 お米ゴハン イラスト 汐街コナ 税込価格 1,296円 1,296 円'
       );
     });

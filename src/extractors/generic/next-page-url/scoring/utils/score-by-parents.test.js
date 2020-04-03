@@ -15,7 +15,7 @@ describe('scoreByParents($link)', () => {
     const $ = cheerio.load(html);
     const $link = $('a').first();
 
-    assert.equal(scoreByParents($link), 25);
+    expect(scoreByParents($link)).toEqual(25);
   });
 
   it('returns -25 if parent sig looks like a comment', () => {
@@ -29,6 +29,6 @@ describe('scoreByParents($link)', () => {
     const $ = cheerio.load(html);
     const $link = $('a').first();
 
-    assert.equal(scoreByParents($link), -25);
+    expect(scoreByParents($link)).toEqual(-25);
   });
 });

@@ -30,7 +30,7 @@ describe('RootExtractor', () => {
       fallback: false,
     });
 
-    assert.equal(url, null);
+    expect(url).toEqual(null);
   });
 });
 
@@ -50,8 +50,8 @@ describe('cleanBySelectors($content, $, { clean })', () => {
     let $content = $('.body');
     $content = cleanBySelectors($content, $, opts);
 
-    assert.equal($content.find('.ad').length, 0);
-    assert.equal($content.find('.share').length, 0);
+    expect($content.find('.ad').length).toEqual(0);
+    expect($content.find('.share').length).toEqual(0);
   });
 });
 
@@ -149,7 +149,7 @@ describe('select(opts)', () => {
     };
 
     const result = select(opts);
-    assert.equal(result, 'Bob');
+    expect(result).toEqual('Bob');
   });
 
   it("returns a node's attr with an attr selector", () => {
@@ -170,7 +170,7 @@ describe('select(opts)', () => {
     };
 
     const result = select(opts);
-    assert.equal(result, '2016-09-07T09:07:59.000Z');
+    expect(result).toEqual('2016-09-07T09:07:59.000Z');
   });
 
   it("returns a node's html when it is a content selector", () => {
@@ -206,8 +206,8 @@ describe('select(opts)', () => {
     };
 
     const result = select(opts);
-    assert.equal($(result).find('img.lead-image').length, 1);
-    assert.equal($(result).find('.content-is-here').length, 1);
+    expect($(result).find('img.lead-image').length).toEqual(1);
+    expect($(result).find('.content-is-here').length).toEqual(1);
   });
 
   it('skips multi-match if not all selectors are present', () => {
@@ -226,7 +226,7 @@ describe('select(opts)', () => {
 
     const result = select(opts);
 
-    assert.equal(result, null);
+    expect(result).toEqual(null);
   });
 
   it('returns an array of results if allowMultiple is true', () => {
@@ -246,8 +246,8 @@ describe('select(opts)', () => {
 
     const result = select(opts);
 
-    assert.equal(result.length, 2);
-    assert.deepEqual(result, [
+    expect(result.length).toEqual(2);
+    expect(result).toEqual([
       '<li class="item">One</li>',
       '<li class="item">Two</li>',
     ]);
@@ -270,8 +270,7 @@ describe('select(opts)', () => {
 
     const result = select(opts);
 
-    assert.equal(
-      result,
+    expect(result).toEqual(
       '<div><a class="linky" href="http://example.com/foo">Bar</a></div>'
     );
   });
@@ -293,7 +292,7 @@ describe('select(opts)', () => {
 
     const result = select(opts);
 
-    assert.deepEqual(result, [
+    expect(result).toEqual([
       'http://example.com/foo',
       'http://example.com/bar',
     ]);

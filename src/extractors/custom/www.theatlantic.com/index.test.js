@@ -27,7 +27,7 @@ describe('AtlanticExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('works with a starter story', async () => {
@@ -38,24 +38,17 @@ describe('AtlanticExtractor', () => {
       const { content, title, author, dek, lead_image_url } = await result;
 
       const $ = cheerio.load(content);
-      const text = $('*')
-        .first()
-        .text()
-        .trim()
-        .slice(0, 20);
+      const text = $('*').first().text().trim().slice(0, 20);
 
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Why New Yorkers Received a Push Alert About a Manhunt'
       );
-      assert.equal(author, 'Kaveh Waddell');
-      assert.equal(text, 'The city has never b');
-      assert.equal(
-        dek,
+      expect(author).toEqual('Kaveh Waddell');
+      expect(text).toEqual('The city has never b');
+      expect(dek).toEqual(
         'The city has never before used the emergency system the way it did Monday morning.'
       );
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://cdn.theatlantic.com/assets/media/img/mt/2016/09/RTSO9RP/lead_720_405.jpg?mod=1533691849'
       );
     });

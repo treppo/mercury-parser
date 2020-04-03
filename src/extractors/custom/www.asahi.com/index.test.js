@@ -25,7 +25,7 @@ describe('WwwAsahiComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,7 +35,9 @@ describe('WwwAsahiComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `メディア芸術祭賞、「チコちゃんに叱られる！」が受賞`);
+      expect(title).toEqual(
+        `メディア芸術祭賞、「チコちゃんに叱られる！」が受賞`
+      );
     });
 
     it('returns the author', async () => {
@@ -45,7 +47,7 @@ describe('WwwAsahiComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'https://www.facebook.com/asahicom/');
+      expect(author).toEqual('https://www.facebook.com/asahicom/');
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +57,7 @@ describe('WwwAsahiComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-03-01T04:16:56.000Z`);
+      expect(date_published).toEqual(`2019-03-01T04:16:56.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -65,7 +67,7 @@ describe('WwwAsahiComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the excerpt', async () => {
@@ -75,8 +77,7 @@ describe('WwwAsahiComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        excerpt,
+      expect(excerpt).toEqual(
         '文化庁は１日、アート、エンターテインメント、アニメーション、マンガの４部門で優れた作品を顕彰する今年度のメディア芸術祭賞を発表した。エンターテインメント部門の大賞はＮＨＫのテレビ番組「チコちゃんに叱…'
       );
     });
@@ -88,8 +89,7 @@ describe('WwwAsahiComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://www.asahicom.jp/articles/images/c_AS20190301001974_comm.jpg`
       );
     });
@@ -103,17 +103,11 @@ describe('WwwAsahiComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        2
-      );
+      const first13 = excerptContent($('*').first().text(), 2);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'チコちゃん 文化庁は１日、アート、エンターテインメント、アニメーション、マンガの４部門で優れた作品を顕彰する今年度のメディア芸術祭賞を発表した。エンターテインメント部門の大賞はＮＨＫのテレビ番組「チコちゃんに叱られる！」が受賞した。'
       );
     });

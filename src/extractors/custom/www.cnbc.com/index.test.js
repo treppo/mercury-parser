@@ -26,7 +26,7 @@ describe('WwwCnbcComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwCnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         "Coal's big US stronghold is losing steam, even as Trump aims for a revival"
       );
     });
@@ -49,7 +48,7 @@ describe('WwwCnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Tom DiChristopher');
+      expect(author).toEqual('Tom DiChristopher');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwCnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-20T15:32:57.000Z');
+      expect(date_published).toEqual('2016-12-20T15:32:57.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwCnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2016/12/19/104176162-GettyImages-161350847.1910x1000.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwCnbcComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Brian Brainerd | The Denver Post | Getty Images The U.S. Mountain States'
       );
     });
@@ -119,8 +111,7 @@ describe('WwwCnbcComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Desperate to get through to executives, some cybersecurity vendors are resorting to lies and blackmail'
       );
     });
@@ -134,17 +125,11 @@ describe('WwwCnbcComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The cybersecurity vendor marketplace is growing so crowded that some companies have been'
       );
     });

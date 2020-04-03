@@ -21,8 +21,8 @@ describe('GenericUrlExtractor', () => {
 
       const { url, domain } = GenericUrlExtractor.extract({ $, url: fullUrl });
 
-      assert.equal(url, clean);
-      assert.equal(domain, 'example.com');
+      expect(url).toEqual(clean);
+      expect(domain).toEqual('example.com');
     });
 
     it('returns og:url second', () => {
@@ -45,8 +45,8 @@ describe('GenericUrlExtractor', () => {
         metaCache,
       });
 
-      assert.equal(url, clean);
-      assert.equal(domain, 'example.com');
+      expect(url).toEqual(clean);
+      expect(domain).toEqual('example.com');
     });
 
     it('returns passed url if others are not found', () => {
@@ -67,8 +67,8 @@ describe('GenericUrlExtractor', () => {
         metaCache,
       });
 
-      assert.equal(url, fullUrl);
-      assert.equal(domain, 'example.com');
+      expect(url).toEqual(fullUrl);
+      expect(domain).toEqual('example.com');
     });
   });
 });

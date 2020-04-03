@@ -26,7 +26,7 @@ describe('WwwCnetComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('WwwCnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Seven mobile trends to look for in 2017');
+      expect(title).toEqual('Seven mobile trends to look for in 2017');
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('WwwCnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Marguerite Reardon');
+      expect(author).toEqual('Marguerite Reardon');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('WwwCnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-22T13:00:00.000Z');
+      expect(date_published).toEqual('2016-12-22T13:00:00.000Z');
     });
 
     it('returns the dek', async () => {
@@ -66,8 +66,7 @@ describe('WwwCnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        dek,
+      expect(dek).toEqual(
         'An anti-regulation, pro-dealmaking US president could make for an interesting year for wireless and broadband companies.'
       );
     });
@@ -79,8 +78,7 @@ describe('WwwCnetComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://cnet2.cbsistatic.com/img/eW0A_hGjyVcT0oRB_23SDCOdEGU=/670x503/2016/12/16/48966e5f-87df-4915-ad68-ed70cdd37fdd/gettyimages-537252007.jpg'
       );
     });
@@ -94,17 +92,11 @@ describe('WwwCnetComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Faster networks, more "free data" and a dismantling of net neutrality rules could'
       );
     });

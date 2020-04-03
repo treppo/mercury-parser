@@ -27,7 +27,7 @@ describe('WwwRedditComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -37,8 +37,7 @@ describe('WwwRedditComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `Vanilla becoming the default flavour of ice cream is the greatest underdog story of all time.`
       );
     });
@@ -50,16 +49,14 @@ describe('WwwRedditComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'u/benyacobi');
+      expect(author).toEqual('u/benyacobi');
     });
 
     it('returns the date_published', async () => {
       // To pass this test, fill out the date_published selector
       // in ./src/extractors/custom/www.reddit.com/index.js.
       const { date_published } = await result;
-      const newDatePublished = moment(date_published)
-        .format()
-        .split('T')[0];
+      const newDatePublished = moment(date_published).format().split('T')[0];
       const expectedDate = moment()
         .subtract(18, 'hours')
         .format()
@@ -67,7 +64,7 @@ describe('WwwRedditComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(newDatePublished, expectedDate);
+      expect(newDatePublished).toEqual(expectedDate);
     });
 
     it('returns the lead_image_url', async () => {
@@ -83,8 +80,7 @@ describe('WwwRedditComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://preview.redd.it/jsc4t74psok21.jpg?auto=webp&s=9c9826487e34d399333f65beb64390206fff4125'
       );
     });
@@ -98,17 +94,11 @@ describe('WwwRedditComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Edit: thank you for educating me about the ubiquity of vanilla. Still, none'
       );
     });
@@ -122,7 +112,7 @@ describe('WwwRedditComExtractor', () => {
 
       const { content } = await Mercury.parse(uri, { html });
 
-      assert.equal(content, '<div></div>');
+      expect(content).toEqual('<div></div>');
     });
 
     it('handles image posts', async () => {
@@ -140,7 +130,7 @@ describe('WwwRedditComExtractor', () => {
         'img[src="https://preview.redd.it/jsc4t74psok21.jpg?width=960&crop=smart&auto=webp&s=54349b21ff628e8c22c053509e86ba84ff9751d3"]'
       );
 
-      assert.equal(image.length, 1);
+      expect(image.length).toEqual(1);
     });
 
     it('handles video posts', async () => {
@@ -158,7 +148,7 @@ describe('WwwRedditComExtractor', () => {
         'video > source[src="https://v.redd.it/kwhzxoz5rok21/HLSPlaylist.m3u8"]'
       );
 
-      assert.equal(video.length, 1);
+      expect(video.length).toEqual(1);
     });
 
     it('handles external link posts with image preview', async () => {
@@ -180,9 +170,9 @@ describe('WwwRedditComExtractor', () => {
         'img[src="https://b.thumbs.redditmedia.com/gWPmq95XmEzQns6B-H6_l4kBNFeuhScpVDYPjvPsdDs.jpg"]'
       );
 
-      assert.equal(link.length, 2);
+      expect(link.length).toEqual(2);
 
-      assert.equal(image.length, 1);
+      expect(image.length).toEqual(1);
     });
 
     it('handles external image posts with image preview', async () => {
@@ -202,9 +192,9 @@ describe('WwwRedditComExtractor', () => {
         'img[src="https://external-preview.redd.it/sKJFPLamiRPOW5u7NTch3ykbFYMwqI5Qr0zlCINMTfU.gif?format=png8&s=56ecd472f8b8b2ee741b3b1cb76cb3a5110a85f9"]'
       );
 
-      assert.equal(link.length, 1);
+      expect(link.length).toEqual(1);
 
-      assert.equal(image.length, 1);
+      expect(image.length).toEqual(1);
     });
 
     it('handles external link posts with embedded media', async () => {
@@ -224,9 +214,9 @@ describe('WwwRedditComExtractor', () => {
         'iframe[src="https://www.redditmedia.com/mediaembed/5gafop?responsive=true"]'
       );
 
-      assert.equal(link.length, 1);
+      expect(link.length).toEqual(1);
 
-      assert.equal(embed.length, 1);
+      expect(embed.length).toEqual(1);
     });
   });
 });

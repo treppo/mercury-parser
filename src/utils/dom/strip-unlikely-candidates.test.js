@@ -15,7 +15,7 @@ describe('Generic Extractor Utils', () => {
     it('returns original doc if no matches found', () => {
       const $ = cheerio.load(HTML.noMatches);
       const stripped = stripUnlikelyCandidates($);
-      assert.equal(stripped.html(), HTML.noMatches);
+      expect(stripped.html()).toEqual(HTML.noMatches);
     });
 
     it('strips unlikely matches from the doc', () => {

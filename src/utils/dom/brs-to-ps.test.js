@@ -14,7 +14,7 @@ describe('Generic Extractor Utils', () => {
   describe('brsToPs(node)', () => {
     it('does nothing when no BRs present', () => {
       const $ = cheerio.load(HTML.positiveId);
-      assert.equal(brsToPs($).html(), HTML.positiveId);
+      expect(brsToPs($).html()).toEqual(HTML.positiveId);
     });
 
     it('does nothing when a single BR is present', () => {

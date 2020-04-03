@@ -19,7 +19,7 @@ describe('GenericNextPageUrlExtractor', () => {
       url,
     });
 
-    assert.equal(nextPage, next);
+    expect(nextPage).toEqual(next);
   });
 
   it('returns null if there is no likely next page', () => {
@@ -32,6 +32,6 @@ describe('GenericNextPageUrlExtractor', () => {
       url,
     });
 
-    assert.equal(nextPage, null);
+    expect(nextPage).toEqual(null);
   });
 });

@@ -26,7 +26,7 @@ describe('WwwOpposingviewsComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwOpposingviewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Investor Icahn To Advise Trump On Finances, Regulation'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwOpposingviewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Lauren Briggs');
+      expect(author).toEqual('Lauren Briggs');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwOpposingviewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-21T23:49:10.000Z');
+      expect(date_published).toEqual('2016-12-21T23:49:10.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwOpposingviewsComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://images.opposingviews.com:8080/ovi/catalog/downloads/preview/rndr_670x377//2016/12/icahn-1482373693.jpg/rndr_670x377.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwOpposingviewsComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         "President-elect Donald Trump's transition team announced on Dec. 21 that investor Carl Icahn"
       );
     });

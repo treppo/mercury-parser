@@ -24,7 +24,7 @@ describe('PagesixComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -34,8 +34,7 @@ describe('PagesixComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Sofía Vergara and Nick Loeb’s embryo drama taking a detour'
       );
     });
@@ -47,7 +46,7 @@ describe('PagesixComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Oli Coleman');
+      expect(author).toEqual('Oli Coleman');
     });
 
     it('returns the date_published', async () => {
@@ -57,7 +56,7 @@ describe('PagesixComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-20T00:08:44.000Z');
+      expect(date_published).toEqual('2016-12-20T00:08:44.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -67,8 +66,7 @@ describe('PagesixComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://nyppagesix.files.wordpress.com/2016/12/sofia-vergara4.jpg?quality=90&strip=all&w=1200'
       );
     });
@@ -82,18 +80,12 @@ describe('PagesixComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
 
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Nick Loeb and Sofia Vergara Shutterstock / Getty Images (Composite) In the latest'
       );
     });

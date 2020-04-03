@@ -20,7 +20,7 @@ if (process.env.CI) {
   typeof Mercury === 'undefined' && require('../dist/mercury');
   describe('Tests', () => {
     it('do not run because this is CI and we do not want network requests', () => {
-      assert.equal(true, true);
+      expect(true).toEqual(true);
     });
   });
 } else {
@@ -32,12 +32,12 @@ if (process.env.CI) {
       it(`gets this title right ${article.title}`, done => {
         Merc.parse(article.url)
           .then(result => {
-            assert.equal(article.title, result.title);
+            expect(article.title).toEqual(result.title);
             done();
           })
           .catch(e => {
             console.log(e.name, e.message); // eslint-disable-line no-console
-            assert.equal(true, false);
+            expect(true).toEqual(false);
             done();
           });
       }, 15000)

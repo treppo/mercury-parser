@@ -18,6 +18,6 @@ describe('stripJunkTags($)', () => {
     let $ = cheerio.load(HTML.ignoresKeepable.before);
 
     $ = stripJunkTags($('*').first(), $);
-    assert.equal($('iframe[src^="https://www.youtube.com"]').length, 1);
+    expect($('iframe[src^="https://www.youtube.com"]').length).toEqual(1);
   });
 });

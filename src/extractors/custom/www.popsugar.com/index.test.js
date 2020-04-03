@@ -26,7 +26,7 @@ describe('WwwPopsugarComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwPopsugarComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'The 5 Biggest Decorating Mistakes Millennials Make — and How to Solve Them'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwPopsugarComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Maggie Winterfeldt');
+      expect(author).toEqual('Maggie Winterfeldt');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwPopsugarComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-19T20:55:00.000Z');
+      expect(date_published).toEqual('2016-12-19T20:55:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwPopsugarComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://media1.popsugar-assets.com/files/thumbor/ACcTJRJJH9B4HWDrRgOZF9Gk3ZU/fit-in/1200x630/filters:format_auto-!!-:strip_icc-!!-:fill-!white!-/2016/11/11/857/n/1922794/9242685858261d30174e09.95998840_edit_img_facebook_post_image_file_42696116_1478888970_14788922890196.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwPopsugarComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'No generation is perfect, and when it comes to millennials, one area ripe'
       );
     });

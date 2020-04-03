@@ -29,7 +29,7 @@ describe('PoliticoExtractor', () => {
       // then add your new extractor to
       // src/extractors/all.js
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -39,7 +39,7 @@ describe('PoliticoExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'Insiders: Trump will sink Pence in VP debate');
+      expect(title).toEqual('Insiders: Trump will sink Pence in VP debate');
     });
 
     it('returns the author', async () => {
@@ -49,7 +49,7 @@ describe('PoliticoExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Steven Shepard');
+      expect(author).toEqual('Steven Shepard');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +59,7 @@ describe('PoliticoExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-10-04T09:07:00.000Z');
+      expect(date_published).toEqual('2016-10-04T09:07:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +69,7 @@ describe('PoliticoExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://static.politico.com/0f/e7/5ee9a89044d1a01f74140bcd5b9e/caucus-vp-preview.jpg'
       );
     });
@@ -84,17 +83,11 @@ describe('PoliticoExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Tim Kaine isn’t Mike Pence’s only opponent Tuesday night in the only debate'
       );
     });

@@ -25,7 +25,7 @@ describe('BlisterreviewComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -35,7 +35,7 @@ describe('BlisterreviewComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, `2019-2020 Line Outline`);
+      expect(title).toEqual(`2019-2020 Line Outline`);
     });
 
     it('returns the author', async () => {
@@ -45,7 +45,7 @@ describe('BlisterreviewComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, `Sam Shaheen`);
+      expect(author).toEqual(`Sam Shaheen`);
     });
 
     it('returns the date_published', async () => {
@@ -55,7 +55,7 @@ describe('BlisterreviewComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-02-20T15:18:15.000Z`);
+      expect(date_published).toEqual(`2019-02-20T15:18:15.000Z`);
     });
 
     // it('returns the dek', async () => {
@@ -75,8 +75,7 @@ describe('BlisterreviewComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://blisterreview.com/wp-content/uploads/2019/02/thumb-6.jpg`
       );
     });
@@ -90,17 +89,11 @@ describe('BlisterreviewComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Ski: 2019-2020 Line Outline, 186 cmAvailable Lengths: 178, 186 cmBlister’s Measured Tip-to-Tail Length:'
       );
     });

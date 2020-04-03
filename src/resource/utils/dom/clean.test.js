@@ -8,20 +8,20 @@ describe('clean($)', () => {
     const html = "<div><script>alert('hi')</script></div>";
     const $ = cheerio.load(html);
 
-    assert.equal(clean($).html(), '<div></div>');
+    expect(clean($).html()).toEqual('<div></div>');
   });
 
   it('removes style elements', () => {
     const html = '<div><style>foo: {color: red;}</style></div>';
     const $ = cheerio.load(html);
 
-    assert.equal(clean($).html(), '<div></div>');
+    expect(clean($).html()).toEqual('<div></div>');
   });
 
   it('removes comments', () => {
     const html = '<div>HI <!-- This is a comment --></div>';
     const $ = cheerio.load(html);
 
-    assert.equal(clean($).html(), '<div>HI </div>');
+    expect(clean($).html()).toEqual('<div>HI </div>');
   });
 });

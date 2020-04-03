@@ -26,7 +26,7 @@ describe('WwwBloombergComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,8 +36,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Air Force One Costs Billions of Dollars Because It’s a Flying White House'
       );
     });
@@ -49,7 +48,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Margaret Talev');
+      expect(author).toEqual('Margaret Talev');
     });
 
     it('returns the date_published', async () => {
@@ -59,7 +58,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-07T10:00:00.011Z');
+      expect(date_published).toEqual('2016-12-07T10:00:00.011Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -69,8 +68,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ioUAfA1V2nzk/v0/-1x-1.jpg'
       );
     });
@@ -84,17 +82,11 @@ describe('WwwBloombergComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Donald Trump took aim at one of the most visible emblems of the'
       );
     });
@@ -116,7 +108,7 @@ describe('WwwBloombergComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -126,8 +118,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'Americans Are Paying Apple Millions to Shelter Overseas Profits'
       );
     });
@@ -139,7 +130,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Andrea Wong');
+      expect(author).toEqual('Andrea Wong');
     });
 
     it('returns the date_published', async () => {
@@ -149,7 +140,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-07T10:00:00.000Z');
+      expect(date_published).toEqual('2016-12-07T10:00:00.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -159,8 +150,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://www.bloomberg.com/graphics/2016-apple-profits/img/2016-apple-profits-facebook.png'
       );
     });
@@ -174,17 +164,11 @@ describe('WwwBloombergComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Over the years, Apple Inc. has become the poster child for U.S. multinationals'
       );
     });
@@ -207,7 +191,7 @@ describe('WwwBloombergComExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -217,8 +201,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         'U.S. Stocks Rise to Records, Bonds Gain on ECB Stimulus Optimism'
       );
     });
@@ -230,7 +213,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Jeremy Herron');
+      expect(author).toEqual('Jeremy Herron');
     });
 
     it('returns the date_published', async () => {
@@ -240,7 +223,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-06T23:22:22.402Z');
+      expect(date_published).toEqual('2016-12-06T23:22:22.402Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -250,8 +233,7 @@ describe('WwwBloombergComExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'https://assets.bwbx.io/javelin/public/images/social-markets-3d32d2f713.jpg'
       );
     });
@@ -265,17 +247,11 @@ describe('WwwBloombergComExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'The Dow Jones Industrial Average rose 220 points as U.S. stock indexes powered'
       );
     });

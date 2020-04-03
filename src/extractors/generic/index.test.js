@@ -17,13 +17,12 @@ describe('GenericExtractor', () => {
       });
       const newDatePublished = moment(date_published).format();
 
-      assert.equal(author, null);
-      assert.equal(
-        title,
+      expect(author).toEqual(null);
+      expect(title).toEqual(
         'California appears poised to be first to ban power-guzzling big-screen TVs'
       );
-      assert.equal(newDatePublished.split('T')[0], '2009-10-14');
-      assert.equal(dek, null);
+      expect(newDatePublished.split('T')[0]).toEqual('2009-10-14');
+      expect(dek).toEqual(null);
     });
 
     it('extracts html and returns the article title', () => {
@@ -35,13 +34,12 @@ describe('GenericExtractor', () => {
         metaCache: [],
       });
 
-      assert.equal(author, 'Eric Adams');
-      assert.equal(
-        title,
+      expect(author).toEqual('Eric Adams');
+      expect(title).toEqual(
         'Airplane Tires Don’t Explode on Landing Because They Are Pumped!'
       );
-      assert.equal(datePublished, null);
-      assert.equal(dek, null);
+      expect(datePublished).toBeUndefined();
+      expect(dek).toEqual(null);
     });
   });
 });

@@ -14,8 +14,8 @@ describe('scoreNode(node)', () => {
     const score = scoreNode(node);
     const pScore = scoreParagraph(node);
 
-    assert.equal(score, pScore);
-    assert.equal(score, 0);
+    expect(score).toEqual(pScore);
+    expect(score).toEqual(0);
   });
 
   it('scores P, LI, SPAN, and PRE using scoreParagraph', () => {
@@ -25,8 +25,8 @@ describe('scoreNode(node)', () => {
     const score = scoreNode(node);
     const pScore = scoreParagraph(node);
 
-    assert.equal(score, pScore);
-    assert.equal(score, 1);
+    expect(score).toEqual(pScore);
+    expect(score).toEqual(1);
   });
 
   it('scores P, LI, SPAN, and PRE using scoreParagraph', () => {
@@ -36,8 +36,8 @@ describe('scoreNode(node)', () => {
     const score = scoreNode(node);
     const pScore = scoreParagraph(node);
 
-    assert.equal(score, pScore);
-    assert.equal(score, 3);
+    expect(score).toEqual(pScore);
+    expect(score).toEqual(3);
   });
 
   it('scores P, LI, SPAN, and PRE using scoreParagraph', () => {
@@ -47,8 +47,8 @@ describe('scoreNode(node)', () => {
     const score = scoreNode(node);
     const pScore = scoreParagraph(node);
 
-    assert.equal(score, pScore);
-    assert.equal(score, 19);
+    expect(score).toEqual(pScore);
+    expect(score).toEqual(19);
   });
 
   it('scores divs with 5', () => {
@@ -57,7 +57,7 @@ describe('scoreNode(node)', () => {
 
     const score = scoreNode(node);
 
-    assert.equal(score, 5);
+    expect(score).toEqual(5);
   });
 
   it('scores the blockquote family with 3', () => {
@@ -66,7 +66,7 @@ describe('scoreNode(node)', () => {
 
     const score = scoreNode(node);
 
-    assert.equal(score, 3);
+    expect(score).toEqual(3);
   });
 
   it('scores a form with negative 3', () => {
@@ -75,7 +75,7 @@ describe('scoreNode(node)', () => {
 
     const score = scoreNode(node);
 
-    assert.equal(score, -3);
+    expect(score).toEqual(-3);
   });
 
   it('scores a TH element with negative 5', () => {
@@ -84,6 +84,6 @@ describe('scoreNode(node)', () => {
 
     const score = scoreNode(node);
 
-    assert.equal(score, -5);
+    expect(score).toEqual(-5);
   });
 });

@@ -29,7 +29,7 @@ describe('WwwLifehackerJpExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -39,8 +39,7 @@ describe('WwwLifehackerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        title,
+      expect(title).toEqual(
         `ファインの新聞ストッカーは引越しにも使える！ 家具の固定も簡単`
       );
     });
@@ -52,7 +51,7 @@ describe('WwwLifehackerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, '島津健吾');
+      expect(author).toEqual('島津健吾');
     });
 
     it('returns the date_published', async () => {
@@ -62,7 +61,7 @@ describe('WwwLifehackerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, `2019-03-08T04:00:00.000Z`);
+      expect(date_published).toEqual(`2019-03-08T04:00:00.000Z`);
     });
 
     it('returns the dek', async () => {
@@ -72,7 +71,7 @@ describe('WwwLifehackerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(dek, null);
+      expect(dek).toEqual(null);
     });
 
     it('returns the lead_image_url', async () => {
@@ -82,8 +81,7 @@ describe('WwwLifehackerJpExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         `https://assets.media-platform.com/lifehacker/dist/images/2019/02/28/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%882019-02-2810.48.32-w960.jpg`
       );
     });
@@ -97,17 +95,11 @@ describe('WwwLifehackerJpExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        2
-      );
+      const first13 = excerptContent($('*').first().text(), 2);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'Image: Amazon.co.jpついつい溜めてしまい、気がつくとかさばって捨てるのにも苦労する新聞紙。そんな新聞紙を捨てる時には、ファインの｢新聞ストッカー｣が役に立ちます。新聞紙を簡単に、くるくるっとテープでまけちゃうんです。Image:'
       );
     });

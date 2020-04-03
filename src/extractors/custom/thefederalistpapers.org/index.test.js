@@ -26,7 +26,7 @@ describe('ThefederalistpapersOrgExtractor', () => {
       // It sanity checks that the correct parser
       // is being selected for URLs from this domain
       const extractor = getExtractor(url);
-      assert.equal(extractor.domain, URL.parse(url).hostname);
+      expect(extractor.domain).toEqual(URL.parse(url).hostname);
     });
 
     it('returns the title', async () => {
@@ -36,7 +36,7 @@ describe('ThefederalistpapersOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(title, 'The FAILURE Of Public Schooling In One Chart');
+      expect(title).toEqual('The FAILURE Of Public Schooling In One Chart');
     });
 
     it('returns the author', async () => {
@@ -46,7 +46,7 @@ describe('ThefederalistpapersOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(author, 'Robert Gehl');
+      expect(author).toEqual('Robert Gehl');
     });
 
     it('returns the date_published', async () => {
@@ -56,7 +56,7 @@ describe('ThefederalistpapersOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(date_published, '2016-12-21T08:31:34.000Z');
+      expect(date_published).toEqual('2016-12-21T08:31:34.000Z');
     });
 
     it('returns the lead_image_url', async () => {
@@ -66,8 +66,7 @@ describe('ThefederalistpapersOrgExtractor', () => {
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        lead_image_url,
+      expect(lead_image_url).toEqual(
         'http://thefederalistpapers.integratedmarket.netdna-cdn.com/wp-content/uploads/2016/12/trends-in-public-schooling-1.jpg'
       );
     });
@@ -81,17 +80,11 @@ describe('ThefederalistpapersOrgExtractor', () => {
 
       const $ = cheerio.load(content || '');
 
-      const first13 = excerptContent(
-        $('*')
-          .first()
-          .text(),
-        13
-      );
+      const first13 = excerptContent($('*').first().text(), 13);
 
       // Update these values with the expected values from
       // the article.
-      assert.equal(
-        first13,
+      expect(first13).toEqual(
         'America’s public schools are failing… miserably. We pump more and more money into'
       );
     });

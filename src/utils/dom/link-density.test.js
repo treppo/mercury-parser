@@ -11,7 +11,7 @@ describe('linkDensity($)', () => {
 
     const density = linkDensity($('div').first(), $);
 
-    assert.equal(density, 0.5);
+    expect(density).toEqual(0.5);
   });
 
   it('returns 1 if all of the text is a link', () => {
@@ -19,7 +19,7 @@ describe('linkDensity($)', () => {
 
     const density = linkDensity($('div').first(), $);
 
-    assert.equal(density, 1);
+    expect(density).toEqual(1);
   });
 
   it("returns 0 if there's no text", () => {
@@ -27,6 +27,6 @@ describe('linkDensity($)', () => {
 
     const density = linkDensity($('div').first());
 
-    assert.equal(density, 0);
+    expect(density).toEqual(0);
   });
 });

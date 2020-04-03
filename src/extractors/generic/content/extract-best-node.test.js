@@ -16,6 +16,6 @@ describe('extractBestNode($, flags)', () => {
 
     const bestNode = extractBestNode($, opts);
 
-    assert(typeof bestNode, 'object');
+    expect(typeof bestNode).toBeTruthy();
   });
 });
