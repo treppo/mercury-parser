@@ -2,25 +2,16 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var _regeneratorRuntime = _interopDefault(require('@babel/runtime-corejs2/regenerator'));
-var _objectSpread = _interopDefault(require('@babel/runtime-corejs2/helpers/objectSpread'));
-var _objectWithoutProperties = _interopDefault(require('@babel/runtime-corejs2/helpers/objectWithoutProperties'));
-var _asyncToGenerator = _interopDefault(require('@babel/runtime-corejs2/helpers/asyncToGenerator'));
 var URL = _interopDefault(require('url'));
 var TurndownService = _interopDefault(require('turndown'));
 var cheerio = _interopDefault(require('cheerio'));
 var iconv = _interopDefault(require('iconv-lite'));
 var _parseInt = _interopDefault(require('@babel/runtime-corejs2/core-js/parse-int'));
-var _slicedToArray = _interopDefault(require('@babel/runtime-corejs2/helpers/slicedToArray'));
 var _Promise = _interopDefault(require('@babel/runtime-corejs2/core-js/promise'));
 var request = _interopDefault(require('postman-request'));
 var _Reflect$ownKeys = _interopDefault(require('@babel/runtime-corejs2/core-js/reflect/own-keys'));
-var _toConsumableArray = _interopDefault(require('@babel/runtime-corejs2/helpers/toConsumableArray'));
-var _defineProperty = _interopDefault(require('@babel/runtime-corejs2/helpers/defineProperty'));
 var _parseFloat = _interopDefault(require('@babel/runtime-corejs2/core-js/parse-float'));
 var _Set = _interopDefault(require('@babel/runtime-corejs2/core-js/set'));
-var _typeof = _interopDefault(require('@babel/runtime-corejs2/helpers/typeof'));
-var _getIterator = _interopDefault(require('@babel/runtime-corejs2/core-js/get-iterator'));
 var _Object$assign = _interopDefault(require('@babel/runtime-corejs2/core-js/object/assign'));
 var _Object$keys = _interopDefault(require('@babel/runtime-corejs2/core-js/object/keys'));
 var stringDirection = _interopDefault(require('string-direction'));
@@ -33,7 +24,7 @@ var _Array$from = _interopDefault(require('@babel/runtime-corejs2/core-js/array/
 var ellipsize = _interopDefault(require('ellipsize'));
 var _Array$isArray = _interopDefault(require('@babel/runtime-corejs2/core-js/array/is-array'));
 
-var NORMALIZE_RE = /\s{2,}(?![^<>]*<\/(pre|code|textarea)>)/g;
+const NORMALIZE_RE = /\s{2,}(?![^<>]*<\/(pre|code|textarea)>)/g;
 function normalizeSpaces(text) {
   return text.replace(NORMALIZE_RE, ' ').trim();
 }
@@ -44,9 +35,7 @@ function normalizeSpaces(text) {
 // string to be cleaned.
 // Only used for date_published currently.
 function extractFromUrl(url, regexList) {
-  var matchRe = regexList.find(function (re) {
-    return re.test(url);
-  });
+  const matchRe = regexList.find(re => re.test(url));
 
   if (matchRe) {
     return matchRe.exec(url)[1];
@@ -71,18 +60,18 @@ function extractFromUrl(url, regexList) {
 // Does not match:
 //  pg=102
 //  page:2
-var PAGE_IN_HREF_RE = new RegExp('(page|paging|(p(a|g|ag)?(e|enum|ewanted|ing|ination)))?(=|/)([0-9]{1,3})', 'i');
-var HAS_ALPHA_RE = /[a-z]/i;
-var IS_ALPHA_RE = /^[a-z]+$/i;
-var IS_DIGIT_RE = /^[0-9]+$/i;
-var ENCODING_RE = /charset=([\w-]+)\b/;
-var DEFAULT_ENCODING = 'utf-8';
+const PAGE_IN_HREF_RE = new RegExp('(page|paging|(p(a|g|ag)?(e|enum|ewanted|ing|ination)))?(=|/)([0-9]{1,3})', 'i');
+const HAS_ALPHA_RE = /[a-z]/i;
+const IS_ALPHA_RE = /^[a-z]+$/i;
+const IS_DIGIT_RE = /^[0-9]+$/i;
+const ENCODING_RE = /charset=([\w-]+)\b/;
+const DEFAULT_ENCODING = 'utf-8';
 
 function pageNumFromUrl(url) {
-  var matches = url.match(PAGE_IN_HREF_RE);
+  const matches = url.match(PAGE_IN_HREF_RE);
   if (!matches) return null;
 
-  var pageNum = _parseInt(matches[6], 10); // Return pageNum < 100, otherwise
+  const pageNum = _parseInt(matches[6], 10); // Return pageNum < 100, otherwise
   // return null
 
 
@@ -94,7 +83,7 @@ function removeAnchor(url) {
 }
 
 function isGoodSegment(segment, index, firstSegmentHasLetters) {
-  var goodSegment = true; // If this is purely a number, and it's the first or second
+  let goodSegment = true; // If this is purely a number, and it's the first or second
   // url_segment, it's probably a page number. Remove it.
 
   if (index < 2 && IS_DIGIT_RE.test(segment) && segment.length < 3) {
@@ -120,19 +109,18 @@ function isGoodSegment(segment, index, firstSegmentHasLetters) {
 
 
 function articleBaseUrl(url, parsed) {
-  var parsedUrl = parsed || URL.parse(url);
-  var protocol = parsedUrl.protocol,
-      host = parsedUrl.host,
-      path = parsedUrl.path;
-  var firstSegmentHasLetters = false;
-  var cleanedSegments = path.split('/').reverse().reduce(function (acc, rawSegment, index) {
-    var segment = rawSegment; // Split off and save anything that looks like a file type.
+  const parsedUrl = parsed || URL.parse(url);
+  const {
+    protocol,
+    host,
+    path
+  } = parsedUrl;
+  let firstSegmentHasLetters = false;
+  const cleanedSegments = path.split('/').reverse().reduce((acc, rawSegment, index) => {
+    let segment = rawSegment; // Split off and save anything that looks like a file type.
 
     if (segment.includes('.')) {
-      var _segment$split = segment.split('.'),
-          _segment$split2 = _slicedToArray(_segment$split, 2),
-          possibleSegment = _segment$split2[0],
-          fileExt = _segment$split2[1];
+      const [possibleSegment, fileExt] = segment.split('.');
 
       if (IS_ALPHA_RE.test(fileExt)) {
         segment = possibleSegment;
@@ -160,18 +148,17 @@ function articleBaseUrl(url, parsed) {
 
     return acc;
   }, []);
-  return "".concat(protocol, "//").concat(host).concat(cleanedSegments.reverse().join('/'));
+  return `${protocol}//${host}${cleanedSegments.reverse().join('/')}`;
 }
 
 // Given a string, return True if it appears to have an ending sentence
 // within it, false otherwise.
-var SENTENCE_END_RE = new RegExp('.( |$)');
+const SENTENCE_END_RE = new RegExp('.( |$)');
 function hasSentenceEnd(text) {
   return SENTENCE_END_RE.test(text);
 }
 
-function excerptContent(content) {
-  var words = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+function excerptContent(content, words = 10) {
   return content.trim().split(/\s+/).slice(0, words).join(' ');
 }
 
@@ -179,13 +166,11 @@ function excerptContent(content) {
 // ensure correctly encoded responses
 
 function getEncoding(str) {
-  var encoding = DEFAULT_ENCODING;
-  var matches = ENCODING_RE.exec(str);
+  let encoding = DEFAULT_ENCODING;
+  const matches = ENCODING_RE.exec(str);
 
   if (matches !== null) {
-    var _matches = _slicedToArray(matches, 2);
-
-    str = _matches[1];
+    [, str] = matches;
   }
 
   if (iconv.encodingExists(str)) {
@@ -195,27 +180,27 @@ function getEncoding(str) {
   return encoding;
 }
 
-var REQUEST_HEADERS = {
+const REQUEST_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
 }; // The number of milliseconds to attempt to fetch a resource before timing out.
 
-var FETCH_TIMEOUT = 10000; // Content types that we do not extract content from
+const FETCH_TIMEOUT = 10000; // Content types that we do not extract content from
 
-var BAD_CONTENT_TYPES = ['audio/mpeg', 'image/gif', 'image/jpeg', 'image/jpg'];
-var BAD_CONTENT_TYPES_RE = new RegExp("^(".concat(BAD_CONTENT_TYPES.join('|'), ")$"), 'i'); // Use this setting as the maximum size an article can be
+const BAD_CONTENT_TYPES = ['audio/mpeg', 'image/gif', 'image/jpeg', 'image/jpg'];
+const BAD_CONTENT_TYPES_RE = new RegExp(`^(${BAD_CONTENT_TYPES.join('|')})$`, 'i'); // Use this setting as the maximum size an article can be
 // for us to attempt parsing. Defaults to 5 MB.
 
-var MAX_CONTENT_LENGTH = 5242880; // Turn the global proxy on or off
+const MAX_CONTENT_LENGTH = 5242880; // Turn the global proxy on or off
 
 function get(options) {
-  return new _Promise(function (resolve, reject) {
-    request(options, function (err, response, body) {
+  return new _Promise((resolve, reject) => {
+    request(options, (err, response, body) => {
       if (err) {
         reject(err);
       } else {
         resolve({
-          body: body,
-          response: response
+          body,
+          response
         });
       }
     });
@@ -226,9 +211,7 @@ function get(options) {
 // further processing of this url.
 
 
-function validateResponse(response) {
-  var parseNon200 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
+function validateResponse(response, parseNon200 = false) {
   // Check if we got a valid status code
   // This isn't great, but I'm requiring a statusMessage to be set
   // before short circuiting b/c nock doesn't set it in tests
@@ -237,23 +220,24 @@ function validateResponse(response) {
   // in tests
   if (response.statusMessage && response.statusMessage !== 'OK' || response.statusCode !== 200) {
     if (!response.statusCode) {
-      throw new Error("Unable to fetch content. Original exception was ".concat(response.error));
+      throw new Error(`Unable to fetch content. Original exception was ${response.error}`);
     } else if (!parseNon200) {
-      throw new Error("Resource returned a response status code of ".concat(response.statusCode, " and resource was instructed to reject non-200 status codes."));
+      throw new Error(`Resource returned a response status code of ${response.statusCode} and resource was instructed to reject non-200 status codes.`);
     }
   }
 
-  var _response$headers = response.headers,
-      contentType = _response$headers['content-type'],
-      contentLength = _response$headers['content-length']; // Check that the content is not in BAD_CONTENT_TYPES
+  const {
+    'content-type': contentType,
+    'content-length': contentLength
+  } = response.headers; // Check that the content is not in BAD_CONTENT_TYPES
 
   if (BAD_CONTENT_TYPES_RE.test(contentType)) {
-    throw new Error("Content-type for this resource was ".concat(contentType, " and is not allowed."));
+    throw new Error(`Content-type for this resource was ${contentType} and is not allowed.`);
   } // Check that the content length is below maximum
 
 
   if (contentLength > MAX_CONTENT_LENGTH) {
-    throw new Error("Content for this resource was too large. Maximum content length is ".concat(MAX_CONTENT_LENGTH, "."));
+    throw new Error(`Content for this resource was too large. Maximum content length is ${MAX_CONTENT_LENGTH}.`);
   }
 
   return true;
@@ -263,80 +247,51 @@ function validateResponse(response) {
 // TODO: Ensure we are not fetching something enormous. Always return
 //       unicode content for HTML, with charset conversion.
 
-function fetchResource(_x, _x2) {
-  return _fetchResource.apply(this, arguments);
-}
+async function fetchResource(url, parsedUrl, headers = {}) {
+  parsedUrl = parsedUrl || URL.parse(encodeURI(url));
+  const options = {
+    url: parsedUrl.href,
+    headers: { ...REQUEST_HEADERS,
+      ...headers
+    },
+    timeout: FETCH_TIMEOUT,
+    // Accept cookies
+    jar: true,
+    // Set to null so the response returns as binary and body as buffer
+    // https://github.com/request/request#requestoptions-callback
+    encoding: null,
+    // Accept and decode gzip
+    gzip: true,
+    // Follow any non-GET redirects
+    followAllRedirects: true,
+    ...(typeof window !== 'undefined' ? {} : {
+      // Follow GET redirects; this option is for Node only
+      followRedirect: true
+    })
+  };
+  const {
+    response,
+    body
+  } = await get(options);
 
-function _fetchResource() {
-  _fetchResource = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(url, parsedUrl) {
-    var headers,
-        options,
-        _ref2,
-        response,
-        body,
-        _args = arguments;
-
-    return _regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            headers = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
-            parsedUrl = parsedUrl || URL.parse(encodeURI(url));
-            options = _objectSpread({
-              url: parsedUrl.href,
-              headers: _objectSpread({}, REQUEST_HEADERS, headers),
-              timeout: FETCH_TIMEOUT,
-              // Accept cookies
-              jar: true,
-              // Set to null so the response returns as binary and body as buffer
-              // https://github.com/request/request#requestoptions-callback
-              encoding: null,
-              // Accept and decode gzip
-              gzip: true,
-              // Follow any non-GET redirects
-              followAllRedirects: true
-            }, typeof window !== 'undefined' ? {} : {
-              // Follow GET redirects; this option is for Node only
-              followRedirect: true
-            });
-            _context.next = 5;
-            return get(options);
-
-          case 5:
-            _ref2 = _context.sent;
-            response = _ref2.response;
-            body = _ref2.body;
-            _context.prev = 8;
-            validateResponse(response);
-            return _context.abrupt("return", {
-              body: body,
-              response: response
-            });
-
-          case 13:
-            _context.prev = 13;
-            _context.t0 = _context["catch"](8);
-            return _context.abrupt("return", {
-              error: true,
-              message: _context.t0.message
-            });
-
-          case 16:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[8, 13]]);
-  }));
-  return _fetchResource.apply(this, arguments);
+  try {
+    validateResponse(response);
+    return {
+      body,
+      response
+    };
+  } catch (e) {
+    return {
+      error: true,
+      message: e.message
+    };
+  }
 }
 
 function convertMetaProp($, from, to) {
-  $("meta[".concat(from, "]")).each(function (_, node) {
-    var $node = $(node);
-    var value = $node.attr(from);
+  $(`meta[${from}]`).each((_, node) => {
+    const $node = $(node);
+    const value = $node.attr(from);
     $node.attr(to, value);
     $node.removeAttr(from);
   });
@@ -356,26 +311,26 @@ function normalizeMetaTags($) {
 }
 
 // Spacer images to be removed
-var SPACER_RE = new RegExp('transparent|spacer|blank', 'i'); // The class we will use to mark elements we want to keep
+const SPACER_RE = new RegExp('transparent|spacer|blank', 'i'); // The class we will use to mark elements we want to keep
 // but would normally remove
 
-var KEEP_CLASS = 'mercury-parser-keep';
-var KEEP_SELECTORS = ['iframe[src^="https://www.youtube.com"]', 'iframe[src^="https://www.youtube-nocookie.com"]', 'iframe[src^="http://www.youtube.com"]', 'iframe[src^="https://player.vimeo"]', 'iframe[src^="http://player.vimeo"]', 'iframe[src^="https://www.redditmedia.com"]']; // A list of tags to strip from the output if we encounter them.
+const KEEP_CLASS = 'mercury-parser-keep';
+const KEEP_SELECTORS = ['iframe[src^="https://www.youtube.com"]', 'iframe[src^="https://www.youtube-nocookie.com"]', 'iframe[src^="http://www.youtube.com"]', 'iframe[src^="https://player.vimeo"]', 'iframe[src^="http://player.vimeo"]', 'iframe[src^="https://www.redditmedia.com"]']; // A list of tags to strip from the output if we encounter them.
 
-var STRIP_OUTPUT_TAGS = ['title', 'script', 'noscript', 'link', 'style', 'hr', 'embed', 'iframe', 'object']; // cleanAttributes
-var WHITELIST_ATTRS = ['src', 'srcset', 'sizes', 'type', 'href', 'class', 'id', 'alt', 'xlink:href', 'width', 'height'];
-var WHITELIST_ATTRS_RE = new RegExp("^(".concat(WHITELIST_ATTRS.join('|'), ")$"), 'i'); // removeEmpty
+const STRIP_OUTPUT_TAGS = ['title', 'script', 'noscript', 'link', 'style', 'hr', 'embed', 'iframe', 'object']; // cleanAttributes
+const WHITELIST_ATTRS = ['src', 'srcset', 'sizes', 'type', 'href', 'class', 'id', 'alt', 'xlink:href', 'width', 'height'];
+const WHITELIST_ATTRS_RE = new RegExp(`^(${WHITELIST_ATTRS.join('|')})$`, 'i'); // removeEmpty
 
-var CLEAN_CONDITIONALLY_TAGS = ['ul', 'ol', 'table', 'div', 'button', 'form'].join(','); // cleanHeaders
+const CLEAN_CONDITIONALLY_TAGS = ['ul', 'ol', 'table', 'div', 'button', 'form'].join(','); // cleanHeaders
 
-var HEADER_TAGS = ['h2', 'h3', 'h4', 'h5', 'h6'];
-var HEADER_TAG_LIST = HEADER_TAGS.join(','); // // CONTENT FETCHING CONSTANTS ////
+const HEADER_TAGS = ['h2', 'h3', 'h4', 'h5', 'h6'];
+const HEADER_TAG_LIST = HEADER_TAGS.join(','); // // CONTENT FETCHING CONSTANTS ////
 // A list of strings that can be considered unlikely candidates when
 // extracting content from a resource. These strings are joined together
 // and then tested for existence using re:test, so may contain simple,
 // non-pipe style regular expression queries if necessary.
 
-var UNLIKELY_CANDIDATES_BLACKLIST = ['ad-break', 'adbox', 'advert', 'addthis', 'agegate', 'aux', 'blogger-labels', 'combx', 'comment', 'conversation', 'disqus', 'entry-unrelated', 'extra', 'foot', // 'form', // This is too generic, has too many false positives
+const UNLIKELY_CANDIDATES_BLACKLIST = ['ad-break', 'adbox', 'advert', 'addthis', 'agegate', 'aux', 'blogger-labels', 'combx', 'comment', 'conversation', 'disqus', 'entry-unrelated', 'extra', 'foot', // 'form', // This is too generic, has too many false positives
 'header', 'hidden', 'loader', 'login', // Note: This can hit 'blogindex'.
 'menu', 'meta', 'nav', 'outbrain', 'pager', 'pagination', 'predicta', // readwriteweb inline ad box
 'presence_control_external', // lifehacker.com container full of false positives
@@ -391,48 +346,48 @@ var UNLIKELY_CANDIDATES_BLACKLIST = ['ad-break', 'adbox', 'advert', 'addthis', '
 // re:test, so may contain simple, non-pipe style regular expression queries
 // if necessary.
 
-var UNLIKELY_CANDIDATES_WHITELIST = ['and', 'article', 'body', 'blogindex', 'column', 'content', 'entry-content-asset', 'format', // misuse of form
+const UNLIKELY_CANDIDATES_WHITELIST = ['and', 'article', 'body', 'blogindex', 'column', 'content', 'entry-content-asset', 'format', // misuse of form
 'hfeed', 'hentry', 'hatom', 'main', 'page', 'posts', 'shadow']; // A list of tags which, if found inside, should cause a <div /> to NOT
 // be turned into a paragraph tag. Shallow div tags without these elements
 // should be turned into <p /> tags.
 
-var DIV_TO_P_BLOCK_TAGS = ['a', 'blockquote', 'dl', 'div', 'img', 'p', 'pre', 'table'].join(','); // A list of tags that should be ignored when trying to find the top candidate
+const DIV_TO_P_BLOCK_TAGS = ['a', 'blockquote', 'dl', 'div', 'img', 'p', 'pre', 'table'].join(','); // A list of tags that should be ignored when trying to find the top candidate
 // an article container. Checked against className and id.
 //
 // TODO: Perhaps have these scale based on their odds of being quality?
 
-var POSITIVE_SCORE_HINTS = ['article', 'articlecontent', 'instapaper_body', 'blog', 'body', 'content', 'entry-content-asset', 'entry', 'hentry', 'main', 'Normal', 'page', 'pagination', 'permalink', 'post', 'story', 'text', '[-_]copy', // usatoday
+const POSITIVE_SCORE_HINTS = ['article', 'articlecontent', 'instapaper_body', 'blog', 'body', 'content', 'entry-content-asset', 'entry', 'hentry', 'main', 'Normal', 'page', 'pagination', 'permalink', 'post', 'story', 'text', '[-_]copy', // usatoday
 '\\Bcopy']; // The above list, joined into a matching regular expression
 
-var POSITIVE_SCORE_RE = new RegExp(POSITIVE_SCORE_HINTS.join('|'), 'i'); // Readability publisher-specific guidelines
+const POSITIVE_SCORE_RE = new RegExp(POSITIVE_SCORE_HINTS.join('|'), 'i'); // Readability publisher-specific guidelines
 // an article container. Checked against className and id.
 //
 // TODO: Perhaps have these scale based on their odds of being quality?
 
-var NEGATIVE_SCORE_HINTS = ['adbox', 'advert', 'author', 'bio', 'bookmark', 'bottom', 'byline', 'clear', 'com-', 'combx', 'comment', 'comment\\B', 'contact', 'copy', 'credit', 'crumb', 'date', 'deck', 'excerpt', 'featured', // tnr.com has a featured_content which throws us off
+const NEGATIVE_SCORE_HINTS = ['adbox', 'advert', 'author', 'bio', 'bookmark', 'bottom', 'byline', 'clear', 'com-', 'combx', 'comment', 'comment\\B', 'contact', 'copy', 'credit', 'crumb', 'date', 'deck', 'excerpt', 'featured', // tnr.com has a featured_content which throws us off
 'foot', 'footer', 'footnote', 'graf', 'head', 'info', 'infotext', // newscientist.com copyright
 'instapaper_ignore', 'jump', 'linebreak', 'link', 'masthead', 'media', 'meta', 'modal', 'outbrain', // slate.com junk
 'promo', 'pr_', // autoblog - press release
 'related', 'respond', 'roundcontent', // lifehacker restricted content warning
 'scroll', 'secondary', 'share', 'shopping', 'shoutbox', 'side', 'sidebar', 'sponsor', 'stamp', 'sub', 'summary', 'tags', 'tools', 'widget']; // The above list, joined into a matching regular expression
 
-var NEGATIVE_SCORE_RE = new RegExp(NEGATIVE_SCORE_HINTS.join('|'), 'i'); // XPath to try to determine if a page is wordpress. Not always successful.
+const NEGATIVE_SCORE_RE = new RegExp(NEGATIVE_SCORE_HINTS.join('|'), 'i'); // XPath to try to determine if a page is wordpress. Not always successful.
 
-var IS_WP_SELECTOR = 'meta[name=generator][value^=WordPress]'; // Match a digit. Pretty clear.
+const IS_WP_SELECTOR = 'meta[name=generator][value^=WordPress]'; // Match a digit. Pretty clear.
 
-var PAGE_RE = new RegExp('pag(e|ing|inat)', 'i'); // Match any link text/classname/id that looks like it could mean the next
+const PAGE_RE = new RegExp('pag(e|ing|inat)', 'i'); // Match any link text/classname/id that looks like it could mean the next
 // http://bit.ly/qneNIT
 
-var BLOCK_LEVEL_TAGS = ['article', 'aside', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'col', 'colgroup', 'dd', 'div', 'dl', 'dt', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'li', 'map', 'object', 'ol', 'output', 'p', 'pre', 'progress', 'section', 'table', 'tbody', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'ul', 'video'];
-var BLOCK_LEVEL_TAGS_RE = new RegExp("^(".concat(BLOCK_LEVEL_TAGS.join('|'), ")$"), 'i'); // The removal is implemented as a blacklist and whitelist, this test finds
+const BLOCK_LEVEL_TAGS = ['article', 'aside', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'col', 'colgroup', 'dd', 'div', 'dl', 'dt', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'li', 'map', 'object', 'ol', 'output', 'p', 'pre', 'progress', 'section', 'table', 'tbody', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'ul', 'video'];
+const BLOCK_LEVEL_TAGS_RE = new RegExp(`^(${BLOCK_LEVEL_TAGS.join('|')})$`, 'i'); // The removal is implemented as a blacklist and whitelist, this test finds
 // blacklisted elements that aren't whitelisted. We do this all in one
 // expression-both because it's only one pass, and because this skips the
 // serialization for whitelisted nodes.
 
-var candidatesBlacklist = UNLIKELY_CANDIDATES_BLACKLIST.join('|');
-var CANDIDATES_BLACKLIST = new RegExp(candidatesBlacklist, 'i');
-var candidatesWhitelist = UNLIKELY_CANDIDATES_WHITELIST.join('|');
-var CANDIDATES_WHITELIST = new RegExp(candidatesWhitelist, 'i');
+const candidatesBlacklist = UNLIKELY_CANDIDATES_BLACKLIST.join('|');
+const CANDIDATES_BLACKLIST = new RegExp(candidatesBlacklist, 'i');
+const candidatesWhitelist = UNLIKELY_CANDIDATES_WHITELIST.join('|');
+const CANDIDATES_WHITELIST = new RegExp(candidatesWhitelist, 'i');
 
 function stripUnlikelyCandidates($) {
   //  Loop through the provided document and remove any non-link nodes
@@ -444,12 +399,12 @@ function stripUnlikelyCandidates($) {
   //
   //  :param $: a cheerio object to strip nodes from
   //  :return $: the cleaned cheerio object
-  $('*').not('a').each(function (index, node) {
-    var $node = $(node);
-    var classes = $node.attr('class');
-    var id = $node.attr('id');
+  $('*').not('a').each((index, node) => {
+    const $node = $(node);
+    const classes = $node.attr('class');
+    const id = $node.attr('id');
     if (!id && !classes) return;
-    var classAndId = "".concat(classes || '', " ").concat(id || '');
+    const classAndId = `${classes || ''} ${id || ''}`;
 
     if (CANDIDATES_WHITELIST.test(classAndId)) {
       return;
@@ -470,10 +425,10 @@ function stripUnlikelyCandidates($) {
 //  :param $: A cheerio object
 
 function brsToPs$$1($) {
-  var collapsing = false;
-  $('br').each(function (index, element) {
-    var $element = $(element);
-    var nextElement = $element.next().get(0);
+  let collapsing = false;
+  $('br').each((index, element) => {
+    const $element = $(element);
+    const nextElement = $element.next().get(0);
 
     if (nextElement && nextElement.tagName.toLowerCase() === 'br') {
       collapsing = true;
@@ -496,18 +451,18 @@ function brsToPs$$1($) {
 // :param $: The cheerio object to handle dom manipulation
 // :param br: Whether or not the passed node is a br
 
-function paragraphize(node, $) {
-  var br = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  var $node = $(node);
+function paragraphize(node, $, br = false) {
+  const $node = $(node);
 
   if (br) {
-    var sibling = node.nextSibling;
-    var p = $('<p></p>'); // while the next node is text or not a block level element
+    let sibling = node.nextSibling;
+    const p = $('<p></p>'); // while the next node is text or not a block level element
     // append it to a new p node
 
     while (sibling && !(sibling.tagName && BLOCK_LEVEL_TAGS_RE.test(sibling.tagName))) {
-      var _sibling = sibling,
-          nextSibling = _sibling.nextSibling;
+      const {
+        nextSibling
+      } = sibling;
       $(sibling).appendTo(p);
       sibling = nextSibling;
     }
@@ -521,9 +476,9 @@ function paragraphize(node, $) {
 }
 
 function convertDivs($) {
-  $('div').each(function (index, div) {
-    var $div = $(div);
-    var convertable = $div.children(DIV_TO_P_BLOCK_TAGS).length === 0;
+  $('div').each((index, div) => {
+    const $div = $(div);
+    const convertable = $div.children(DIV_TO_P_BLOCK_TAGS).length === 0;
 
     if (convertable) {
       convertNodeTo$$1($div, $, 'p');
@@ -533,9 +488,9 @@ function convertDivs($) {
 }
 
 function convertSpans($) {
-  $('span').each(function (index, span) {
-    var $span = $(span);
-    var convertable = $span.parents('p, div').length === 0;
+  $('span').each((index, span) => {
+    const $span = $(span);
+    const convertable = $span.parents('p, div').length === 0;
 
     if (convertable) {
       convertNodeTo$$1($span, $, 'p');
@@ -562,29 +517,26 @@ function convertToParagraphs$$1($) {
   return $;
 }
 
-function convertNodeTo$$1($node, $) {
-  var tag = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'p';
-  var node = $node.get(0);
+function convertNodeTo$$1($node, $, tag = 'p') {
+  const node = $node.get(0);
 
   if (!node) {
     return $;
   }
 
-  var attrs = getAttrs(node) || {};
+  const attrs = getAttrs(node) || {};
 
-  var attribString = _Reflect$ownKeys(attrs).map(function (key) {
-    return "".concat(key, "=").concat(attrs[key]);
-  }).join(' ');
+  const attribString = _Reflect$ownKeys(attrs).map(key => `${key}=${attrs[key]}`).join(' ');
 
-  var html = $node.contents();
-  $node.replaceWith("<".concat(tag, " ").concat(attribString, ">").concat(html, "</").concat(tag, ">"));
+  const html = $node.contents();
+  $node.replaceWith(`<${tag} ${attribString}>${html}</${tag}>`);
   return $;
 }
 
 function cleanForHeight($img, $) {
-  var height = _parseInt($img.attr('height'), 10);
+  const height = _parseInt($img.attr('height'), 10);
 
-  var width = _parseInt($img.attr('width'), 10) || 20; // Remove images that explicitly have very small heights or
+  const width = _parseInt($img.attr('width'), 10) || 20; // Remove images that explicitly have very small heights or
   // widths, because they are most likely shims or icons,
   // which aren't very useful for reading.
 
@@ -611,43 +563,39 @@ function removeSpacers($img, $) {
 }
 
 function cleanImages($article, $) {
-  $article.find('img').each(function (index, img) {
-    var $img = $(img);
+  $article.find('img').each((index, img) => {
+    const $img = $(img);
     cleanForHeight($img, $);
     removeSpacers($img, $);
   });
   return $;
 }
 
-function markToKeep(article, $, url) {
-  var tags = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-
+function markToKeep(article, $, url, tags = []) {
   if (tags.length === 0) {
     tags = KEEP_SELECTORS;
   }
 
   if (url) {
-    var _URL$parse = URL.parse(url),
-        protocol = _URL$parse.protocol,
-        hostname = _URL$parse.hostname;
-
-    tags = [].concat(_toConsumableArray(tags), ["iframe[src^=\"".concat(protocol, "//").concat(hostname, "\"]")]);
+    const {
+      protocol,
+      hostname
+    } = URL.parse(url);
+    tags = [...tags, `iframe[src^="${protocol}//${hostname}"]`];
   }
 
   $(tags.join(','), article).addClass(KEEP_CLASS);
   return $;
 }
 
-function stripJunkTags(article, $) {
-  var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-
+function stripJunkTags(article, $, tags = []) {
   if (tags.length === 0) {
     tags = STRIP_OUTPUT_TAGS;
   } // Remove matching elements, but ignore
   // any element with a class of mercury-parser-keep
 
 
-  $(tags.join(','), article).not(".".concat(KEEP_CLASS)).remove();
+  $(tags.join(','), article).not(`.${KEEP_CLASS}`).remove();
   return $;
 }
 
@@ -655,14 +603,12 @@ function stripJunkTags(article, $) {
 // strip them. Otherwise, turn 'em into H2s.
 
 function cleanHOnes$$1(article, $) {
-  var $hOnes = $('h1', article);
+  const $hOnes = $('h1', article);
 
   if ($hOnes.length < 3) {
-    $hOnes.each(function (index, node) {
-      return $(node).remove();
-    });
+    $hOnes.each((index, node) => $(node).remove());
   } else {
-    $hOnes.each(function (index, node) {
+    $hOnes.each((index, node) => {
       convertNodeTo$$1($(node), $, 'h2');
     });
   }
@@ -671,18 +617,20 @@ function cleanHOnes$$1(article, $) {
 }
 
 function removeAllButWhitelist($article, $) {
-  $article.find('*').each(function (index, node) {
-    var attrs = getAttrs(node);
-    setAttrs(node, _Reflect$ownKeys(attrs).reduce(function (acc, attr) {
+  $article.find('*').each((index, node) => {
+    const attrs = getAttrs(node);
+    setAttrs(node, _Reflect$ownKeys(attrs).reduce((acc, attr) => {
       if (WHITELIST_ATTRS_RE.test(attr)) {
-        return _objectSpread({}, acc, _defineProperty({}, attr, attrs[attr]));
+        return { ...acc,
+          [attr]: attrs[attr]
+        };
       }
 
       return acc;
     }, {}));
   }); // Remove the mercury-parser-keep class from result
 
-  $(".".concat(KEEP_CLASS), $article).removeClass(KEEP_CLASS);
+  $(`.${KEEP_CLASS}`, $article).removeClass(KEEP_CLASS);
   return $article;
 } // Remove attributes like style or align
 
@@ -695,8 +643,8 @@ function cleanAttributes$$1($article, $) {
 }
 
 function removeEmpty($article, $) {
-  $article.find('p').each(function (index, p) {
-    var $p = $(p);
+  $article.find('p').each((index, p) => {
+    const $p = $(p);
     if ($p.find('iframe, img').length === 0 && $p.text().trim() === '') $p.remove();
   });
   return $;
@@ -705,44 +653,44 @@ function removeEmpty($article, $) {
 // // CONTENT FETCHING CONSTANTS ////
 // for a document.
 
-var NON_TOP_CANDIDATE_TAGS$1 = ['br', 'b', 'i', 'label', 'hr', 'area', 'base', 'basefont', 'input', 'img', 'link', 'meta'];
-var NON_TOP_CANDIDATE_TAGS_RE$1 = new RegExp("^(".concat(NON_TOP_CANDIDATE_TAGS$1.join('|'), ")$"), 'i'); // A list of selectors that specify, very clearly, either hNews or other
+const NON_TOP_CANDIDATE_TAGS$1 = ['br', 'b', 'i', 'label', 'hr', 'area', 'base', 'basefont', 'input', 'img', 'link', 'meta'];
+const NON_TOP_CANDIDATE_TAGS_RE$1 = new RegExp(`^(${NON_TOP_CANDIDATE_TAGS$1.join('|')})$`, 'i'); // A list of selectors that specify, very clearly, either hNews or other
 // very content-specific style content, like Blogger templates.
 // More examples here: http://microformats.org/wiki/blog-post-formats
 
-var HNEWS_CONTENT_SELECTORS$1 = [['.hentry', '.entry-content'], ['entry', '.entry-content'], ['.entry', '.entry_content'], ['.post', '.postbody'], ['.post', '.post_body'], ['.post', '.post-body']];
-var PHOTO_HINTS$1 = ['figure', 'photo', 'image', 'caption'];
-var PHOTO_HINTS_RE$1 = new RegExp(PHOTO_HINTS$1.join('|'), 'i'); // A list of strings that denote a positive scoring for this content as being
+const HNEWS_CONTENT_SELECTORS$1 = [['.hentry', '.entry-content'], ['entry', '.entry-content'], ['.entry', '.entry_content'], ['.post', '.postbody'], ['.post', '.post_body'], ['.post', '.post-body']];
+const PHOTO_HINTS$1 = ['figure', 'photo', 'image', 'caption'];
+const PHOTO_HINTS_RE$1 = new RegExp(PHOTO_HINTS$1.join('|'), 'i'); // A list of strings that denote a positive scoring for this content as being
 // an article container. Checked against className and id.
 //
 // TODO: Perhaps have these scale based on their odds of being quality?
 
-var POSITIVE_SCORE_HINTS$1 = ['article', 'articlecontent', 'instapaper_body', 'blog', 'body', 'content', 'entry-content-asset', 'entry', 'hentry', 'main', 'Normal', 'page', 'pagination', 'permalink', 'post', 'story', 'text', '[-_]copy', // usatoday
+const POSITIVE_SCORE_HINTS$1 = ['article', 'articlecontent', 'instapaper_body', 'blog', 'body', 'content', 'entry-content-asset', 'entry', 'hentry', 'main', 'Normal', 'page', 'pagination', 'permalink', 'post', 'story', 'text', '[-_]copy', // usatoday
 '\\Bcopy']; // The above list, joined into a matching regular expression
 
-var POSITIVE_SCORE_RE$1 = new RegExp(POSITIVE_SCORE_HINTS$1.join('|'), 'i'); // Readability publisher-specific guidelines
+const POSITIVE_SCORE_RE$1 = new RegExp(POSITIVE_SCORE_HINTS$1.join('|'), 'i'); // Readability publisher-specific guidelines
 
-var READABILITY_ASSET$1 = new RegExp('entry-content-asset', 'i'); // A list of strings that denote a negative scoring for this content as being
+const READABILITY_ASSET$1 = new RegExp('entry-content-asset', 'i'); // A list of strings that denote a negative scoring for this content as being
 // an article container. Checked against className and id.
 //
 // TODO: Perhaps have these scale based on their odds of being quality?
 
-var NEGATIVE_SCORE_HINTS$1 = ['adbox', 'advert', 'author', 'bio', 'bookmark', 'bottom', 'byline', 'clear', 'com-', 'combx', 'comment', 'comment\\B', 'contact', 'copy', 'credit', 'crumb', 'date', 'deck', 'excerpt', 'featured', // tnr.com has a featured_content which throws us off
+const NEGATIVE_SCORE_HINTS$1 = ['adbox', 'advert', 'author', 'bio', 'bookmark', 'bottom', 'byline', 'clear', 'com-', 'combx', 'comment', 'comment\\B', 'contact', 'copy', 'credit', 'crumb', 'date', 'deck', 'excerpt', 'featured', // tnr.com has a featured_content which throws us off
 'foot', 'footer', 'footnote', 'graf', 'head', 'info', 'infotext', // newscientist.com copyright
 'instapaper_ignore', 'jump', 'linebreak', 'link', 'masthead', 'media', 'meta', 'modal', 'outbrain', // slate.com junk
 'promo', 'pr_', // autoblog - press release
 'related', 'respond', 'roundcontent', // lifehacker restricted content warning
 'scroll', 'secondary', 'share', 'shopping', 'shoutbox', 'side', 'sidebar', 'sponsor', 'stamp', 'sub', 'summary', 'tags', 'tools', 'widget']; // The above list, joined into a matching regular expression
 
-var NEGATIVE_SCORE_RE$1 = new RegExp(NEGATIVE_SCORE_HINTS$1.join('|'), 'i'); // Match a digit. Pretty clear.
-var PARAGRAPH_SCORE_TAGS$1 = new RegExp('^(p|li|span|pre)$', 'i');
-var CHILD_CONTENT_TAGS$1 = new RegExp('^(td|blockquote|ol|ul|dl)$', 'i');
-var BAD_TAGS$1 = new RegExp('^(address|form)$', 'i');
+const NEGATIVE_SCORE_RE$1 = new RegExp(NEGATIVE_SCORE_HINTS$1.join('|'), 'i'); // Match a digit. Pretty clear.
+const PARAGRAPH_SCORE_TAGS$1 = new RegExp('^(p|li|span|pre)$', 'i');
+const CHILD_CONTENT_TAGS$1 = new RegExp('^(td|blockquote|ol|ul|dl)$', 'i');
+const BAD_TAGS$1 = new RegExp('^(address|form)$', 'i');
 
 function getWeight(node) {
-  var classes = node.attr('class');
-  var id = node.attr('id');
-  var score = 0;
+  const classes = node.attr('class');
+  const id = node.attr('id');
+  let score = 0;
 
   if (id) {
     // if id exists, try to score on both positive and negative
@@ -799,13 +747,12 @@ function scoreCommas(text) {
   return (text.match(/,/g) || []).length;
 }
 
-var idkRe = new RegExp('^(p|pre)$', 'i');
-function scoreLength(textLength) {
-  var tagName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'p';
-  var chunks = textLength / 50;
+const idkRe = new RegExp('^(p|pre)$', 'i');
+function scoreLength(textLength, tagName = 'p') {
+  const chunks = textLength / 50;
 
   if (chunks > 0) {
-    var lengthBonus; // No idea why p or pre are being tamped down here
+    let lengthBonus; // No idea why p or pre are being tamped down here
     // but just following the source for now
     // Not even sure why tagName is included here,
     // since this is only being called from the context
@@ -826,9 +773,9 @@ function scoreLength(textLength) {
 // commas, etc. Higher is better.
 
 function scoreParagraph$$1(node) {
-  var score = 1;
-  var text = node.text().trim();
-  var textLength = text.length; // If this paragraph is less than 25 characters, don't count it.
+  let score = 1;
+  const text = node.text().trim();
+  const textLength = text.length; // If this paragraph is less than 25 characters, don't count it.
 
   if (textLength < 25) {
     return 0;
@@ -857,7 +804,7 @@ function setScore($node, $, score) {
 
 function addScore$$1($node, $, amount) {
   try {
-    var score = getOrInitScore$$1($node, $) + amount;
+    const score = getOrInitScore$$1($node, $) + amount;
     setScore($node, $, score);
   } catch (e) {// Ignoring; error occurs in scoreNode
   }
@@ -866,7 +813,7 @@ function addScore$$1($node, $, amount) {
 }
 
 function addToParent$$1(node, $, score) {
-  var parent = node.parent();
+  const parent = node.parent();
 
   if (parent) {
     addScore$$1(parent, $, score * 0.25);
@@ -878,9 +825,8 @@ function addToParent$$1(node, $, score) {
 // if not, initializes a score based on
 // the node's tag type
 
-function getOrInitScore$$1($node, $) {
-  var weightNodes = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  var score = getScore($node);
+function getOrInitScore$$1($node, $, weightNodes = true) {
+  let score = getScore($node);
 
   if (score) {
     return score;
@@ -899,11 +845,11 @@ function getOrInitScore$$1($node, $) {
 // just scores based on tag.
 
 function scoreNode$$1($node) {
-  var _$node$get = $node.get(0),
-      tagName = _$node$get.tagName; // TODO: Consider ordering by most likely.
+  const {
+    tagName
+  } = $node.get(0); // TODO: Consider ordering by most likely.
   // E.g., if divs are a more common tag on a page,
   // Could save doing that regex test on every node – AP
-
 
   if (PARAGRAPH_SCORE_TAGS$1.test(tagName)) {
     return scoreParagraph$$1($node);
@@ -930,8 +876,9 @@ function scoreNode$$1($node) {
 
 function convertSpans$1($node, $) {
   if ($node.get(0)) {
-    var _$node$get = $node.get(0),
-        tagName = _$node$get.tagName;
+    const {
+      tagName
+    } = $node.get(0);
 
     if (tagName === 'span') {
       // convert spans to divs
@@ -948,13 +895,13 @@ function addScoreTo($node, $, score) {
 }
 
 function scorePs($, weightNodes) {
-  $('p, pre').not('[score]').each(function (index, node) {
+  $('p, pre').not('[score]').each((index, node) => {
     // The raw score for this paragraph, before we add any parent/child
     // scores.
-    var $node = $(node);
+    let $node = $(node);
     $node = setScore($node, $, getOrInitScore$$1($node, $, weightNodes));
-    var $parent = $node.parent();
-    var rawScore = scoreNode$$1($node);
+    const $parent = $node.parent();
+    const rawScore = scoreNode$$1($node);
     addScoreTo($parent, $, rawScore, weightNodes);
 
     if ($parent) {
@@ -968,16 +915,11 @@ function scorePs($, weightNodes) {
 // content score, grandparents half
 
 
-function scoreContent$$1($) {
-  var weightNodes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+function scoreContent$$1($, weightNodes = true) {
   // First, look for special hNews based selectors and give them a big
   // boost, if they exist
-  HNEWS_CONTENT_SELECTORS$1.forEach(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-        parentSelector = _ref2[0],
-        childSelector = _ref2[1];
-
-    $("".concat(parentSelector, " ").concat(childSelector)).each(function (index, node) {
+  HNEWS_CONTENT_SELECTORS$1.forEach(([parentSelector, childSelector]) => {
+    $(`${parentSelector} ${childSelector}`).each((index, node) => {
       addScore$$1($(node).parent(parentSelector), $, 80);
     });
   }); // Doubling this again
@@ -1001,23 +943,23 @@ function mergeSiblings($candidate, topScore, $) {
     return $candidate;
   }
 
-  var siblingScoreThreshold = Math.max(10, topScore * 0.25);
-  var wrappingDiv = $('<div></div>');
-  $candidate.parent().children().each(function (index, sibling) {
-    var $sibling = $(sibling); // Ignore tags like BR, HR, etc
+  const siblingScoreThreshold = Math.max(10, topScore * 0.25);
+  const wrappingDiv = $('<div></div>');
+  $candidate.parent().children().each((index, sibling) => {
+    const $sibling = $(sibling); // Ignore tags like BR, HR, etc
 
     if (NON_TOP_CANDIDATE_TAGS_RE$1.test(sibling.tagName)) {
       return null;
     }
 
-    var siblingScore = getScore($sibling);
+    const siblingScore = getScore($sibling);
 
     if (siblingScore) {
       if ($sibling.get(0) === $candidate.get(0)) {
         wrappingDiv.append($sibling);
       } else {
-        var contentBonus = 0;
-        var density = linkDensity($sibling); // If sibling has a very low link density,
+        let contentBonus = 0;
+        const density = linkDensity($sibling); // If sibling has a very low link density,
         // give it a small bonus
 
         if (density < 0.05) {
@@ -1036,15 +978,15 @@ function mergeSiblings($candidate, topScore, $) {
           contentBonus += topScore * 0.2;
         }
 
-        var newScore = siblingScore + contentBonus;
+        const newScore = siblingScore + contentBonus;
 
         if (newScore >= siblingScoreThreshold) {
           return wrappingDiv.append($sibling);
         }
 
         if (sibling.tagName === 'p') {
-          var siblingContent = $sibling.text();
-          var siblingContentLength = textLength(siblingContent);
+          const siblingContent = $sibling.text();
+          const siblingContentLength = textLength(siblingContent);
 
           if (siblingContentLength > 80 && density < 0.25) {
             return wrappingDiv.append($sibling);
@@ -1070,16 +1012,16 @@ function mergeSiblings($candidate, topScore, $) {
 // candidate nodes we found and find the one with the highest score.
 
 function findTopCandidate$$1($) {
-  var $candidate;
-  var topScore = 0;
-  $('[score]').each(function (index, node) {
+  let $candidate;
+  let topScore = 0;
+  $('[score]').each((index, node) => {
     // Ignore tags like BR, HR, etc
     if (NON_TOP_CANDIDATE_TAGS_RE$1.test(node.tagName)) {
       return;
     }
 
-    var $node = $(node);
-    var score = getScore($node);
+    const $node = $(node);
+    const score = getScore($node);
 
     if (score > topScore) {
       topScore = score;
@@ -1107,19 +1049,19 @@ function removeUnlessContent($node, $, weight) {
     return;
   }
 
-  var content = normalizeSpaces($node.text());
+  const content = normalizeSpaces($node.text());
 
   if (scoreCommas(content) < 10) {
-    var pCount = $('p', $node).length;
-    var inputCount = $('input', $node).length; // Looks like a form, too many inputs.
+    const pCount = $('p', $node).length;
+    const inputCount = $('input', $node).length; // Looks like a form, too many inputs.
 
     if (inputCount > pCount / 3) {
       $node.remove();
       return;
     }
 
-    var contentLength = content.length;
-    var imgCount = $('img', $node).length; // Content is too short, and there are no images, so
+    const contentLength = content.length;
+    const imgCount = $('img', $node).length; // Content is too short, and there are no images, so
     // this is probably junk content.
 
     if (contentLength < 25 && imgCount === 0) {
@@ -1127,7 +1069,7 @@ function removeUnlessContent($node, $, weight) {
       return;
     }
 
-    var density = linkDensity($node); // Too high of link density, is probably a menu or
+    const density = linkDensity($node); // Too high of link density, is probably a menu or
     // something similar.
     // console.log(weight, density, contentLength)
 
@@ -1142,11 +1084,11 @@ function removeUnlessContent($node, $, weight) {
       // Don't remove the node if it's a list and the
       // previous sibling starts with a colon though. That
       // means it's probably content.
-      var tagName = $node.get(0).tagName.toLowerCase();
-      var nodeIsList = tagName === 'ol' || tagName === 'ul';
+      const tagName = $node.get(0).tagName.toLowerCase();
+      const nodeIsList = tagName === 'ol' || tagName === 'ul';
 
       if (nodeIsList) {
-        var previousNode = $node.prev();
+        const previousNode = $node.prev();
 
         if (previousNode && normalizeSpaces(previousNode.text()).slice(-1) === ':') {
           return;
@@ -1157,7 +1099,7 @@ function removeUnlessContent($node, $, weight) {
       return;
     }
 
-    var scriptCount = $('script', $node).length; // Too many script tags, not enough content.
+    const scriptCount = $('script', $node).length; // Too many script tags, not enough content.
 
     if (scriptCount > 0 && contentLength < 150) {
       $node.remove();
@@ -1173,11 +1115,11 @@ function removeUnlessContent($node, $, weight) {
 
 
 function cleanTags$$1($article, $) {
-  $(CLEAN_CONDITIONALLY_TAGS, $article).each(function (index, node) {
-    var $node = $(node); // If marked to keep, skip it
+  $(CLEAN_CONDITIONALLY_TAGS, $article).each((index, node) => {
+    const $node = $(node); // If marked to keep, skip it
 
-    if ($node.hasClass(KEEP_CLASS) || $node.find(".".concat(KEEP_CLASS)).length > 0) return;
-    var weight = getScore($node);
+    if ($node.hasClass(KEEP_CLASS) || $node.find(`.${KEEP_CLASS}`).length > 0) return;
+    let weight = getScore($node);
 
     if (!weight) {
       weight = getOrInitScore$$1($node, $);
@@ -1195,10 +1137,9 @@ function cleanTags$$1($article, $) {
   return $;
 }
 
-function cleanHeaders($article, $) {
-  var title = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-  $(HEADER_TAG_LIST, $article).each(function (index, header) {
-    var $header = $(header); // Remove any headers that appear before all other p tags in the
+function cleanHeaders($article, $, title = '') {
+  $(HEADER_TAG_LIST, $article).each((index, header) => {
+    const $header = $(header); // Remove any headers that appear before all other p tags in the
     // document. This probably means that it was part of the title, a
     // subtitle or something else extraneous like a datestamp or byline,
     // all of which should be handled by other metadata handling.
@@ -1235,46 +1176,42 @@ function rewriteTopLevel$$1(article, $) {
 }
 
 function absolutize($, rootUrl, attr) {
-  var baseUrl = $('base').attr('href');
-  $("[".concat(attr, "]")).each(function (_, node) {
-    var attrs = getAttrs(node);
-    var url = attrs[attr];
+  const baseUrl = $('base').attr('href');
+  $(`[${attr}]`).each((_, node) => {
+    const attrs = getAttrs(node);
+    const url = attrs[attr];
     if (!url) return;
-    var absoluteUrl = URL.resolve(baseUrl || rootUrl, url);
+    const absoluteUrl = URL.resolve(baseUrl || rootUrl, url);
     setAttr(node, attr, absoluteUrl);
   });
 }
 
 function absolutizeSet($, rootUrl, $content) {
-  $('[srcset]', $content).each(function (_, node) {
-    var attrs = getAttrs(node);
-    var urlSet = attrs.srcset;
+  $('[srcset]', $content).each((_, node) => {
+    const attrs = getAttrs(node);
+    const urlSet = attrs.srcset;
 
     if (urlSet) {
       // a comma should be considered part of the candidate URL unless preceded by a descriptor
       // descriptors can only contain positive numbers followed immediately by either 'w' or 'x'
       // space characters inside the URL should be encoded (%20 or +)
-      var candidates = urlSet.match(/(?:\s*)(\S+(?:\s*[\d.]+[wx])?)(?:\s*,\s*)?/g);
+      const candidates = urlSet.match(/(?:\s*)(\S+(?:\s*[\d.]+[wx])?)(?:\s*,\s*)?/g);
       if (!candidates) return;
-      var absoluteCandidates = candidates.map(function (candidate) {
+      const absoluteCandidates = candidates.map(candidate => {
         // a candidate URL cannot start or end with a comma
         // descriptors are separated from the URLs by unescaped whitespace
-        var parts = candidate.trim().replace(/,$/, '').split(/\s+/);
+        const parts = candidate.trim().replace(/,$/, '').split(/\s+/);
         parts[0] = URL.resolve(rootUrl, parts[0]);
         return parts.join(' ');
       });
-
-      var absoluteUrlSet = _toConsumableArray(new _Set(absoluteCandidates)).join(', ');
-
+      const absoluteUrlSet = [...new _Set(absoluteCandidates)].join(', ');
       setAttr(node, 'srcset', absoluteUrlSet);
     }
   });
 }
 
 function makeLinksAbsolute$$1($content, $, url) {
-  ['href', 'src'].forEach(function (attr) {
-    return absolutize($, url, attr);
-  });
+  ['href', 'src'].forEach(attr => absolutize($, url, attr));
   absolutizeSet($, url, $content);
   return $content;
 }
@@ -1286,9 +1223,9 @@ function textLength(text) {
 // Takes a node, returns a float
 
 function linkDensity($node) {
-  var totalTextLength = textLength($node.text());
-  var linkText = $node.find('a').text();
-  var linkLength = textLength(linkText);
+  const totalTextLength = textLength($node.text());
+  const linkText = $node.find('a').text();
+  const linkLength = textLength(linkText);
 
   if (totalTextLength > 0) {
     return linkLength / totalTextLength;
@@ -1303,72 +1240,35 @@ function linkDensity($node) {
 
 // search for, find a meta tag associated.
 
-function extractFromMeta$$1($, metaNames, cachedNames) {
-  var cleanTags = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
-  var foundNames = metaNames.filter(function (name) {
-    return cachedNames.indexOf(name) !== -1;
-  }); // eslint-disable-next-line no-restricted-syntax
+function extractFromMeta$$1($, metaNames, cachedNames, cleanTags = true) {
+  const foundNames = metaNames.filter(name => cachedNames.indexOf(name) !== -1); // eslint-disable-next-line no-restricted-syntax
 
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  for (const name of foundNames) {
+    const type = 'name';
+    const value = 'value';
+    const nodes = $(`meta[${type}="${name}"]`); // Get the unique value of every matching node, in case there
+    // are two meta tags with the same name and value.
+    // Remove empty values.
 
-  try {
-    var _loop = function _loop() {
-      var name = _step.value;
-      var type = 'name';
-      var value = 'value';
-      var nodes = $("meta[".concat(type, "=\"").concat(name, "\"]")); // Get the unique value of every matching node, in case there
-      // are two meta tags with the same name and value.
-      // Remove empty values.
+    const values = nodes.map((index, node) => $(node).attr(value)).toArray().filter(text => text !== ''); // If we have more than one value for the same name, we have a
+    // conflict and can't trust any of them. Skip this name. If we have
+    // zero, that means our meta tags had no values. Skip this name
+    // also.
 
-      var values = nodes.map(function (index, node) {
-        return $(node).attr(value);
-      }).toArray().filter(function (text) {
-        return text !== '';
-      }); // If we have more than one value for the same name, we have a
-      // conflict and can't trust any of them. Skip this name. If we have
-      // zero, that means our meta tags had no values. Skip this name
-      // also.
+    if (values.length === 1) {
+      let metaValue; // Meta values that contain HTML should be stripped, as they
+      // weren't subject to cleaning previously.
 
-      if (values.length === 1) {
-        var metaValue; // Meta values that contain HTML should be stripped, as they
-        // weren't subject to cleaning previously.
-
-        if (cleanTags) {
-          metaValue = stripTags(values[0], $);
-        } else {
-          var _values = _slicedToArray(values, 1);
-
-          metaValue = _values[0];
-        }
-
-        return {
-          v: metaValue
-        };
+      if (cleanTags) {
+        metaValue = stripTags(values[0], $);
+      } else {
+        [metaValue] = values;
       }
-    };
 
-    for (var _iterator = _getIterator(foundNames), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var _ret = _loop();
-
-      if (_typeof(_ret) === "object") return _ret.v;
-    } // If nothing is found, return null
-
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
+      return metaValue;
     }
-  }
+  } // If nothing is found, return null
+
 
   return null;
 }
@@ -1391,49 +1291,27 @@ function isGoodNode($node, maxChildren) {
 // meta-information, like author, title, date published, etc.
 
 
-function extractFromSelectors$$1($, selectors) {
-  var maxChildren = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-  var textOnly = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+function extractFromSelectors$$1($, selectors, maxChildren = 1, textOnly = true) {
   // eslint-disable-next-line no-restricted-syntax
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  for (const selector of selectors) {
+    const nodes = $(selector); // If we didn't get exactly one of this selector, this may be
+    // a list of articles or comments. Skip it.
 
-  try {
-    for (var _iterator = _getIterator(selectors), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var selector = _step.value;
-      var nodes = $(selector); // If we didn't get exactly one of this selector, this may be
-      // a list of articles or comments. Skip it.
+    if (nodes.length === 1) {
+      const $node = $(nodes[0]);
 
-      if (nodes.length === 1) {
-        var $node = $(nodes[0]);
+      if (isGoodNode($node, maxChildren)) {
+        let content;
 
-        if (isGoodNode($node, maxChildren)) {
-          var content = void 0;
-
-          if (textOnly) {
-            content = $node.text();
-          } else {
-            content = $node.html();
-          }
-
-          if (content) {
-            return content;
-          }
+        if (textOnly) {
+          content = $node.text();
+        } else {
+          content = $node.html();
         }
-      }
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
+
+        if (content) {
+          return content;
+        }
       }
     }
   }
@@ -1445,17 +1323,19 @@ function extractFromSelectors$$1($, selectors) {
 function stripTags(text, $) {
   // Wrapping text in html element prevents errors when text
   // has no html
-  var cleanText = $("<span>".concat(text, "</span>")).text();
+  const cleanText = $(`<span>${text}</span>`).text();
   return cleanText === '' ? text : cleanText;
 }
 
 function withinComment$$1($node) {
-  var parents = $node.parents().toArray();
-  var commentParent = parents.find(function (parent) {
-    var attrs = getAttrs(parent);
-    var nodeClass = attrs.class,
-        id = attrs.id;
-    var classAndId = "".concat(nodeClass, " ").concat(id);
+  const parents = $node.parents().toArray();
+  const commentParent = parents.find(parent => {
+    const attrs = getAttrs(parent);
+    const {
+      class: nodeClass,
+      id
+    } = attrs;
+    const classAndId = `${nodeClass} ${id}`;
     return classAndId.includes('comment');
   });
   return commentParent !== undefined;
@@ -1473,12 +1353,14 @@ function isWordpress($) {
 }
 
 function getAttrs(node) {
-  var attribs = node.attribs,
-      attributes = node.attributes;
+  const {
+    attribs,
+    attributes
+  } = node;
 
   if (!attribs && attributes) {
-    var attrs = _Reflect$ownKeys(attributes).reduce(function (acc, index) {
-      var attr = attributes[index];
+    const attrs = _Reflect$ownKeys(attributes).reduce((acc, index) => {
+      const attr = attributes[index];
       if (!attr.name || !attr.value) return acc;
       acc[attr.name] = attr.value;
       return acc;
@@ -1508,7 +1390,7 @@ function setAttrs(node, attrs) {
       node.removeAttribute(node.attributes[0].name);
     }
 
-    _Reflect$ownKeys(attrs).forEach(function (key) {
+    _Reflect$ownKeys(attrs).forEach(key => {
       node.setAttribute(key, attrs[key]);
     });
   }
@@ -1518,11 +1400,11 @@ function setAttrs(node, attrs) {
 
 // DOM manipulation
 
-var IS_LINK = new RegExp('https?://', 'i');
-var IMAGE_RE = '.(png|gif|jpe?g)';
-var IS_IMAGE = new RegExp("".concat(IMAGE_RE), 'i');
-var IS_SRCSET = new RegExp("".concat(IMAGE_RE, "(\\?\\S+)?(\\s*[\\d.]+[wx])"), 'i');
-var TAGS_TO_REMOVE = ['script', 'style', 'form'].join(',');
+const IS_LINK = new RegExp('https?://', 'i');
+const IMAGE_RE = '.(png|gif|jpe?g)';
+const IS_IMAGE = new RegExp(`${IMAGE_RE}`, 'i');
+const IS_SRCSET = new RegExp(`${IMAGE_RE}(\\?\\S+)?(\\s*[\\d.]+[wx])`, 'i');
+const TAGS_TO_REMOVE = ['script', 'style', 'form'].join(',');
 
 // lazy loaded images into normal images.
 // Many sites will have img tags with no source, or an image tag with a src
@@ -1530,11 +1412,11 @@ var TAGS_TO_REMOVE = ['script', 'style', 'form'].join(',');
 // the src attribute so the images are no longer lazy loaded.
 
 function convertLazyLoadedImages($) {
-  $('img').each(function (_, img) {
-    var attrs = getAttrs(img);
+  $('img').each((_, img) => {
+    const attrs = getAttrs(img);
 
-    _Reflect$ownKeys(attrs).forEach(function (attr) {
-      var value = attrs[attr];
+    _Reflect$ownKeys(attrs).forEach(attr => {
+      const value = attrs[attr];
 
       if (attr !== 'srcset' && IS_LINK.test(value) && IS_SRCSET.test(value)) {
         $(img).attr('srcset', value);
@@ -1561,7 +1443,7 @@ function clean($) {
   return $;
 }
 
-var Resource = {
+const Resource = {
   // Create a Resource.
   //
   // :param url: The URL for the document we should retrieve.
@@ -1569,87 +1451,50 @@ var Resource = {
   //                  attempting to fetch it ourselves. Expects a
   //                  string.
   // :param headers: Custom headers to be included in the request
-  create: function () {
-    var _create = _asyncToGenerator(
-    /*#__PURE__*/
-    _regeneratorRuntime.mark(function _callee(url, preparedResponse, parsedUrl) {
-      var headers,
-          result,
-          validResponse,
-          _args = arguments;
-      return _regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              headers = _args.length > 3 && _args[3] !== undefined ? _args[3] : {};
+  async create(url, preparedResponse, parsedUrl, headers = {}) {
+    let result;
 
-              if (!preparedResponse) {
-                _context.next = 6;
-                break;
-              }
-
-              validResponse = {
-                statusMessage: 'OK',
-                statusCode: 200,
-                headers: {
-                  'content-type': 'text/html',
-                  'content-length': 500
-                }
-              };
-              result = {
-                body: preparedResponse,
-                response: validResponse
-              };
-              _context.next = 9;
-              break;
-
-            case 6:
-              _context.next = 8;
-              return fetchResource(url, parsedUrl, headers);
-
-            case 8:
-              result = _context.sent;
-
-            case 9:
-              if (!result.error) {
-                _context.next = 12;
-                break;
-              }
-
-              result.failed = true;
-              return _context.abrupt("return", result);
-
-            case 12:
-              return _context.abrupt("return", this.generateDoc(result));
-
-            case 13:
-            case "end":
-              return _context.stop();
-          }
+    if (preparedResponse) {
+      const validResponse = {
+        statusMessage: 'OK',
+        statusCode: 200,
+        headers: {
+          'content-type': 'text/html',
+          'content-length': 500
         }
-      }, _callee, this);
-    }));
-
-    function create(_x, _x2, _x3) {
-      return _create.apply(this, arguments);
+      };
+      result = {
+        body: preparedResponse,
+        response: validResponse
+      };
+    } else {
+      result = await fetchResource(url, parsedUrl, headers);
     }
 
-    return create;
-  }(),
-  generateDoc: function generateDoc(_ref) {
-    var content = _ref.body,
-        response = _ref.response;
-    var _response$headers$con = response.headers['content-type'],
-        contentType = _response$headers$con === void 0 ? '' : _response$headers$con; // TODO: Implement is_text function from
+    if (result.error) {
+      result.failed = true;
+      return result;
+    }
+
+    return this.generateDoc(result);
+  },
+
+  generateDoc({
+    body: content,
+    response
+  }) {
+    const {
+      'content-type': contentType = ''
+    } = response.headers; // TODO: Implement is_text function from
     // https://github.com/ReadabilityHoldings/readability/blob/8dc89613241d04741ebd42fa9fa7df1b1d746303/readability/utils/text.py#L57
 
     if (!contentType.includes('html') && !contentType.includes('text')) {
       throw new Error('Content does not appear to be text.');
     }
 
-    var $ = this.encodeDoc({
-      content: content,
-      contentType: contentType
+    let $ = this.encodeDoc({
+      content,
+      contentType
     });
 
     if ($.root().children().length === 0) {
@@ -1661,16 +1506,18 @@ var Resource = {
     $ = clean($);
     return $;
   },
-  encodeDoc: function encodeDoc(_ref2) {
-    var content = _ref2.content,
-        contentType = _ref2.contentType;
-    var encoding = getEncoding(contentType);
-    var decodedContent = iconv.decode(content, encoding);
-    var $ = cheerio.load(decodedContent); // after first cheerio.load, check to see if encoding matches
 
-    var contentTypeSelector = 'meta[http-equiv=content-type i]';
-    var metaContentType = $(contentTypeSelector).attr('content') || $('meta[charset]').attr('charset');
-    var properEncoding = getEncoding(metaContentType); // if encodings in the header/body dont match, use the one in the body
+  encodeDoc({
+    content,
+    contentType
+  }) {
+    const encoding = getEncoding(contentType);
+    let decodedContent = iconv.decode(content, encoding);
+    let $ = cheerio.load(decodedContent); // after first cheerio.load, check to see if encoding matches
+
+    const contentTypeSelector = 'meta[http-equiv=content-type i]';
+    const metaContentType = $(contentTypeSelector).attr('content') || $('meta[charset]').attr('charset');
+    const properEncoding = getEncoding(metaContentType); // if encodings in the header/body dont match, use the one in the body
 
     if (metaContentType && properEncoding !== encoding) {
       decodedContent = iconv.decode(content, properEncoding);
@@ -1679,63 +1526,33 @@ var Resource = {
 
     return $;
   }
+
 };
 
-var _marked =
-/*#__PURE__*/
-_regeneratorRuntime.mark(range);
-
-function range() {
-  var start,
-      end,
-      _args = arguments;
-  return _regeneratorRuntime.wrap(function range$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          start = _args.length > 0 && _args[0] !== undefined ? _args[0] : 1;
-          end = _args.length > 1 && _args[1] !== undefined ? _args[1] : 1;
-
-        case 2:
-          if (!(start <= end)) {
-            _context.next = 7;
-            break;
-          }
-
-          _context.next = 5;
-          return start += 1;
-
-        case 5:
-          _context.next = 2;
-          break;
-
-        case 7:
-        case "end":
-          return _context.stop();
-      }
-    }
-  }, _marked, this);
+function* range(start = 1, end = 1) {
+  while (start <= end) {
+    yield start += 1;
+  }
 }
 
 // extremely simple url validation as a first step
-function validateUrl(_ref) {
-  var hostname = _ref.hostname;
+function validateUrl({
+  hostname
+}) {
   // If this isn't a valid url, return an error message
   return !!hostname;
 }
 
-var merge = function merge(extractor, domains) {
-  return domains.reduce(function (acc, domain) {
-    acc[domain] = extractor;
-    return acc;
-  }, {});
-};
+const merge = (extractor, domains) => domains.reduce((acc, domain) => {
+  acc[domain] = extractor;
+  return acc;
+}, {});
 
 function mergeSupportedDomains(extractor) {
-  return extractor.supportedDomains ? merge(extractor, [extractor.domain].concat(_toConsumableArray(extractor.supportedDomains))) : merge(extractor, [extractor.domain]);
+  return extractor.supportedDomains ? merge(extractor, [extractor.domain, ...extractor.supportedDomains]) : merge(extractor, [extractor.domain]);
 }
 
-var apiExtractors = {};
+const apiExtractors = {};
 function addExtractor(extractor) {
   if (!extractor || !extractor.domain) {
     return {
@@ -1749,7 +1566,7 @@ function addExtractor(extractor) {
   return apiExtractors;
 }
 
-var BloggerExtractor = {
+const BloggerExtractor = {
   domain: 'blogspot.com',
   content: {
     // Blogger is insane and does not load its content
@@ -1774,7 +1591,7 @@ var BloggerExtractor = {
   }
 };
 
-var NYMagExtractor = {
+const NYMagExtractor = {
   domain: 'nymag.com',
   content: {
     // Order by most likely. Extractor will stop on first occurrence
@@ -1791,8 +1608,8 @@ var NYMagExtractor = {
       // Convert h1s to h2s
       h1: 'h2',
       // Convert lazy-loaded noscript images to figures
-      noscript: function noscript($node) {
-        var $children = $node.children();
+      noscript: $node => {
+        const $children = $node.children();
 
         if ($children.length === 1 && $children.get(0) !== undefined && $children.get(0).tagName.toLowerCase() === 'img') {
           return 'figure';
@@ -1816,15 +1633,15 @@ var NYMagExtractor = {
   }
 };
 
-var WikipediaExtractor = {
+const WikipediaExtractor = {
   domain: 'wikipedia.org',
   content: {
     selectors: ['#mw-content-text'],
     defaultCleaner: false,
     // transform top infobox to an image with caption
     transforms: {
-      '.infobox img': function infoboxImg($node) {
-        var $parent = $node.parents('.infobox'); // Only prepend the first image in .infobox
+      '.infobox img': $node => {
+        const $parent = $node.parents('.infobox'); // Only prepend the first image in .infobox
 
         if ($parent.children('img').length === 0) {
           $parent.prepend($node);
@@ -1845,7 +1662,7 @@ var WikipediaExtractor = {
   }
 };
 
-var TwitterExtractor = {
+const TwitterExtractor = {
   domain: 'twitter.com',
   content: {
     transforms: {
@@ -1853,9 +1670,9 @@ var TwitterExtractor = {
       // Twitter doesn't have nice selectors, so our initial
       // selector grabs the whole page, then we're re-writing
       // it to fit our needs before we clean it up.
-      '.permalink[role=main]': function permalinkRoleMain($node, $) {
-        var tweets = $node.find('.tweet');
-        var $tweetContainer = $('<div id="TWEETS_GO_HERE"></div>');
+      '.permalink[role=main]': ($node, $) => {
+        const tweets = $node.find('.tweet');
+        const $tweetContainer = $('<div id="TWEETS_GO_HERE"></div>');
         $tweetContainer.append(tweets);
         $node.replaceWith($tweetContainer);
       },
@@ -1875,7 +1692,7 @@ var TwitterExtractor = {
   }
 };
 
-var NYTimesExtractor = {
+const NYTimesExtractor = {
   domain: 'www.nytimes.com',
   title: {
     selectors: ['h1.g-headline', 'h1[itemprop="headline"]', 'h1.headline', 'h1 .balancedHeadline']
@@ -1886,9 +1703,9 @@ var NYTimesExtractor = {
   content: {
     selectors: ['div.g-blocks', 'section[name="articleBody"]', 'article#story'],
     transforms: {
-      'img.g-lazy': function imgGLazy($node) {
-        var src = $node.attr('src');
-        var width = 640;
+      'img.g-lazy': $node => {
+        let src = $node.attr('src');
+        const width = 640;
         src = src.replace('{{size}}', width);
         $node.attr('src', src);
       }
@@ -1908,7 +1725,7 @@ var NYTimesExtractor = {
 
 // Rename CustomExtractor
 // to fit your publication
-var TheAtlanticExtractor = {
+const TheAtlanticExtractor = {
   domain: 'www.theatlantic.com',
   title: {
     selectors: ['h1', '.c-article-header__hed']
@@ -1942,7 +1759,7 @@ var TheAtlanticExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var NewYorkerExtractor = {
+const NewYorkerExtractor = {
   domain: 'www.newyorker.com',
   title: {
     selectors: ['h1[class^="ArticleHeader__hed"]', ['meta[name="og:title"]', 'value']]
@@ -1978,7 +1795,7 @@ var NewYorkerExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var WiredExtractor = {
+const WiredExtractor = {
   domain: 'www.wired.com',
   title: {
     selectors: ['h1.post-title']
@@ -2012,7 +1829,7 @@ var WiredExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var MSNExtractor = {
+const MSNExtractor = {
   domain: 'www.msn.com',
   title: {
     selectors: ['h1']
@@ -2046,7 +1863,7 @@ var MSNExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var YahooExtractor = {
+const YahooExtractor = {
   domain: 'www.yahoo.com',
   title: {
     selectors: ['header.canvas-header']
@@ -2082,7 +1899,7 @@ var YahooExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var BuzzfeedExtractor = {
+const BuzzfeedExtractor = {
   domain: 'www.buzzfeed.com',
   title: {
     selectors: ['h1[id="post-title"]']
@@ -2097,7 +1914,7 @@ var BuzzfeedExtractor = {
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
       h2: 'b',
-      'div.longform_custom_header_media': function divLongform_custom_header_media($node) {
+      'div.longform_custom_header_media': $node => {
         if ($node.has('img') && $node.has('.longform_header_image_source')) {
           return 'figure';
         }
@@ -2127,7 +1944,7 @@ var BuzzfeedExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var WikiaExtractor = {
+const WikiaExtractor = {
   domain: 'fandom.wikia.com',
   title: {
     selectors: ['h1.entry-title']
@@ -2161,7 +1978,7 @@ var WikiaExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var LittleThingsExtractor = {
+const LittleThingsExtractor = {
   domain: 'www.littlethings.com',
   title: {
     selectors: ['h1.post-title']
@@ -2190,7 +2007,7 @@ var LittleThingsExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var PoliticoExtractor = {
+const PoliticoExtractor = {
   domain: 'www.politico.com',
   title: {
     selectors: [// enter title selectors
@@ -2224,7 +2041,7 @@ var PoliticoExtractor = {
   excerpt: null
 };
 
-var DeadspinExtractor = {
+const DeadspinExtractor = {
   domain: 'deadspin.com',
   supportedDomains: ['jezebel.com', 'lifehacker.com', 'kotaku.com', 'gizmodo.com', 'jalopnik.com', 'kinja.com', 'avclub.com', 'clickhole.com', 'splinternews.com', 'theonion.com', 'theroot.com', 'thetakeout.com', 'theinventory.com'],
   title: {
@@ -2238,9 +2055,9 @@ var DeadspinExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'iframe.lazyload[data-recommend-id^="youtube://"]': function iframeLazyloadDataRecommendIdYoutube($node) {
-        var youtubeId = $node.attr('id').split('youtube-')[1];
-        $node.attr('src', "https://www.youtube.com/embed/".concat(youtubeId));
+      'iframe.lazyload[data-recommend-id^="youtube://"]': $node => {
+        const youtubeId = $node.attr('id').split('youtube-')[1];
+        $node.attr('src', `https://www.youtube.com/embed/${youtubeId}`);
       }
     },
     // Is there anything that is in the result that shouldn't be?
@@ -2271,7 +2088,7 @@ var DeadspinExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var BroadwayWorldExtractor = {
+const BroadwayWorldExtractor = {
   domain: 'www.broadwayworld.com',
   title: {
     selectors: ['h1.article-title']
@@ -2311,7 +2128,7 @@ var BroadwayWorldExtractor = {
 // Rename CustomExtractor
 // to fit your publication
 // (e.g., NYTimesExtractor)
-var ApartmentTherapyExtractor = {
+const ApartmentTherapyExtractor = {
   domain: 'www.apartmenttherapy.com',
   title: {
     selectors: ['h1.headline']
@@ -2324,10 +2141,12 @@ var ApartmentTherapyExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'div[data-render-react-id="images/LazyPicture"]': function divDataRenderReactIdImagesLazyPicture($node, $) {
-        var data = JSON.parse($node.attr('data-props'));
-        var src = data.sources[0].src;
-        var $img = $('<img />').attr('src', src);
+      'div[data-render-react-id="images/LazyPicture"]': ($node, $) => {
+        const data = JSON.parse($node.attr('data-props'));
+        const {
+          src
+        } = data.sources[0];
+        const $img = $('<img />').attr('src', src);
         $node.replaceWith($img);
       }
     },
@@ -2355,7 +2174,7 @@ var ApartmentTherapyExtractor = {
   }
 };
 
-var MediumExtractor = {
+const MediumExtractor = {
   domain: 'medium.com',
   title: {
     selectors: ['h1', ['meta[name="og:title"]', 'value']]
@@ -2369,20 +2188,16 @@ var MediumExtractor = {
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
       // Re-write lazy-loaded youtube videos
-      iframe: function iframe($node) {
-        var ytRe = /https:\/\/i.embed.ly\/.+url=https:\/\/i\.ytimg\.com\/vi\/(\w+)\//;
-        var thumb = decodeURIComponent($node.attr('data-thumbnail'));
-        var $parent = $node.parents('figure');
+      iframe: $node => {
+        const ytRe = /https:\/\/i.embed.ly\/.+url=https:\/\/i\.ytimg\.com\/vi\/(\w+)\//;
+        const thumb = decodeURIComponent($node.attr('data-thumbnail'));
+        const $parent = $node.parents('figure');
 
         if (ytRe.test(thumb)) {
-          var _thumb$match = thumb.match(ytRe),
-              _thumb$match2 = _slicedToArray(_thumb$match, 2),
-              _ = _thumb$match2[0],
-              youtubeId = _thumb$match2[1]; // eslint-disable-line
+          const [_, youtubeId] = thumb.match(ytRe); // eslint-disable-line
 
-
-          $node.attr('src', "https://www.youtube.com/embed/".concat(youtubeId));
-          var $caption = $parent.find('figcaption');
+          $node.attr('src', `https://www.youtube.com/embed/${youtubeId}`);
+          const $caption = $parent.find('figcaption');
           $parent.empty().append([$node, $caption]);
           return;
         } // If we can't draw the YouTube preview, remove the figure.
@@ -2391,17 +2206,17 @@ var MediumExtractor = {
         $parent.remove();
       },
       // rewrite figures to pull out image and caption, remove rest
-      figure: function figure($node) {
+      figure: $node => {
         // ignore if figure has an iframe
         if ($node.find('iframe').length > 0) return;
-        var $img = $node.find('img').slice(-1)[0];
-        var $caption = $node.find('figcaption');
+        const $img = $node.find('img').slice(-1)[0];
+        const $caption = $node.find('figcaption');
         $node.empty().append([$img, $caption]);
       },
       // Remove any smaller images that did not get caught by the generic image
       // cleaner (author photo 48px, leading sentence images 79px, etc.).
-      img: function img($node) {
-        var width = _parseInt($node.attr('width'), 10);
+      img: $node => {
+        const width = _parseInt($node.attr('width'), 10);
 
         if (width < 100) $node.remove();
       }
@@ -2428,7 +2243,7 @@ var MediumExtractor = {
   }
 };
 
-var WwwTmzComExtractor = {
+const WwwTmzComExtractor = {
   domain: 'www.tmz.com',
   title: {
     selectors: ['.post-title-breadcrumb', 'h1', '.headline']
@@ -2457,7 +2272,7 @@ var WwwTmzComExtractor = {
   }
 };
 
-var WwwWashingtonpostComExtractor = {
+const WwwWashingtonpostComExtractor = {
   domain: 'www.washingtonpost.com',
   title: {
     selectors: ['h1', '#topper-headline-wrapper']
@@ -2479,7 +2294,7 @@ var WwwWashingtonpostComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'div.inline-content': function divInlineContent($node) {
+      'div.inline-content': $node => {
         if ($node.has('img,iframe,video').length > 0) {
           return 'figure';
         }
@@ -2496,7 +2311,7 @@ var WwwWashingtonpostComExtractor = {
   }
 };
 
-var WwwHuffingtonpostComExtractor = {
+const WwwHuffingtonpostComExtractor = {
   domain: 'www.huffingtonpost.com',
   title: {
     selectors: ['h1.headline__title']
@@ -2526,7 +2341,7 @@ var WwwHuffingtonpostComExtractor = {
   }
 };
 
-var NewrepublicComExtractor = {
+const NewrepublicComExtractor = {
   domain: 'newrepublic.com',
   title: {
     selectors: ['h1.article-headline', '.minutes-primary h1.minute-title']
@@ -2556,7 +2371,7 @@ var NewrepublicComExtractor = {
   }
 };
 
-var MoneyCnnComExtractor = {
+const MoneyCnnComExtractor = {
   domain: 'money.cnn.com',
   title: {
     selectors: ['.article-title']
@@ -2586,7 +2401,7 @@ var MoneyCnnComExtractor = {
   }
 };
 
-var WwwThevergeComExtractor = {
+const WwwThevergeComExtractor = {
   domain: 'www.theverge.com',
   supportedDomains: ['www.polygon.com'],
   title: {
@@ -2612,8 +2427,8 @@ var WwwThevergeComExtractor = {
     'div.c-entry-content'],
     // Transform lazy-loaded images
     transforms: {
-      noscript: function noscript($node) {
-        var $children = $node.children();
+      noscript: $node => {
+        const $children = $node.children();
 
         if ($children.length === 1 && $children.get(0).tagName === 'img') {
           return 'span';
@@ -2629,7 +2444,7 @@ var WwwThevergeComExtractor = {
   }
 };
 
-var WwwCnnComExtractor = {
+const WwwCnnComExtractor = {
   domain: 'www.cnn.com',
   title: {
     selectors: ['h1.pg-headline', 'h1']
@@ -2650,8 +2465,8 @@ var WwwCnnComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '.zn-body__paragraph, .el__leafmedia--sourced-paragraph': function znBody__paragraphEl__leafmediaSourcedParagraph($node) {
-        var $text = $node.html();
+      '.zn-body__paragraph, .el__leafmedia--sourced-paragraph': $node => {
+        const $text = $node.html();
 
         if ($text) {
           return 'p';
@@ -2661,7 +2476,7 @@ var WwwCnnComExtractor = {
       },
       // this transform cleans the short, all-link sections linking
       // to related content but not marked as such in any way.
-      '.zn-body__paragraph': function znBody__paragraph($node) {
+      '.zn-body__paragraph': $node => {
         if ($node.has('a')) {
           if ($node.text().trim() === $node.find('a').text().trim()) {
             $node.remove();
@@ -2677,7 +2492,7 @@ var WwwCnnComExtractor = {
   }
 };
 
-var WwwAolComExtractor = {
+const WwwAolComExtractor = {
   domain: 'www.aol.com',
   title: {
     selectors: ['h1.p-article__title']
@@ -2708,7 +2523,7 @@ var WwwAolComExtractor = {
   }
 };
 
-var WwwYoutubeComExtractor = {
+const WwwYoutubeComExtractor = {
   domain: 'www.youtube.com',
   title: {
     selectors: ['.watch-title', 'h1.watch-title-container']
@@ -2733,9 +2548,10 @@ var WwwYoutubeComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '#player-api': function playerApi($node, $) {
-        var videoId = $('meta[itemProp="videoId"]').attr('value');
-        $node.html("\n          <iframe src=\"https://www.youtube.com/embed/".concat(videoId, "\" frameborder=\"0\" allowfullscreen></iframe>"));
+      '#player-api': ($node, $) => {
+        const videoId = $('meta[itemProp="videoId"]').attr('value');
+        $node.html(`
+          <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`);
       }
     },
     // Is there anything that is in the result that shouldn't be?
@@ -2745,7 +2561,7 @@ var WwwYoutubeComExtractor = {
   }
 };
 
-var WwwTheguardianComExtractor = {
+const WwwTheguardianComExtractor = {
   domain: 'www.theguardian.com',
   title: {
     selectors: ['.content__headline']
@@ -2774,7 +2590,7 @@ var WwwTheguardianComExtractor = {
   }
 };
 
-var WwwSbnationComExtractor = {
+const WwwSbnationComExtractor = {
   domain: 'www.sbnation.com',
   title: {
     selectors: ['h1.c-page-title']
@@ -2803,7 +2619,7 @@ var WwwSbnationComExtractor = {
   }
 };
 
-var WwwBloombergComExtractor = {
+const WwwBloombergComExtractor = {
   domain: 'www.bloomberg.com',
   title: {
     selectors: [// normal articles
@@ -2839,7 +2655,7 @@ var WwwBloombergComExtractor = {
   }
 };
 
-var WwwBustleComExtractor = {
+const WwwBustleComExtractor = {
   domain: 'www.bustle.com',
   title: {
     selectors: ['h1.post-page__title']
@@ -2865,7 +2681,7 @@ var WwwBustleComExtractor = {
   }
 };
 
-var WwwNprOrgExtractor = {
+const WwwNprOrgExtractor = {
   domain: 'www.npr.org',
   title: {
     selectors: ['h1', '.storytitle']
@@ -2894,7 +2710,7 @@ var WwwNprOrgExtractor = {
   }
 };
 
-var WwwRecodeNetExtractor = {
+const WwwRecodeNetExtractor = {
   domain: 'www.recode.net',
   title: {
     selectors: ['h1.c-page-title']
@@ -2923,7 +2739,7 @@ var WwwRecodeNetExtractor = {
   }
 };
 
-var QzComExtractor = {
+const QzComExtractor = {
   domain: 'qz.com',
   title: {
     selectors: ['header.item-header.content-width-responsive']
@@ -2949,7 +2765,7 @@ var QzComExtractor = {
   }
 };
 
-var WwwDmagazineComExtractor = {
+const WwwDmagazineComExtractor = {
   domain: 'www.dmagazine.com',
   title: {
     selectors: ['h1.story__title']
@@ -2980,7 +2796,7 @@ var WwwDmagazineComExtractor = {
   }
 };
 
-var WwwReutersComExtractor = {
+const WwwReutersComExtractor = {
   domain: 'www.reuters.com',
   title: {
     selectors: ['h1.article-headline']
@@ -3008,7 +2824,7 @@ var WwwReutersComExtractor = {
   }
 };
 
-var MashableComExtractor = {
+const MashableComExtractor = {
   domain: 'mashable.com',
   title: {
     selectors: ['h1.title']
@@ -3036,7 +2852,7 @@ var MashableComExtractor = {
   }
 };
 
-var WwwChicagotribuneComExtractor = {
+const WwwChicagotribuneComExtractor = {
   domain: 'www.chicagotribune.com',
   title: {
     selectors: ['h1.trb_ar_hl_t']
@@ -3062,7 +2878,7 @@ var WwwChicagotribuneComExtractor = {
   }
 };
 
-var WwwVoxComExtractor = {
+const WwwVoxComExtractor = {
   domain: 'www.vox.com',
   title: {
     selectors: ['h1.c-page-title']
@@ -3084,8 +2900,8 @@ var WwwVoxComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'figure .e-image__image noscript': function figureEImage__imageNoscript($node) {
-        var imgHtml = $node.html();
+      'figure .e-image__image noscript': $node => {
+        const imgHtml = $node.html();
         $node.parents('.e-image__image').find('.c-dynamic-image').replaceWith(imgHtml);
       },
       'figure .e-image__meta': 'figcaption'
@@ -3097,7 +2913,7 @@ var WwwVoxComExtractor = {
   }
 };
 
-var NewsNationalgeographicComExtractor = {
+const NewsNationalgeographicComExtractor = {
   domain: 'news.nationalgeographic.com',
   title: {
     selectors: ['h1', 'h1.main-title']
@@ -3121,11 +2937,11 @@ var NewsNationalgeographicComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '.parsys.content': function parsysContent($node, $) {
-        var $imgSrc = $node.find('.image.parbase.section').find('.picturefill').first().data('platform-src');
+      '.parsys.content': ($node, $) => {
+        const $imgSrc = $node.find('.image.parbase.section').find('.picturefill').first().data('platform-src');
 
         if ($imgSrc) {
-          $node.prepend($("<img class=\"__image-lead__\" src=\"".concat($imgSrc, "\"/>")));
+          $node.prepend($(`<img class="__image-lead__" src="${$imgSrc}"/>`));
         }
       }
     },
@@ -3136,7 +2952,7 @@ var NewsNationalgeographicComExtractor = {
   }
 };
 
-var WwwNationalgeographicComExtractor = {
+const WwwNationalgeographicComExtractor = {
   domain: 'www.nationalgeographic.com',
   title: {
     selectors: ['h1', 'h1.main-title']
@@ -3158,22 +2974,25 @@ var WwwNationalgeographicComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '.parsys.content': function parsysContent($node, $) {
-        var $imageParent = $node.children().first();
+      '.parsys.content': ($node, $) => {
+        const $imageParent = $node.children().first();
 
         if ($imageParent.hasClass('imageGroup')) {
-          var $dataAttrContainer = $imageParent.find('.media--medium__container').children().first();
-          var imgPath1 = $dataAttrContainer.data('platform-image1-path');
-          var imgPath2 = $dataAttrContainer.data('platform-image2-path');
+          const $dataAttrContainer = $imageParent.find('.media--medium__container').children().first();
+          const imgPath1 = $dataAttrContainer.data('platform-image1-path');
+          const imgPath2 = $dataAttrContainer.data('platform-image2-path');
 
           if (imgPath2 && imgPath1) {
-            $node.prepend($("<div class=\"__image-lead__\">\n                <img src=\"".concat(imgPath1, "\"/>\n                <img src=\"").concat(imgPath2, "\"/>\n              </div>")));
+            $node.prepend($(`<div class="__image-lead__">
+                <img src="${imgPath1}"/>
+                <img src="${imgPath2}"/>
+              </div>`));
           }
         } else {
-          var $imgSrc = $node.find('.image.parbase.section').find('.picturefill').first().data('platform-src');
+          const $imgSrc = $node.find('.image.parbase.section').find('.picturefill').first().data('platform-src');
 
           if ($imgSrc) {
-            $node.prepend($("<img class=\"__image-lead__\" src=\"".concat($imgSrc, "\"/>")));
+            $node.prepend($(`<img class="__image-lead__" src="${$imgSrc}"/>`));
           }
         }
       }
@@ -3185,7 +3004,7 @@ var WwwNationalgeographicComExtractor = {
   }
 };
 
-var WwwLatimesComExtractor = {
+const WwwLatimesComExtractor = {
   domain: 'www.latimes.com',
   title: {
     selectors: ['.trb_ar_hl']
@@ -3204,8 +3023,8 @@ var WwwLatimesComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '.trb_ar_la': function trb_ar_la($node) {
-        var $figure = $node.find('figure');
+      '.trb_ar_la': $node => {
+        const $figure = $node.find('figure');
         $node.replaceWith($figure);
       }
     },
@@ -3216,7 +3035,7 @@ var WwwLatimesComExtractor = {
   }
 };
 
-var PagesixComExtractor = {
+const PagesixComExtractor = {
   domain: 'pagesix.com',
   supportedDomains: ['nypost.com'],
   title: {
@@ -3249,7 +3068,7 @@ var PagesixComExtractor = {
   }
 };
 
-var ThefederalistpapersOrgExtractor = {
+const ThefederalistpapersOrgExtractor = {
   domain: 'thefederalistpapers.org',
   title: {
     selectors: ['h1.entry-title']
@@ -3275,7 +3094,7 @@ var ThefederalistpapersOrgExtractor = {
   }
 };
 
-var WwwCbssportsComExtractor = {
+const WwwCbssportsComExtractor = {
   domain: 'www.cbssports.com',
   title: {
     selectors: ['.article-headline']
@@ -3305,7 +3124,7 @@ var WwwCbssportsComExtractor = {
   }
 };
 
-var WwwMsnbcComExtractor = {
+const WwwMsnbcComExtractor = {
   domain: 'www.msnbc.com',
   title: {
     selectors: ['h1', 'h1.is-title-pane']
@@ -3327,15 +3146,12 @@ var WwwMsnbcComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '.pane-node-body': function paneNodeBody($node, $) {
-        var _WwwMsnbcComExtractor = _slicedToArray(WwwMsnbcComExtractor.lead_image_url.selectors[0], 2),
-            selector = _WwwMsnbcComExtractor[0],
-            attr = _WwwMsnbcComExtractor[1];
-
-        var src = $(selector).attr(attr);
+      '.pane-node-body': ($node, $) => {
+        const [selector, attr] = WwwMsnbcComExtractor.lead_image_url.selectors[0];
+        const src = $(selector).attr(attr);
 
         if (src) {
-          $node.prepend("<img src=\"".concat(src, "\" />"));
+          $node.prepend(`<img src="${src}" />`);
         }
       }
     },
@@ -3346,7 +3162,7 @@ var WwwMsnbcComExtractor = {
   }
 };
 
-var WwwThepoliticalinsiderComExtractor = {
+const WwwThepoliticalinsiderComExtractor = {
   domain: 'www.thepoliticalinsider.com',
   title: {
     selectors: [['meta[name="sailthru.title"]', 'value']]
@@ -3377,7 +3193,7 @@ var WwwThepoliticalinsiderComExtractor = {
   }
 };
 
-var WwwMentalflossComExtractor = {
+const WwwMentalflossComExtractor = {
   domain: 'www.mentalfloss.com',
   title: {
     selectors: ['h1.title', '.title-group', '.inner']
@@ -3404,7 +3220,7 @@ var WwwMentalflossComExtractor = {
   }
 };
 
-var AbcnewsGoComExtractor = {
+const AbcnewsGoComExtractor = {
   domain: 'abcnews.go.com',
   title: {
     selectors: ['.article-header h1']
@@ -3432,7 +3248,7 @@ var AbcnewsGoComExtractor = {
   }
 };
 
-var WwwNydailynewsComExtractor = {
+const WwwNydailynewsComExtractor = {
   domain: 'www.nydailynews.com',
   title: {
     selectors: ['h1#ra-headline']
@@ -3458,7 +3274,7 @@ var WwwNydailynewsComExtractor = {
   }
 };
 
-var WwwCnbcComExtractor = {
+const WwwCnbcComExtractor = {
   domain: 'www.cnbc.com',
   title: {
     selectors: ['h1.title', 'h1.ArticleHeader-headline']
@@ -3484,7 +3300,7 @@ var WwwCnbcComExtractor = {
   }
 };
 
-var WwwPopsugarComExtractor = {
+const WwwPopsugarComExtractor = {
   domain: 'www.popsugar.com',
   title: {
     selectors: ['h2.post-title', 'title-text']
@@ -3510,7 +3326,7 @@ var WwwPopsugarComExtractor = {
   }
 };
 
-var ObserverComExtractor = {
+const ObserverComExtractor = {
   domain: 'observer.com',
   title: {
     selectors: ['h1.entry-title']
@@ -3539,7 +3355,7 @@ var ObserverComExtractor = {
   }
 };
 
-var PeopleComExtractor = {
+const PeopleComExtractor = {
   domain: 'people.com',
   title: {
     selectors: [['meta[name="og:title"]', 'value']]
@@ -3565,7 +3381,7 @@ var PeopleComExtractor = {
   }
 };
 
-var WwwUsmagazineComExtractor = {
+const WwwUsmagazineComExtractor = {
   domain: 'www.usmagazine.com',
   title: {
     selectors: ['header h1']
@@ -3592,7 +3408,7 @@ var WwwUsmagazineComExtractor = {
   }
 };
 
-var WwwRollingstoneComExtractor = {
+const WwwRollingstoneComExtractor = {
   domain: 'www.rollingstone.com',
   title: {
     selectors: ['h1.content-title']
@@ -3622,7 +3438,7 @@ var WwwRollingstoneComExtractor = {
   }
 };
 
-var twofortysevensportsComExtractor = {
+const twofortysevensportsComExtractor = {
   domain: '247sports.com',
   title: {
     selectors: ['title', 'article header h1']
@@ -3648,7 +3464,7 @@ var twofortysevensportsComExtractor = {
   }
 };
 
-var UproxxComExtractor = {
+const UproxxComExtractor = {
   domain: 'uproxx.com',
   title: {
     selectors: ['div.post-top h1']
@@ -3677,7 +3493,7 @@ var UproxxComExtractor = {
   }
 };
 
-var WwwEonlineComExtractor = {
+const WwwEonlineComExtractor = {
   domain: 'www.eonline.com',
   title: {
     selectors: ['h1.article__title']
@@ -3706,7 +3522,7 @@ var WwwEonlineComExtractor = {
   }
 };
 
-var WwwMiamiheraldComExtractor = {
+const WwwMiamiheraldComExtractor = {
   domain: 'www.miamiherald.com',
   title: {
     selectors: ['h1.title']
@@ -3730,7 +3546,7 @@ var WwwMiamiheraldComExtractor = {
   }
 };
 
-var WwwRefinery29ComExtractor = {
+const WwwRefinery29ComExtractor = {
   domain: 'www.refinery29.com',
   title: {
     selectors: ['h1.title']
@@ -3750,8 +3566,8 @@ var WwwRefinery29ComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'div.loading noscript': function divLoadingNoscript($node) {
-        var imgHtml = $node.html();
+      'div.loading noscript': $node => {
+        const imgHtml = $node.html();
         $node.parents('.loading').replaceWith(imgHtml);
       },
       '.section-image': 'figure',
@@ -3765,7 +3581,7 @@ var WwwRefinery29ComExtractor = {
   }
 };
 
-var WwwMacrumorsComExtractor = {
+const WwwMacrumorsComExtractor = {
   domain: 'www.macrumors.com',
   title: {
     selectors: ['h1', 'h1.title']
@@ -3797,7 +3613,7 @@ var WwwMacrumorsComExtractor = {
   }
 };
 
-var WwwAndroidcentralComExtractor = {
+const WwwAndroidcentralComExtractor = {
   domain: 'www.androidcentral.com',
   title: {
     selectors: ['h1', 'h1.main-title']
@@ -3826,7 +3642,7 @@ var WwwAndroidcentralComExtractor = {
   }
 };
 
-var WwwSiComExtractor = {
+const WwwSiComExtractor = {
   domain: 'www.si.com',
   title: {
     selectors: ['h1', 'h1.headline']
@@ -3849,8 +3665,8 @@ var WwwSiComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      noscript: function noscript($node) {
-        var $children = $node.children();
+      noscript: $node => {
+        const $children = $node.children();
 
         if ($children.length === 1 && $children.get(0).tagName === 'img') {
           return 'figure';
@@ -3866,7 +3682,7 @@ var WwwSiComExtractor = {
   }
 };
 
-var WwwRawstoryComExtractor = {
+const WwwRawstoryComExtractor = {
   domain: 'www.rawstory.com',
   title: {
     selectors: ['.blog-title']
@@ -3893,7 +3709,7 @@ var WwwRawstoryComExtractor = {
   }
 };
 
-var WwwCnetComExtractor = {
+const WwwCnetComExtractor = {
   domain: 'www.cnet.com',
   title: {
     selectors: [['meta[name="og:title"]', 'value']]
@@ -3916,8 +3732,8 @@ var WwwCnetComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'figure.image': function figureImage($node) {
-        var $img = $node.find('img');
+      'figure.image': $node => {
+        const $img = $node.find('img');
         $img.attr('width', '100%');
         $img.attr('height', '100%');
         $img.addClass('__image-lead__');
@@ -3931,7 +3747,7 @@ var WwwCnetComExtractor = {
   }
 };
 
-var WwwCinemablendComExtractor = {
+const WwwCinemablendComExtractor = {
   domain: 'www.cinemablend.com',
   title: {
     selectors: ['.story_title']
@@ -3958,7 +3774,7 @@ var WwwCinemablendComExtractor = {
   }
 };
 
-var WwwTodayComExtractor = {
+const WwwTodayComExtractor = {
   domain: 'www.today.com',
   title: {
     selectors: ['h1.entry-headline']
@@ -3984,7 +3800,7 @@ var WwwTodayComExtractor = {
   }
 };
 
-var WwwHowtogeekComExtractor = {
+const WwwHowtogeekComExtractor = {
   domain: 'www.howtogeek.com',
   title: {
     selectors: ['title']
@@ -4011,7 +3827,7 @@ var WwwHowtogeekComExtractor = {
   }
 };
 
-var WwwAlComExtractor = {
+const WwwAlComExtractor = {
   domain: 'www.al.com',
   title: {
     selectors: [['meta[name="title"]', 'value']]
@@ -4038,7 +3854,7 @@ var WwwAlComExtractor = {
   }
 };
 
-var WwwThepennyhoarderComExtractor = {
+const WwwThepennyhoarderComExtractor = {
   domain: 'www.thepennyhoarder.com',
   title: {
     selectors: [['meta[name="dcterms.title"]', 'value']]
@@ -4064,7 +3880,7 @@ var WwwThepennyhoarderComExtractor = {
   }
 };
 
-var WwwWesternjournalismComExtractor = {
+const WwwWesternjournalismComExtractor = {
   domain: 'www.westernjournalism.com',
   title: {
     selectors: ['title', 'h1.entry-title']
@@ -4093,7 +3909,7 @@ var WwwWesternjournalismComExtractor = {
   }
 };
 
-var FusionNetExtractor = {
+const FusionNetExtractor = {
   domain: 'fusion.net',
   title: {
     selectors: ['.post-title', '.single-title', '.headline']
@@ -4125,7 +3941,7 @@ var FusionNetExtractor = {
   }
 };
 
-var WwwAmericanowComExtractor = {
+const WwwAmericanowComExtractor = {
   domain: 'www.americanow.com',
   title: {
     selectors: ['.title', ['meta[name="title"]', 'value']]
@@ -4155,7 +3971,7 @@ var WwwAmericanowComExtractor = {
   }
 };
 
-var ScienceflyComExtractor = {
+const ScienceflyComExtractor = {
   domain: 'sciencefly.com',
   title: {
     selectors: ['.entry-title', '.cb-entry-title', '.cb-single-title']
@@ -4185,7 +4001,7 @@ var ScienceflyComExtractor = {
   }
 };
 
-var HellogigglesComExtractor = {
+const HellogigglesComExtractor = {
   domain: 'hellogiggles.com',
   title: {
     selectors: ['.title']
@@ -4211,7 +4027,7 @@ var HellogigglesComExtractor = {
   }
 };
 
-var ThoughtcatalogComExtractor = {
+const ThoughtcatalogComExtractor = {
   domain: 'thoughtcatalog.com',
   title: {
     selectors: ['h1.title', ['meta[name="og:title"]', 'value']]
@@ -4237,7 +4053,7 @@ var ThoughtcatalogComExtractor = {
   }
 };
 
-var WwwNjComExtractor = {
+const WwwNjComExtractor = {
   domain: 'www.nj.com',
   title: {
     selectors: [['meta[name="title"]', 'value']]
@@ -4264,7 +4080,7 @@ var WwwNjComExtractor = {
   }
 };
 
-var WwwInquisitrComExtractor = {
+const WwwInquisitrComExtractor = {
   domain: 'www.inquisitr.com',
   title: {
     selectors: ['h1.entry-title.story--header--title']
@@ -4290,7 +4106,7 @@ var WwwInquisitrComExtractor = {
   }
 };
 
-var WwwNbcnewsComExtractor = {
+const WwwNbcnewsComExtractor = {
   domain: 'www.nbcnews.com',
   title: {
     selectors: ['div.article-hed h1']
@@ -4317,7 +4133,7 @@ var WwwNbcnewsComExtractor = {
   }
 };
 
-var FortuneComExtractor = {
+const FortuneComExtractor = {
   domain: 'fortune.com',
   title: {
     selectors: ['h1']
@@ -4344,7 +4160,7 @@ var FortuneComExtractor = {
   }
 };
 
-var WwwLinkedinComExtractor = {
+const WwwLinkedinComExtractor = {
   domain: 'www.linkedin.com',
   title: {
     selectors: ['.article-title', 'h1']
@@ -4375,7 +4191,7 @@ var WwwLinkedinComExtractor = {
   }
 };
 
-var ObamawhitehouseArchivesGovExtractor = {
+const ObamawhitehouseArchivesGovExtractor = {
   domain: 'obamawhitehouse.archives.gov',
   supportedDomains: ['whitehouse.gov'],
   title: {
@@ -4406,7 +4222,7 @@ var ObamawhitehouseArchivesGovExtractor = {
   }
 };
 
-var WwwOpposingviewsComExtractor = {
+const WwwOpposingviewsComExtractor = {
   domain: 'www.opposingviews.com',
   title: {
     selectors: ['h1.title']
@@ -4436,7 +4252,7 @@ var WwwOpposingviewsComExtractor = {
   }
 };
 
-var WwwProspectmagazineCoUkExtractor = {
+const WwwProspectmagazineCoUkExtractor = {
   domain: 'www.prospectmagazine.co.uk',
   title: {
     selectors: ['.page-title']
@@ -4466,7 +4282,7 @@ var WwwProspectmagazineCoUkExtractor = {
   }
 };
 
-var ForwardComExtractor = {
+const ForwardComExtractor = {
   domain: 'forward.com',
   title: {
     selectors: [['meta[name="og:title"]', 'value']]
@@ -4496,7 +4312,7 @@ var ForwardComExtractor = {
   }
 };
 
-var WwwQdailyComExtractor = {
+const WwwQdailyComExtractor = {
   domain: 'www.qdaily.com',
   title: {
     selectors: ['h2', 'h2.title']
@@ -4525,7 +4341,7 @@ var WwwQdailyComExtractor = {
   }
 };
 
-var GothamistComExtractor = {
+const GothamistComExtractor = {
   domain: 'gothamist.com',
   supportedDomains: ['chicagoist.com', 'laist.com', 'sfist.com', 'shanghaiist.com', 'dcist.com'],
   title: {
@@ -4563,7 +4379,7 @@ var GothamistComExtractor = {
   }
 };
 
-var WwwFoolComExtractor = {
+const WwwFoolComExtractor = {
   domain: 'www.fool.com',
   title: {
     selectors: ['h1']
@@ -4585,9 +4401,9 @@ var WwwFoolComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      '.caption img': function captionImg($node) {
-        var src = $node.attr('src');
-        $node.parent().replaceWith("<figure><img src=\"".concat(src, "\"/></figure>"));
+      '.caption img': $node => {
+        const src = $node.attr('src');
+        $node.parent().replaceWith(`<figure><img src="${src}"/></figure>`);
       },
       '.caption': 'figcaption'
     },
@@ -4598,7 +4414,7 @@ var WwwFoolComExtractor = {
   }
 };
 
-var WwwSlateComExtractor = {
+const WwwSlateComExtractor = {
   domain: 'www.slate.com',
   title: {
     selectors: ['.hed', 'h1']
@@ -4628,7 +4444,7 @@ var WwwSlateComExtractor = {
   }
 };
 
-var IciRadioCanadaCaExtractor = {
+const IciRadioCanadaCaExtractor = {
   domain: 'ici.radio-canada.ca',
   title: {
     selectors: ['h1']
@@ -4658,7 +4474,7 @@ var IciRadioCanadaCaExtractor = {
   }
 };
 
-var WwwFortinetComExtractor = {
+const WwwFortinetComExtractor = {
   domain: 'www.fortinet.com',
   title: {
     selectors: ['h1']
@@ -4675,8 +4491,8 @@ var WwwFortinetComExtractor = {
   content: {
     selectors: ['div.responsivegrid.aem-GridColumn.aem-GridColumn--default--12'],
     transforms: {
-      noscript: function noscript($node) {
-        var $children = $node.children();
+      noscript: $node => {
+        const $children = $node.children();
 
         if ($children.length === 1 && $children.get(0).tagName === 'img') {
           return 'figure';
@@ -4688,7 +4504,7 @@ var WwwFortinetComExtractor = {
   }
 };
 
-var WwwFastcompanyComExtractor = {
+const WwwFastcompanyComExtractor = {
   domain: 'www.fastcompany.com',
   title: {
     selectors: ['h1']
@@ -4710,7 +4526,7 @@ var WwwFastcompanyComExtractor = {
   }
 };
 
-var BlisterreviewComExtractor = {
+const BlisterreviewComExtractor = {
   domain: 'blisterreview.com',
   title: {
     selectors: [['meta[name="og:title"]', 'value'], 'h1.entry-title']
@@ -4742,7 +4558,7 @@ var BlisterreviewComExtractor = {
   }
 };
 
-var NewsMynaviJpExtractor = {
+const NewsMynaviJpExtractor = {
   domain: 'news.mynavi.jp',
   title: {
     selectors: [['meta[name="og:title"]', 'value']]
@@ -4764,8 +4580,8 @@ var NewsMynaviJpExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      img: function img($node) {
-        var src = $node.attr('data-original');
+      img: $node => {
+        const src = $node.attr('data-original');
 
         if (src !== '') {
           $node.attr('src', src);
@@ -4779,7 +4595,7 @@ var NewsMynaviJpExtractor = {
   }
 };
 
-var ClinicaltrialsGovExtractor = {
+const ClinicaltrialsGovExtractor = {
   domain: 'clinicaltrials.gov',
   title: {
     selectors: ['h1.tr-solo_record']
@@ -4803,7 +4619,7 @@ var ClinicaltrialsGovExtractor = {
   }
 };
 
-var GithubComExtractor = {
+const GithubComExtractor = {
   domain: 'github.com',
   title: {
     selectors: [['meta[name="og:title"]', 'value']]
@@ -4833,7 +4649,7 @@ var GithubComExtractor = {
   }
 };
 
-var WwwRedditComExtractor = {
+const WwwRedditComExtractor = {
   domain: 'www.reddit.com',
   title: {
     selectors: ['div[data-test-id="post-content"] h2']
@@ -4857,10 +4673,10 @@ var WwwRedditComExtractor = {
     // Is there anything in the content you selected that needs transformed
     // before it's consumable content? E.g., unusual lazy loaded images
     transforms: {
-      'div[role="img"]': function divRoleImg($node) {
+      'div[role="img"]': $node => {
         // External link image preview
-        var $img = $node.find('img');
-        var bgImg = $node.css('background-image');
+        const $img = $node.find('img');
+        const bgImg = $node.css('background-image');
 
         if ($img.length === 1 && bgImg) {
           $img.attr('src', bgImg.match(/\((.*?)\)/)[1].replace(/('|")/g, ''));
@@ -4877,7 +4693,7 @@ var WwwRedditComExtractor = {
   }
 };
 
-var OtrsComExtractor = {
+const OtrsComExtractor = {
   domain: 'otrs.com',
   title: {
     selectors: ['#main article h1']
@@ -4902,7 +4718,7 @@ var OtrsComExtractor = {
   }
 };
 
-var WwwOssnewsJpExtractor = {
+const WwwOssnewsJpExtractor = {
   domain: 'www.ossnews.jp',
   title: {
     selectors: ['#alpha-block h1.hxnewstitle']
@@ -4925,7 +4741,7 @@ var WwwOssnewsJpExtractor = {
   }
 };
 
-var BuzzapJpExtractor = {
+const BuzzapJpExtractor = {
   domain: 'buzzap.jp',
   title: {
     selectors: ['h1.entry-title']
@@ -4946,7 +4762,7 @@ var BuzzapJpExtractor = {
   }
 };
 
-var WwwAsahiComExtractor = {
+const WwwAsahiComExtractor = {
   domain: 'www.asahi.com',
   title: {
     selectors: ['.ArticleTitle h1']
@@ -4972,7 +4788,7 @@ var WwwAsahiComExtractor = {
   }
 };
 
-var WwwSanwaCoJpExtractor = {
+const WwwSanwaCoJpExtractor = {
   domain: 'www.sanwa.co.jp',
   title: {
     selectors: ['#newsContent h1']
@@ -4997,7 +4813,7 @@ var WwwSanwaCoJpExtractor = {
   }
 };
 
-var WwwElecomCoJpExtractor = {
+const WwwElecomCoJpExtractor = {
   domain: 'www.elecom.co.jp',
   title: {
     selectors: ['title']
@@ -5014,7 +4830,7 @@ var WwwElecomCoJpExtractor = {
     selectors: ['td.TableMain2'],
     defaultCleaner: false,
     transforms: {
-      table: function table($node) {
+      table: $node => {
         $node.attr('width', 'auto');
       }
     },
@@ -5022,7 +4838,7 @@ var WwwElecomCoJpExtractor = {
   }
 };
 
-var ScanNetsecurityNeJpExtractor = {
+const ScanNetsecurityNeJpExtractor = {
   domain: 'scan.netsecurity.ne.jp',
   title: {
     selectors: ['header.arti-header h1.head']
@@ -5045,7 +4861,7 @@ var ScanNetsecurityNeJpExtractor = {
   }
 };
 
-var JvndbJvnJpExtractor = {
+const JvndbJvnJpExtractor = {
   domain: 'jvndb.jvn.jp',
   title: {
     selectors: ['title']
@@ -5066,7 +4882,7 @@ var JvndbJvnJpExtractor = {
   }
 };
 
-var GeniusComExtractor = {
+const GeniusComExtractor = {
   domain: 'genius.com',
   title: {
     selectors: ['h1']
@@ -5075,8 +4891,8 @@ var GeniusComExtractor = {
     selectors: ['h2 a']
   },
   date_published: {
-    selectors: [['meta[itemprop=page_data]', 'value', function (res) {
-      var json = JSON.parse(res);
+    selectors: [['meta[itemprop=page_data]', 'value', res => {
+      const json = JSON.parse(res);
       return json.song.release_date;
     }]]
   },
@@ -5085,8 +4901,8 @@ var GeniusComExtractor = {
     ]
   },
   lead_image_url: {
-    selectors: [['meta[itemprop=page_data]', 'value', function (res) {
-      var json = JSON.parse(res);
+    selectors: [['meta[itemprop=page_data]', 'value', res => {
+      const json = JSON.parse(res);
       return json.song.album.cover_art_url;
     }]]
   },
@@ -5102,7 +4918,7 @@ var GeniusComExtractor = {
   }
 };
 
-var WwwJnsaOrgExtractor = {
+const WwwJnsaOrgExtractor = {
   domain: 'www.jnsa.org',
   title: {
     selectors: ['#wgtitle h2']
@@ -5123,7 +4939,7 @@ var WwwJnsaOrgExtractor = {
   }
 };
 
-var PhpspotOrgExtractor = {
+const PhpspotOrgExtractor = {
   domain: 'phpspot.org',
   title: {
     selectors: ['h3.hl']
@@ -5144,7 +4960,7 @@ var PhpspotOrgExtractor = {
   }
 };
 
-var WwwInfoqComExtractor = {
+const WwwInfoqComExtractor = {
   domain: 'www.infoq.com',
   title: {
     selectors: ['h1.heading']
@@ -5171,7 +4987,7 @@ var WwwInfoqComExtractor = {
   }
 };
 
-var WwwMoongiftJpExtractor = {
+const WwwMoongiftJpExtractor = {
   domain: 'www.moongift.jp',
   title: {
     selectors: ['h1.title a']
@@ -5194,7 +5010,7 @@ var WwwMoongiftJpExtractor = {
   }
 };
 
-var WwwItmediaCoJpExtractor = {
+const WwwItmediaCoJpExtractor = {
   domain: 'www.itmedia.co.jp',
   supportedDomains: ['www.atmarkit.co.jp', 'techtarget.itmedia.co.jp', 'nlab.itmedia.co.jp'],
   title: {
@@ -5220,7 +5036,7 @@ var WwwItmediaCoJpExtractor = {
   }
 };
 
-var WwwPublickey1JpExtractor = {
+const WwwPublickey1JpExtractor = {
   domain: 'www.publickey1.jp',
   title: {
     selectors: ['h1']
@@ -5245,7 +5061,7 @@ var WwwPublickey1JpExtractor = {
   }
 };
 
-var TakagihiromitsuJpExtractor = {
+const TakagihiromitsuJpExtractor = {
   domain: 'takagi-hiromitsu.jp',
   title: {
     selectors: ['h3']
@@ -5266,7 +5082,7 @@ var TakagihiromitsuJpExtractor = {
   }
 };
 
-var BookwalkerJpExtractor = {
+const BookwalkerJpExtractor = {
   domain: 'bookwalker.jp',
   title: {
     selectors: ['h1.main-heading']
@@ -5290,7 +5106,7 @@ var BookwalkerJpExtractor = {
   }
 };
 
-var WwwYomiuriCoJpExtractor = {
+const WwwYomiuriCoJpExtractor = {
   domain: 'www.yomiuri.co.jp',
   title: {
     selectors: ['h1.title-article.c-article-title']
@@ -5310,7 +5126,7 @@ var WwwYomiuriCoJpExtractor = {
   }
 };
 
-var JapanCnetComExtractor = {
+const JapanCnetComExtractor = {
   domain: 'japan.cnet.com',
   title: {
     selectors: ['.leaf-headline-ttl']
@@ -5334,7 +5150,7 @@ var JapanCnetComExtractor = {
   }
 };
 
-var DeadlineComExtractor = {
+const DeadlineComExtractor = {
   domain: 'deadline.com',
   title: {
     selectors: ['h1']
@@ -5352,8 +5168,8 @@ var DeadlineComExtractor = {
   content: {
     selectors: ['div.a-article-grid__main.pmc-a-grid article.pmc-a-grid-item'],
     transforms: {
-      '.embed-twitter': function embedTwitter($node) {
-        var innerHtml = $node.html();
+      '.embed-twitter': $node => {
+        const innerHtml = $node.html();
         $node.replaceWith(innerHtml);
       }
     },
@@ -5361,7 +5177,7 @@ var DeadlineComExtractor = {
   }
 };
 
-var WwwGizmodoJpExtractor = {
+const WwwGizmodoJpExtractor = {
   domain: 'www.gizmodo.jp',
   title: {
     selectors: ['h1.p-post-title']
@@ -5379,8 +5195,8 @@ var WwwGizmodoJpExtractor = {
   content: {
     selectors: ['article.p-post'],
     transforms: {
-      'img.p-post-thumbnailImage': function imgPPostThumbnailImage($node) {
-        var src = $node.attr('src');
+      'img.p-post-thumbnailImage': $node => {
+        const src = $node.attr('src');
         $node.attr('src', src.replace(/^.*=%27/, '').replace(/%27;$/, ''));
       }
     },
@@ -5388,7 +5204,7 @@ var WwwGizmodoJpExtractor = {
   }
 };
 
-var GetnewsJpExtractor = {
+const GetnewsJpExtractor = {
   domain: 'getnews.jp',
   title: {
     selectors: ['article h1']
@@ -5410,7 +5226,7 @@ var GetnewsJpExtractor = {
   }
 };
 
-var WwwLifehackerJpExtractor = {
+const WwwLifehackerJpExtractor = {
   domain: 'www.lifehacker.jp',
   title: {
     selectors: ['h1.lh-summary-title']
@@ -5428,8 +5244,8 @@ var WwwLifehackerJpExtractor = {
   content: {
     selectors: ['div.lh-entryDetail-body'],
     transforms: {
-      'img.lazyload': function imgLazyload($node) {
-        var src = $node.attr('src');
+      'img.lazyload': $node => {
+        const src = $node.attr('src');
         $node.attr('src', src.replace(/^.*=%27/, '').replace(/%27;$/, ''));
       }
     },
@@ -5437,7 +5253,7 @@ var WwwLifehackerJpExtractor = {
   }
 };
 
-var SectIijAdJpExtractor = {
+const SectIijAdJpExtractor = {
   domain: 'sect.iij.ad.jp',
   title: {
     selectors: ['h3']
@@ -5461,7 +5277,7 @@ var SectIijAdJpExtractor = {
   }
 };
 
-var WwwOreillyCoJpExtractor = {
+const WwwOreillyCoJpExtractor = {
   domain: 'www.oreilly.co.jp',
   title: {
     selectors: ['h3']
@@ -5485,7 +5301,7 @@ var WwwOreillyCoJpExtractor = {
   }
 };
 
-var WwwIpaGoJpExtractor = {
+const WwwIpaGoJpExtractor = {
   domain: 'www.ipa.go.jp',
   title: {
     selectors: ['h1']
@@ -5506,7 +5322,7 @@ var WwwIpaGoJpExtractor = {
   }
 };
 
-var WeeklyAsciiJpExtractor = {
+const WeeklyAsciiJpExtractor = {
   domain: 'weekly.ascii.jp',
   title: {
     selectors: ['h1[itemprop="headline"]']
@@ -5528,7 +5344,7 @@ var WeeklyAsciiJpExtractor = {
   }
 };
 
-var TechlogIijAdJpExtractor = {
+const TechlogIijAdJpExtractor = {
   domain: 'techlog.iij.ad.jp',
   title: {
     selectors: ['h1.entry-title']
@@ -5551,7 +5367,7 @@ var TechlogIijAdJpExtractor = {
   }
 };
 
-var WiredJpExtractor = {
+const WiredJpExtractor = {
   domain: 'wired.jp',
   title: {
     selectors: ['h1.post-title']
@@ -5571,10 +5387,10 @@ var WiredJpExtractor = {
   content: {
     selectors: ['article.article-detail'],
     transforms: {
-      'img[data-original]': function imgDataOriginal($node) {
-        var dataOriginal = $node.attr('data-original');
-        var src = $node.attr('src');
-        var url = URL.resolve(src, dataOriginal);
+      'img[data-original]': $node => {
+        const dataOriginal = $node.attr('data-original');
+        const src = $node.attr('src');
+        const url = URL.resolve(src, dataOriginal);
         $node.attr('src', url);
       }
     },
@@ -5582,7 +5398,7 @@ var WiredJpExtractor = {
   }
 };
 
-var JapanZdnetComExtractor = {
+const JapanZdnetComExtractor = {
   domain: 'japan.zdnet.com',
   title: {
     selectors: ['h1']
@@ -5604,7 +5420,7 @@ var JapanZdnetComExtractor = {
   }
 };
 
-var WwwRbbtodayComExtractor = {
+const WwwRbbtodayComExtractor = {
   domain: 'www.rbbtoday.com',
   title: {
     selectors: ['h1']
@@ -5628,7 +5444,7 @@ var WwwRbbtodayComExtractor = {
   }
 };
 
-var WwwLemondeFrExtractor = {
+const WwwLemondeFrExtractor = {
   domain: 'www.lemonde.fr',
   title: {
     selectors: ['h1.article__title']
@@ -5652,7 +5468,7 @@ var WwwLemondeFrExtractor = {
   }
 };
 
-var WwwPhoronixComExtractor = {
+const WwwPhoronixComExtractor = {
   domain: 'www.phoronix.com',
   title: {
     selectors: ['article header']
@@ -5680,7 +5496,7 @@ var WwwPhoronixComExtractor = {
   }
 };
 
-var PitchforkComExtractor = {
+const PitchforkComExtractor = {
   domain: 'pitchfork.com',
   title: {
     selectors: ['title']
@@ -5707,7 +5523,7 @@ var PitchforkComExtractor = {
   }
 };
 
-var BiorxivOrgExtractor = {
+const BiorxivOrgExtractor = {
   domain: 'biorxiv.org',
   title: {
     selectors: ['h1#page-title']
@@ -5727,7 +5543,7 @@ var BiorxivOrgExtractor = {
   }
 };
 
-var EpaperZeitDeExtractor = {
+const EpaperZeitDeExtractor = {
   domain: 'epaper.zeit.de',
   title: {
     selectors: ['p.title']
@@ -5896,39 +5712,41 @@ var CustomExtractors = /*#__PURE__*/Object.freeze({
   EpaperZeitDeExtractor: EpaperZeitDeExtractor
 });
 
-var Extractors = _Object$keys(CustomExtractors).reduce(function (acc, key) {
-  var extractor = CustomExtractors[key];
-  return _objectSpread({}, acc, mergeSupportedDomains(extractor));
+var Extractors = _Object$keys(CustomExtractors).reduce((acc, key) => {
+  const extractor = CustomExtractors[key];
+  return { ...acc,
+    ...mergeSupportedDomains(extractor)
+  };
 }, {});
 
 // CLEAN AUTHOR CONSTANTS
-var CLEAN_AUTHOR_RE = /^\s*(posted |written )?by\s*:?\s*(.*)/i; // CLEAN DEK CONSTANTS
+const CLEAN_AUTHOR_RE = /^\s*(posted |written )?by\s*:?\s*(.*)/i; // CLEAN DEK CONSTANTS
 
-var TEXT_LINK_RE = new RegExp('http(s)?://', 'i'); // An ordered list of meta tag names that denote likely article deks.
+const TEXT_LINK_RE = new RegExp('http(s)?://', 'i'); // An ordered list of meta tag names that denote likely article deks.
 
-var MS_DATE_STRING = /^\d{13}$/i;
-var SEC_DATE_STRING = /^\d{10}$/i;
-var CLEAN_DATE_STRING_RE = /^\s*published\s*:?\s*(.*)/i;
-var TIME_MERIDIAN_SPACE_RE = /(.*\d)(am|pm)(.*)/i;
-var TIME_MERIDIAN_DOTS_RE = /\.m\./i;
-var TIME_NOW_STRING = /^\s*(just|right)?\s*now\s*/i;
-var timeUnits = ['seconds?', 'minutes?', 'hours?', 'days?', 'weeks?', 'months?', 'years?'];
-var allTimeUnits = timeUnits.join('|');
-var TIME_AGO_STRING = new RegExp("(\\d+)\\s+(".concat(allTimeUnits, ")\\s+ago"), 'i');
-var months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-var allMonths = months.join('|');
-var timestamp1 = '[0-9]{1,2}:[0-9]{2,2}( ?[ap].?m.?)?';
-var timestamp2 = '[0-9]{1,2}[/-][0-9]{1,2}[/-][0-9]{2,4}';
-var timestamp3 = '-[0-9]{3,4}$';
-var SPLIT_DATE_STRING = new RegExp("(".concat(timestamp1, ")|(").concat(timestamp2, ")|(").concat(timestamp3, ")|([0-9]{1,4})|(").concat(allMonths, ")"), 'ig'); // 2016-11-22T08:57-500
+const MS_DATE_STRING = /^\d{13}$/i;
+const SEC_DATE_STRING = /^\d{10}$/i;
+const CLEAN_DATE_STRING_RE = /^\s*published\s*:?\s*(.*)/i;
+const TIME_MERIDIAN_SPACE_RE = /(.*\d)(am|pm)(.*)/i;
+const TIME_MERIDIAN_DOTS_RE = /\.m\./i;
+const TIME_NOW_STRING = /^\s*(just|right)?\s*now\s*/i;
+const timeUnits = ['seconds?', 'minutes?', 'hours?', 'days?', 'weeks?', 'months?', 'years?'];
+const allTimeUnits = timeUnits.join('|');
+const TIME_AGO_STRING = new RegExp(`(\\d+)\\s+(${allTimeUnits})\\s+ago`, 'i');
+const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+const allMonths = months.join('|');
+const timestamp1 = '[0-9]{1,2}:[0-9]{2,2}( ?[ap].?m.?)?';
+const timestamp2 = '[0-9]{1,2}[/-][0-9]{1,2}[/-][0-9]{2,4}';
+const timestamp3 = '-[0-9]{3,4}$';
+const SPLIT_DATE_STRING = new RegExp(`(${timestamp1})|(${timestamp2})|(${timestamp3})|([0-9]{1,4})|(${allMonths})`, 'ig'); // 2016-11-22T08:57-500
 // Check if datetime string has an offset at the end
 
-var TIME_WITH_OFFSET_RE = /-\d{3,4}$/; // CLEAN TITLE CONSTANTS
+const TIME_WITH_OFFSET_RE = /-\d{3,4}$/; // CLEAN TITLE CONSTANTS
 // A regular expression that will match separating characters on a
 // title, that usually denote breadcrumbs or something similar.
 
-var TITLE_SPLITTERS_RE = /(: | - | \| )/g;
-var DOMAIN_ENDINGS_RE = new RegExp('.com$|.net$|.org$|.co.uk$', 'g');
+const TITLE_SPLITTERS_RE = /(: | - | \| )/g;
+const DOMAIN_ENDINGS_RE = new RegExp('.com$|.net$|.org$|.co.uk$', 'g');
 
 // just the name(s): 'David Smith'.
 
@@ -5948,14 +5766,15 @@ function clean$1(leadImageUrl) {
 
 // Return None if the dek wasn't good enough.
 
-function cleanDek(dek, _ref) {
-  var $ = _ref.$,
-      excerpt = _ref.excerpt;
+function cleanDek(dek, {
+  $,
+  excerpt
+}) {
   // Sanity check that we didn't get too short or long of a dek.
   if (dek.length > 1000 || dek.length < 5) return null; // Check that dek isn't the same as excerpt
 
   if (excerpt && excerptContent(excerpt, 10) === excerptContent(dek, 10)) return null;
-  var dekText = stripTags(dek, $); // Plain text links shouldn't exist in the dek. If we have some, it's
+  const dekText = stripTags(dek, $); // Plain text links shouldn't exist in the dek. If we have some, it's
   // not a good dek - bail.
 
   if (TEXT_LINK_RE.test(dekText)) return null;
@@ -5971,7 +5790,7 @@ function createDate(dateString, timezone, format) {
   }
 
   if (TIME_AGO_STRING.test(dateString)) {
-    var fragments = TIME_AGO_STRING.exec(dateString);
+    const fragments = TIME_AGO_STRING.exec(dateString);
     return moment().subtract(fragments[1], fragments[2]);
   }
 
@@ -5983,17 +5802,16 @@ function createDate(dateString, timezone, format) {
 } // Take a date published string, and hopefully return a date out of
 // it. Return none if we fail.
 
-function cleanDatePublished(dateString) {
-  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      timezone = _ref.timezone,
-      format = _ref.format;
-
+function cleanDatePublished(dateString, {
+  timezone,
+  format
+} = {}) {
   // If string is in milliseconds or seconds, convert to int and return
   if (MS_DATE_STRING.test(dateString) || SEC_DATE_STRING.test(dateString)) {
     return new Date(_parseInt(dateString, 10)).toISOString();
   }
 
-  var date = createDate(dateString, timezone, format);
+  let date = createDate(dateString, timezone, format);
 
   if (!date.isValid()) {
     dateString = cleanDateString(dateString);
@@ -6003,16 +5821,13 @@ function cleanDatePublished(dateString) {
   return date.isValid() ? date.toISOString() : null;
 }
 
-function extractCleanNode(article, _ref) {
-  var $ = _ref.$,
-      _ref$cleanConditional = _ref.cleanConditionally,
-      cleanConditionally = _ref$cleanConditional === void 0 ? true : _ref$cleanConditional,
-      _ref$title = _ref.title,
-      title = _ref$title === void 0 ? '' : _ref$title,
-      _ref$url = _ref.url,
-      url = _ref$url === void 0 ? '' : _ref$url,
-      _ref$defaultCleaner = _ref.defaultCleaner,
-      defaultCleaner = _ref$defaultCleaner === void 0 ? true : _ref$defaultCleaner;
+function extractCleanNode(article, {
+  $,
+  cleanConditionally = true,
+  title = '',
+  url = '',
+  defaultCleaner = true
+}) {
   // Rewrite the tag name to div if it's a top level node like body or
   // html to avoid later complications with multiple body tags.
   rewriteTopLevel$$1(article, $); // Drop small images and spacer images
@@ -6047,10 +5862,10 @@ function extractCleanNode(article, _ref) {
   return article;
 }
 
-function cleanTitle$$1(title, _ref) {
-  var url = _ref.url,
-      $ = _ref.$;
-
+function cleanTitle$$1(title, {
+  url,
+  $
+}) {
   // If title has |, :, or - in it, see if
   // we can clean it up.
   if (TITLE_SPLITTERS_RE.test(title)) {
@@ -6061,7 +5876,7 @@ function cleanTitle$$1(title, _ref) {
 
   if (title.length > 150) {
     // If we did, return h1 from the document if it exists
-    var h1 = $('h1');
+    const h1 = $('h1');
 
     if (h1.length === 1) {
       title = h1.text();
@@ -6080,21 +5895,18 @@ function extractBreadcrumbTitle(splitTitle, text) {
     // Look to see if we can find a breadcrumb splitter that happens
     // more than once. If we can, we'll be able to better pull out
     // the title.
-    var termCounts = splitTitle.reduce(function (acc, titleText) {
+    const termCounts = splitTitle.reduce((acc, titleText) => {
       acc[titleText] = acc[titleText] ? acc[titleText] + 1 : 1;
       return acc;
     }, {});
 
-    var _Reflect$ownKeys$redu = _Reflect$ownKeys(termCounts).reduce(function (acc, key) {
+    const [maxTerm, termCount] = _Reflect$ownKeys(termCounts).reduce((acc, key) => {
       if (acc[1] < termCounts[key]) {
         return [key, termCounts[key]];
       }
 
       return acc;
-    }, [0, 0]),
-        _Reflect$ownKeys$redu2 = _slicedToArray(_Reflect$ownKeys$redu, 2),
-        maxTerm = _Reflect$ownKeys$redu2[0],
-        termCount = _Reflect$ownKeys$redu2[1]; // We found a splitter that was used more than once, so it
+    }, [0, 0]); // We found a splitter that was used more than once, so it
     // is probably the breadcrumber. Split our title on that instead.
     // Note: max_term should be <= 4 characters, so that " >> "
     // will match, but nothing longer than that.
@@ -6104,10 +5916,8 @@ function extractBreadcrumbTitle(splitTitle, text) {
       splitTitle = text.split(maxTerm);
     }
 
-    var splitEnds = [splitTitle[0], splitTitle.slice(-1)];
-    var longestEnd = splitEnds.reduce(function (acc, end) {
-      return acc.length > end.length ? acc : end;
-    }, '');
+    const splitEnds = [splitTitle[0], splitTitle.slice(-1)];
+    const longestEnd = splitEnds.reduce((acc, end) => acc.length > end.length ? acc : end, '');
 
     if (longestEnd.length > 10) {
       return longestEnd;
@@ -6126,19 +5936,19 @@ function cleanDomainFromTitle(splitTitle, url) {
   //
   // Strip out the big TLDs - it just makes the matching a bit more
   // accurate. Not the end of the world if it doesn't strip right.
-  var _URL$parse = URL.parse(url),
-      host = _URL$parse.host;
-
-  var nakedDomain = host.replace(DOMAIN_ENDINGS_RE, '');
-  var startSlug = splitTitle[0].toLowerCase().replace(' ', '');
-  var startSlugRatio = wuzzy.levenshtein(startSlug, nakedDomain);
+  const {
+    host
+  } = URL.parse(url);
+  const nakedDomain = host.replace(DOMAIN_ENDINGS_RE, '');
+  const startSlug = splitTitle[0].toLowerCase().replace(' ', '');
+  const startSlugRatio = wuzzy.levenshtein(startSlug, nakedDomain);
 
   if (startSlugRatio > 0.4 && startSlug.length > 5) {
     return splitTitle.slice(2).join('');
   }
 
-  var endSlug = splitTitle.slice(-1)[0].toLowerCase().replace(' ', '');
-  var endSlugRatio = wuzzy.levenshtein(endSlug, nakedDomain);
+  const endSlug = splitTitle.slice(-1)[0].toLowerCase().replace(' ', '');
+  const endSlugRatio = wuzzy.levenshtein(endSlug, nakedDomain);
 
   if (endSlugRatio > 0.4 && endSlug.length >= 5) {
     return splitTitle.slice(0, -2).join('');
@@ -6149,17 +5959,16 @@ function cleanDomainFromTitle(splitTitle, url) {
 // resolve whether any of the segments should be removed.
 
 
-function resolveSplitTitle(title) {
-  var url = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+function resolveSplitTitle(title, url = '') {
   // Splits while preserving splitters, like:
   // ['The New New York', ' - ', 'The Washington Post']
-  var splitTitle = title.split(TITLE_SPLITTERS_RE);
+  const splitTitle = title.split(TITLE_SPLITTERS_RE);
 
   if (splitTitle.length === 1) {
     return title;
   }
 
-  var newTitle = extractBreadcrumbTitle(splitTitle, title);
+  let newTitle = extractBreadcrumbTitle(splitTitle, title);
   if (newTitle) return newTitle;
   newTitle = cleanDomainFromTitle(splitTitle, url);
   if (newTitle) return newTitle; // Fuzzy ratio didn't find anything, so this title is probably legit.
@@ -6168,7 +5977,7 @@ function resolveSplitTitle(title) {
   return title;
 }
 
-var Cleaners = {
+const Cleaners = {
   author: cleanAuthor,
   lead_image_url: clean$1,
   dek: cleanDek,
@@ -6195,16 +6004,17 @@ function extractBestNode($, opts) {
 
   $ = convertToParagraphs$$1($);
   $ = scoreContent$$1($, opts.weightNodes);
-  var $topCandidate = findTopCandidate$$1($);
+  const $topCandidate = findTopCandidate$$1($);
   return $topCandidate;
 }
 
-var GenericContentExtractor = {
+const GenericContentExtractor = {
   defaultOpts: {
     stripUnlikelyCandidates: true,
     weightNodes: true,
     cleanConditionally: true
   },
+
   // Extract the content for this resource - initially, pass in our
   // most restrictive opts which will return the highest quality
   // content. On each failure, retry with slightly more lax opts.
@@ -6224,16 +6034,19 @@ var GenericContentExtractor = {
   //
   // cleanConditionally: Clean the node to return of some
   // superfluous content. Things like forms, ads, etc.
-  extract: function extract(_ref, opts) {
-    var $ = _ref.$,
-        html = _ref.html,
-        title = _ref.title,
-        url = _ref.url;
-    opts = _objectSpread({}, this.defaultOpts, opts);
+  extract({
+    $,
+    html,
+    title,
+    url
+  }, opts) {
+    opts = { ...this.defaultOpts,
+      ...opts
+    };
     $ = $ || cheerio.load(html); // Cascade through our extraction-specific opts in an ordered fashion,
     // turning them off as we try to extract content.
 
-    var node = this.getContentNode($, title, url, opts);
+    let node = this.getContentNode($, title, url, opts);
 
     if (nodeIsSufficient(node)) {
       return this.cleanAndReturnNode(node, $);
@@ -6242,59 +6055,40 @@ var GenericContentExtractor = {
     // eslint-disable-next-line no-restricted-syntax
 
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    for (const key of _Reflect$ownKeys(opts).filter(k => opts[k] === true)) {
+      opts[key] = false;
+      $ = cheerio.load(html);
+      node = this.getContentNode($, title, url, opts);
 
-    try {
-      for (var _iterator = _getIterator(_Reflect$ownKeys(opts).filter(function (k) {
-        return opts[k] === true;
-      })), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var key = _step.value;
-        opts[key] = false;
-        $ = cheerio.load(html);
-        node = this.getContentNode($, title, url, opts);
-
-        if (nodeIsSufficient(node)) {
-          break;
-        }
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
+      if (nodeIsSufficient(node)) {
+        break;
       }
     }
 
     return this.cleanAndReturnNode(node, $);
   },
+
   // Get node given current options
-  getContentNode: function getContentNode($, title, url, opts) {
+  getContentNode($, title, url, opts) {
     return extractCleanNode(extractBestNode($, opts), {
-      $: $,
+      $,
       cleanConditionally: opts.cleanConditionally,
-      title: title,
-      url: url
+      title,
+      url
     });
   },
+
   // Once we got here, either we're at our last-resort node, or
   // we broke early. Make sure we at least have -something- before we
   // move forward.
-  cleanAndReturnNode: function cleanAndReturnNode(node, $) {
+  cleanAndReturnNode(node, $) {
     if (!node) {
       return null;
     }
 
     return normalizeSpaces($.html(node));
   }
+
 };
 
 // TODO: It would be great if we could merge the meta and selector lists into
@@ -6303,10 +6097,10 @@ var GenericContentExtractor = {
 // An ordered list of meta tag names that denote likely article titles. All
 // attributes should be lowercase for faster case-insensitive matching. From
 // most distinct to least distinct.
-var STRONG_TITLE_META_TAGS = ['tweetmeme-title', 'dc.title', 'rbtitle', 'headline', 'title']; // og:title is weak because it typically contains context that we don't like,
+const STRONG_TITLE_META_TAGS = ['tweetmeme-title', 'dc.title', 'rbtitle', 'headline', 'title']; // og:title is weak because it typically contains context that we don't like,
 // for example the source site's name. Gotta get that brand into facebook!
 
-var WEAK_TITLE_META_TAGS = ['og:title']; // An ordered list of XPath Selectors to find likely article titles. From
+const WEAK_TITLE_META_TAGS = ['og:title']; // An ordered list of XPath Selectors to find likely article titles. From
 // most explicit to least explicit.
 //
 // Note - this does not use classes like CSS. This checks to see if the string
@@ -6314,44 +6108,46 @@ var WEAK_TITLE_META_TAGS = ['og:title']; // An ordered list of XPath Selectors t
 // splits on spaces/endlines), but for our purposes it's close enough. The
 // speed tradeoff is worth the accuracy hit.
 
-var STRONG_TITLE_SELECTORS = ['.hentry .entry-title', 'h1#articleHeader', 'h1.articleHeader', 'h1.article', '.instapaper_title', '#meebo-title'];
-var WEAK_TITLE_SELECTORS = ['article h1', '#entry-title', '.entry-title', '#entryTitle', '#entrytitle', '.entryTitle', '.entrytitle', '#articleTitle', '.articleTitle', 'post post-title', 'h1.title', 'h2.article', 'h1', 'html head title', 'title'];
+const STRONG_TITLE_SELECTORS = ['.hentry .entry-title', 'h1#articleHeader', 'h1.articleHeader', 'h1.article', '.instapaper_title', '#meebo-title'];
+const WEAK_TITLE_SELECTORS = ['article h1', '#entry-title', '.entry-title', '#entryTitle', '#entrytitle', '.entryTitle', '.entrytitle', '#articleTitle', '.articleTitle', 'post post-title', 'h1.title', 'h2.article', 'h1', 'html head title', 'title'];
 
-var GenericTitleExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        url = _ref.url,
-        metaCache = _ref.metaCache;
+const GenericTitleExtractor = {
+  extract({
+    $,
+    url,
+    metaCache
+  }) {
     // First, check to see if we have a matching meta tag that we can make
     // use of that is strongly associated with the headline.
-    var title;
+    let title;
     title = extractFromMeta$$1($, STRONG_TITLE_META_TAGS, metaCache);
     if (title) return cleanTitle$$1(title, {
-      url: url,
-      $: $
+      url,
+      $
     }); // Second, look through our content selectors for the most likely
     // article title that is strongly associated with the headline.
 
     title = extractFromSelectors$$1($, STRONG_TITLE_SELECTORS);
     if (title) return cleanTitle$$1(title, {
-      url: url,
-      $: $
+      url,
+      $
     }); // Third, check for weaker meta tags that may match.
 
     title = extractFromMeta$$1($, WEAK_TITLE_META_TAGS, metaCache);
     if (title) return cleanTitle$$1(title, {
-      url: url,
-      $: $
+      url,
+      $
     }); // Last, look for weaker selector tags that may match.
 
     title = extractFromSelectors$$1($, WEAK_TITLE_SELECTORS);
     if (title) return cleanTitle$$1(title, {
-      url: url,
-      $: $
+      url,
+      $
     }); // If no matches, return an empty string
 
     return '';
   }
+
 };
 
 // An ordered list of meta tag names that denote likely article authors. All
@@ -6360,8 +6156,8 @@ var GenericTitleExtractor = {
 //
 // Note: "author" is too often the -developer- of the page, so it is not
 // added here.
-var AUTHOR_META_TAGS = ['byl', 'clmst', 'dc.author', 'dcsext.author', 'dc.creator', 'rbauthors', 'authors'];
-var AUTHOR_MAX_LENGTH = 300; // An ordered list of XPath Selectors to find likely article authors. From
+const AUTHOR_META_TAGS = ['byl', 'clmst', 'dc.author', 'dcsext.author', 'dc.creator', 'rbauthors', 'authors'];
+const AUTHOR_MAX_LENGTH = 300; // An ordered list of XPath Selectors to find likely article authors. From
 // most explicit to least explicit.
 //
 // Note - this does not use classes like CSS. This checks to see if the string
@@ -6369,17 +6165,18 @@ var AUTHOR_MAX_LENGTH = 300; // An ordered list of XPath Selectors to find likel
 // splits on spaces/endlines), but for our purposes it's close enough. The
 // speed tradeoff is worth the accuracy hit.
 
-var AUTHOR_SELECTORS = ['.entry .entry-author', '.author.vcard .fn', '.author .vcard .fn', '.byline.vcard .fn', '.byline .vcard .fn', '.byline .by .author', '.byline .by', '.byline .author', '.post-author.vcard', '.post-author .vcard', 'a[rel=author]', '#by_author', '.by_author', '#entryAuthor', '.entryAuthor', '.byline a[href*=author]', '#author .authorname', '.author .authorname', '#author', '.author', '.articleauthor', '.ArticleAuthor', '.byline']; // An ordered list of Selectors to find likely article authors, with
+const AUTHOR_SELECTORS = ['.entry .entry-author', '.author.vcard .fn', '.author .vcard .fn', '.byline.vcard .fn', '.byline .vcard .fn', '.byline .by .author', '.byline .by', '.byline .author', '.post-author.vcard', '.post-author .vcard', 'a[rel=author]', '#by_author', '.by_author', '#entryAuthor', '.entryAuthor', '.byline a[href*=author]', '#author .authorname', '.author .authorname', '#author', '.author', '.articleauthor', '.ArticleAuthor', '.byline']; // An ordered list of Selectors to find likely article authors, with
 // regular expression for content.
 
-var bylineRe = /^[\n\s]*By/i;
-var BYLINE_SELECTORS_RE = [['#byline', bylineRe], ['.byline', bylineRe]];
+const bylineRe = /^[\n\s]*By/i;
+const BYLINE_SELECTORS_RE = [['#byline', bylineRe], ['.byline', bylineRe]];
 
-var GenericAuthorExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        metaCache = _ref.metaCache;
-    var author; // First, check to see if we have a matching
+const GenericAuthorExtractor = {
+  extract({
+    $,
+    metaCache
+  }) {
+    let author; // First, check to see if we have a matching
     // meta tag that we can make use of.
 
     author = extractFromMeta$$1($, AUTHOR_META_TAGS, metaCache);
@@ -6398,66 +6195,45 @@ var GenericAuthorExtractor = {
     // eslint-disable-next-line no-restricted-syntax
 
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    for (const [selector, regex] of BYLINE_SELECTORS_RE) {
+      const node = $(selector);
 
-    try {
-      for (var _iterator = _getIterator(BYLINE_SELECTORS_RE), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var _step$value = _slicedToArray(_step.value, 2),
-            selector = _step$value[0],
-            regex = _step$value[1];
+      if (node.length === 1) {
+        const text = node.text();
 
-        var node = $(selector);
-
-        if (node.length === 1) {
-          var text = node.text();
-
-          if (regex.test(text)) {
-            return cleanAuthor(text);
-          }
-        }
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+        if (regex.test(text)) {
+          return cleanAuthor(text);
         }
       }
     }
 
     return null;
   }
+
 };
 
 // An ordered list of meta tag names that denote
 // likely date published dates. All attributes
 // should be lowercase for faster case-insensitive matching.
 // From most distinct to least distinct.
-var DATE_PUBLISHED_META_TAGS = ['article:published_time', 'displaydate', 'dc.date', 'dc.date.issued', 'rbpubdate', 'publish_date', 'pub_date', 'pagedate', 'pubdate', 'revision_date', 'doc_date', 'date_created', 'content_create_date', 'lastmodified', 'created', 'date']; // An ordered list of XPath Selectors to find
+const DATE_PUBLISHED_META_TAGS = ['article:published_time', 'displaydate', 'dc.date', 'dc.date.issued', 'rbpubdate', 'publish_date', 'pub_date', 'pagedate', 'pubdate', 'revision_date', 'doc_date', 'date_created', 'content_create_date', 'lastmodified', 'created', 'date']; // An ordered list of XPath Selectors to find
 // likely date published dates. From most explicit
 // to least explicit.
 
-var DATE_PUBLISHED_SELECTORS = ['.hentry .dtstamp.published', '.hentry .published', '.hentry .dtstamp.updated', '.hentry .updated', '.single .published', '.meta .published', '.meta .postDate', '.entry-date', '.byline .date', '.postmetadata .date', '.article_datetime', '.date-header', '.story-date', '.dateStamp', '#story .datetime', '.dateline', '.pubdate']; // An ordered list of compiled regular expressions to find likely date
+const DATE_PUBLISHED_SELECTORS = ['.hentry .dtstamp.published', '.hentry .published', '.hentry .dtstamp.updated', '.hentry .updated', '.single .published', '.meta .published', '.meta .postDate', '.entry-date', '.byline .date', '.postmetadata .date', '.article_datetime', '.date-header', '.story-date', '.dateStamp', '#story .datetime', '.dateline', '.pubdate']; // An ordered list of compiled regular expressions to find likely date
 // published dates from the URL. These should always have the first
 // reference be a date string that is parseable by dateutil.parser.parse
 
-var abbrevMonthsStr = '(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)';
-var DATE_PUBLISHED_URL_RES = [new RegExp('/(20\\d{2}/\\d{2}/\\d{2})/', 'i'), new RegExp('(20\\d{2}-[01]\\d-[0-3]\\d)', 'i'), new RegExp("/(20\\d{2}/".concat(abbrevMonthsStr, "/[0-3]\\d)/"), 'i')];
+const abbrevMonthsStr = '(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)';
+const DATE_PUBLISHED_URL_RES = [new RegExp('/(20\\d{2}/\\d{2}/\\d{2})/', 'i'), new RegExp('(20\\d{2}-[01]\\d-[0-3]\\d)', 'i'), new RegExp(`/(20\\d{2}/${abbrevMonthsStr}/[0-3]\\d)/`, 'i')];
 
-var GenericDatePublishedExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        url = _ref.url,
-        metaCache = _ref.metaCache;
-    var datePublished; // First, check to see if we have a matching meta tag
+const GenericDatePublishedExtractor = {
+  extract({
+    $,
+    url,
+    metaCache
+  }) {
+    let datePublished; // First, check to see if we have a matching meta tag
     // that we can make use of.
     // Don't try cleaning tags from this string
 
@@ -6472,38 +6248,40 @@ var GenericDatePublishedExtractor = {
     if (datePublished) return cleanDatePublished(datePublished);
     return null;
   }
+
 };
 
 // Currently there is only one selector for
 // deks. We should simply return null here
 // until we have a more robust generic option.
 // Below is the original source for this, for reference.
-var GenericDekExtractor = {
-  extract: function extract() {
+const GenericDekExtractor = {
+  extract() {
     return null;
   }
+
 };
 
 // An ordered list of meta tag names that denote likely article leading images.
 // All attributes should be lowercase for faster case-insensitive matching.
 // From most distinct to least distinct.
-var LEAD_IMAGE_URL_META_TAGS = ['og:image', 'twitter:image', 'image_src'];
-var LEAD_IMAGE_URL_SELECTORS = ['link[rel=image_src]'];
-var POSITIVE_LEAD_IMAGE_URL_HINTS = ['upload', 'wp-content', 'large', 'photo', 'wp-image'];
-var POSITIVE_LEAD_IMAGE_URL_HINTS_RE = new RegExp(POSITIVE_LEAD_IMAGE_URL_HINTS.join('|'), 'i');
-var NEGATIVE_LEAD_IMAGE_URL_HINTS = ['spacer', 'sprite', 'blank', 'throbber', 'gradient', 'tile', 'bg', 'background', 'icon', 'social', 'header', 'hdr', 'advert', 'spinner', 'loader', 'loading', 'default', 'rating', 'share', 'facebook', 'twitter', 'theme', 'promo', 'ads', 'wp-includes'];
-var NEGATIVE_LEAD_IMAGE_URL_HINTS_RE = new RegExp(NEGATIVE_LEAD_IMAGE_URL_HINTS.join('|'), 'i');
-var GIF_RE = /\.gif(\?.*)?$/i;
-var JPG_RE = /\.jpe?g(\?.*)?$/i;
+const LEAD_IMAGE_URL_META_TAGS = ['og:image', 'twitter:image', 'image_src'];
+const LEAD_IMAGE_URL_SELECTORS = ['link[rel=image_src]'];
+const POSITIVE_LEAD_IMAGE_URL_HINTS = ['upload', 'wp-content', 'large', 'photo', 'wp-image'];
+const POSITIVE_LEAD_IMAGE_URL_HINTS_RE = new RegExp(POSITIVE_LEAD_IMAGE_URL_HINTS.join('|'), 'i');
+const NEGATIVE_LEAD_IMAGE_URL_HINTS = ['spacer', 'sprite', 'blank', 'throbber', 'gradient', 'tile', 'bg', 'background', 'icon', 'social', 'header', 'hdr', 'advert', 'spinner', 'loader', 'loading', 'default', 'rating', 'share', 'facebook', 'twitter', 'theme', 'promo', 'ads', 'wp-includes'];
+const NEGATIVE_LEAD_IMAGE_URL_HINTS_RE = new RegExp(NEGATIVE_LEAD_IMAGE_URL_HINTS.join('|'), 'i');
+const GIF_RE = /\.gif(\?.*)?$/i;
+const JPG_RE = /\.jpe?g(\?.*)?$/i;
 
 function getSig($node) {
-  return "".concat($node.attr('class') || '', " ").concat($node.attr('id') || '');
+  return `${$node.attr('class') || ''} ${$node.attr('id') || ''}`;
 } // Scores image urls based on a variety of heuristics.
 
 
 function scoreImageUrl(url) {
   url = url.trim();
-  var score = 0;
+  let score = 0;
 
   if (POSITIVE_LEAD_IMAGE_URL_HINTS_RE.test(url)) {
     score += 20;
@@ -6537,21 +6315,21 @@ function scoreAttr($img) {
 // container elements, give a bonus if we find them
 
 function scoreByParents($img) {
-  var score = 0;
-  var $figParent = $img.parents('figure').first();
+  let score = 0;
+  const $figParent = $img.parents('figure').first();
 
   if ($figParent.length === 1) {
     score += 25;
   }
 
-  var $parent = $img.parent();
-  var $gParent;
+  const $parent = $img.parent();
+  let $gParent;
 
   if ($parent.length === 1) {
     $gParent = $parent.parent();
   }
 
-  [$parent, $gParent].forEach(function ($node) {
+  [$parent, $gParent].forEach($node => {
     if (PHOTO_HINTS_RE$1.test(getSig($node))) {
       score += 15;
     }
@@ -6561,9 +6339,9 @@ function scoreByParents($img) {
 // caption. Bonus if so.
 
 function scoreBySibling($img) {
-  var score = 0;
-  var $sibling = $img.next();
-  var sibling = $sibling.get(0);
+  let score = 0;
+  const $sibling = $img.next();
+  const sibling = $sibling.get(0);
 
   if (sibling && sibling.tagName.toLowerCase() === 'figcaption') {
     score += 25;
@@ -6576,13 +6354,13 @@ function scoreBySibling($img) {
   return score;
 }
 function scoreByDimensions($img) {
-  var score = 0;
+  let score = 0;
 
-  var width = _parseFloat($img.attr('width'));
+  const width = _parseFloat($img.attr('width'));
 
-  var height = _parseFloat($img.attr('height'));
+  const height = _parseFloat($img.attr('height'));
 
-  var src = $img.attr('src'); // Penalty for skinny images
+  const src = $img.attr('src'); // Penalty for skinny images
 
   if (width && width <= 50) {
     score -= 50;
@@ -6594,7 +6372,7 @@ function scoreByDimensions($img) {
   }
 
   if (width && height && !src.includes('sprite')) {
-    var area = width * height;
+    const area = width * height;
 
     if (area < 5000) {
       // Smaller than 50 x 100
@@ -6618,13 +6396,14 @@ function scoreByPosition($imgs, index) {
 //   * domain
 //   * weird aspect ratio
 
-var GenericLeadImageUrlExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        content = _ref.content,
-        metaCache = _ref.metaCache,
-        html = _ref.html;
-    var cleanUrl;
+const GenericLeadImageUrlExtractor = {
+  extract({
+    $,
+    content,
+    metaCache,
+    html
+  }) {
+    let cleanUrl;
 
     if ($('head').length === 0) {
       $('*').first().prepend(html);
@@ -6634,7 +6413,7 @@ var GenericLeadImageUrlExtractor = {
     // images usually have for things like Open Graph.
 
 
-    var imageUrl = extractFromMeta$$1($, LEAD_IMAGE_URL_META_TAGS, metaCache, false);
+    const imageUrl = extractFromMeta$$1($, LEAD_IMAGE_URL_META_TAGS, metaCache, false);
 
     if (imageUrl) {
       cleanUrl = clean$1(imageUrl);
@@ -6644,14 +6423,14 @@ var GenericLeadImageUrlExtractor = {
     // so try to do some analysis and determine them instead.
 
 
-    var $content = $(content);
-    var imgs = $('img', $content).toArray();
-    var imgScores = {};
-    imgs.forEach(function (img, index) {
-      var $img = $(img);
-      var src = $img.attr('src');
+    const $content = $(content);
+    const imgs = $('img', $content).toArray();
+    const imgScores = {};
+    imgs.forEach((img, index) => {
+      const $img = $(img);
+      const src = $img.attr('src');
       if (!src) return;
-      var score = scoreImageUrl(src);
+      let score = scoreImageUrl(src);
       score += scoreAttr($img);
       score += scoreByParents($img);
       score += scoreBySibling($img);
@@ -6660,12 +6439,7 @@ var GenericLeadImageUrlExtractor = {
       imgScores[src] = score;
     });
 
-    var _Reflect$ownKeys$redu = _Reflect$ownKeys(imgScores).reduce(function (acc, key) {
-      return imgScores[key] > acc[1] ? [key, imgScores[key]] : acc;
-    }, [null, 0]),
-        _Reflect$ownKeys$redu2 = _slicedToArray(_Reflect$ownKeys$redu, 2),
-        topUrl = _Reflect$ownKeys$redu2[0],
-        topScore = _Reflect$ownKeys$redu2[1];
+    const [topUrl, topScore] = _Reflect$ownKeys(imgScores).reduce((acc, key) => imgScores[key] > acc[1] ? [key, imgScores[key]] : acc, [null, 0]);
 
     if (topScore > 0) {
       cleanUrl = clean$1(topUrl);
@@ -6675,52 +6449,33 @@ var GenericLeadImageUrlExtractor = {
     // eslint-disable-next-line no-restricted-syntax
 
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    for (const selector of LEAD_IMAGE_URL_SELECTORS) {
+      const $node = $(selector).first();
+      const src = $node.attr('src');
 
-    try {
-      for (var _iterator = _getIterator(LEAD_IMAGE_URL_SELECTORS), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var selector = _step.value;
-        var $node = $(selector).first();
-        var src = $node.attr('src');
-
-        if (src) {
-          cleanUrl = clean$1(src);
-          if (cleanUrl) return cleanUrl;
-        }
-
-        var href = $node.attr('href');
-
-        if (href) {
-          cleanUrl = clean$1(href);
-          if (cleanUrl) return cleanUrl;
-        }
-
-        var value = $node.attr('value');
-
-        if (value) {
-          cleanUrl = clean$1(value);
-          if (cleanUrl) return cleanUrl;
-        }
+      if (src) {
+        cleanUrl = clean$1(src);
+        if (cleanUrl) return cleanUrl;
       }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
+
+      const href = $node.attr('href');
+
+      if (href) {
+        cleanUrl = clean$1(href);
+        if (cleanUrl) return cleanUrl;
+      }
+
+      const value = $node.attr('value');
+
+      if (value) {
+        cleanUrl = clean$1(value);
+        if (cleanUrl) return cleanUrl;
       }
     }
 
     return null;
   }
+
 };
 
 function scoreSimilarity(score, articleUrl, href) {
@@ -6730,15 +6485,15 @@ function scoreSimilarity(score, articleUrl, href) {
   // sliding scale, subtract points from this link based on
   // similarity.
   if (score > 0) {
-    var similarity = new difflib.SequenceMatcher(null, articleUrl, href).ratio(); // Subtract .1 from diff_percent when calculating modifier,
+    const similarity = new difflib.SequenceMatcher(null, articleUrl, href).ratio(); // Subtract .1 from diff_percent when calculating modifier,
     // which means that if it's less than 10% different, we give a
     // bonus instead. Ex:
     //  3% different = +17.5 points
     // 10% different = 0 points
     // 20% different = -25 points
 
-    var diffPercent = 1.0 - similarity;
-    var diffModifier = -(250 * (diffPercent - 0.2));
+    const diffPercent = 1.0 - similarity;
+    const diffModifier = -(250 * (diffPercent - 0.2));
     return score + diffModifier;
   }
 
@@ -6750,10 +6505,10 @@ function scoreLinkText(linkText, pageNum) {
   // bonus, with a slight bias towards lower numbered pages. This is
   // so that pages that might not have 'next' in their text can still
   // get scored, and sorted properly by score.
-  var score = 0;
+  let score = 0;
 
   if (IS_DIGIT_RE.test(linkText.trim())) {
-    var linkTextAsNum = _parseInt(linkText, 10); // If it's the first page, we already got it on the first call.
+    const linkTextAsNum = _parseInt(linkText, 10); // If it's the first page, we already got it on the first call.
     // Give it a negative score. Otherwise, up to page 10, give a
     // small bonus.
 
@@ -6786,21 +6541,21 @@ function scorePageInLink(pageNum, isWp) {
   return 0;
 }
 
-var DIGIT_RE$2 = /\d/; // A list of words that, if found in link text or URLs, likely mean that
+const DIGIT_RE$2 = /\d/; // A list of words that, if found in link text or URLs, likely mean that
 // this link is not a next page link.
 
-var EXTRANEOUS_LINK_HINTS$1 = ['print', 'archive', 'comment', 'discuss', 'e-mail', 'email', 'share', 'reply', 'all', 'login', 'sign', 'single', 'adx', 'entry-unrelated'];
-var EXTRANEOUS_LINK_HINTS_RE$1 = new RegExp(EXTRANEOUS_LINK_HINTS$1.join('|'), 'i'); // Match any link text/classname/id that looks like it could mean the next
+const EXTRANEOUS_LINK_HINTS$1 = ['print', 'archive', 'comment', 'discuss', 'e-mail', 'email', 'share', 'reply', 'all', 'login', 'sign', 'single', 'adx', 'entry-unrelated'];
+const EXTRANEOUS_LINK_HINTS_RE$1 = new RegExp(EXTRANEOUS_LINK_HINTS$1.join('|'), 'i'); // Match any link text/classname/id that looks like it could mean the next
 // page. Things like: next, continue, >, >>, » but not >|, »| as those can
 // mean last page.
 
-var NEXT_LINK_TEXT_RE$1 = new RegExp('(next|weiter|continue|>([^|]|$)|»([^|]|$))', 'i'); // Match any link text/classname/id that looks like it is an end link: things
+const NEXT_LINK_TEXT_RE$1 = new RegExp('(next|weiter|continue|>([^|]|$)|»([^|]|$))', 'i'); // Match any link text/classname/id that looks like it is an end link: things
 // like "first", "last", "end", etc.
 
-var CAP_LINK_TEXT_RE$1 = new RegExp('(first|last|end)', 'i'); // Match any link text/classname/id that looks like it means the previous
+const CAP_LINK_TEXT_RE$1 = new RegExp('(first|last|end)', 'i'); // Match any link text/classname/id that looks like it means the previous
 // page.
 
-var PREV_LINK_TEXT_RE$1 = new RegExp('(prev|earl|old|new|<|«)', 'i'); // Match any phrase that looks like it could be page, or paging, or pagination
+const PREV_LINK_TEXT_RE$1 = new RegExp('(prev|earl|old|new|<|«)', 'i'); // Match any phrase that looks like it could be page, or paging, or pagination
 
 function scoreExtraneousLinks(href) {
   // If the URL itself contains extraneous values, give a penalty.
@@ -6812,24 +6567,24 @@ function scoreExtraneousLinks(href) {
 }
 
 function makeSig($link) {
-  return "".concat($link.attr('class') || '', " ").concat($link.attr('id') || '');
+  return `${$link.attr('class') || ''} ${$link.attr('id') || ''}`;
 }
 
 function scoreByParents$1($link) {
   // If a parent node contains paging-like classname or id, give a
   // bonus. Additionally, if a parent_node contains bad content
   // (like 'sponsor'), give a penalty.
-  var $parent = $link.parent();
-  var positiveMatch = false;
-  var negativeMatch = false;
-  var score = 0;
+  let $parent = $link.parent();
+  let positiveMatch = false;
+  let negativeMatch = false;
+  let score = 0;
 
-  _Array$from(range(0, 4)).forEach(function () {
+  _Array$from(range(0, 4)).forEach(() => {
     if ($parent.length === 0) {
       return;
     }
 
-    var parentData = makeSig($parent, ' '); // If we have 'page' or 'paging' in our data, that's a good
+    const parentData = makeSig($parent, ' '); // If we have 'page' or 'paging' in our data, that's a good
     // sign. Add a bonus.
 
     if (!positiveMatch && PAGE_RE.test(parentData)) {
@@ -6865,9 +6620,7 @@ function scorePrevLink(linkData) {
 
 function shouldScore(href, articleUrl, baseUrl, parsedUrl, linkText, previousUrls) {
   // skip if we've already fetched this url
-  if (previousUrls.find(function (url) {
-    return href === url;
-  }) !== undefined) {
+  if (previousUrls.find(url => href === url) !== undefined) {
     return false;
   } // If we've already parsed this URL, or the URL matches the base
   // URL, or is empty, skip it.
@@ -6877,11 +6630,12 @@ function shouldScore(href, articleUrl, baseUrl, parsedUrl, linkText, previousUrl
     return false;
   }
 
-  var hostname = parsedUrl.hostname;
-
-  var _URL$parse = URL.parse(href),
-      linkHost = _URL$parse.hostname; // Domain mismatch.
-
+  const {
+    hostname
+  } = parsedUrl;
+  const {
+    hostname: linkHost
+  } = URL.parse(href); // Domain mismatch.
 
   if (linkHost !== hostname) {
     return false;
@@ -6889,7 +6643,7 @@ function shouldScore(href, articleUrl, baseUrl, parsedUrl, linkText, previousUrl
   // it's certainly not the next page.
 
 
-  var fragment = href.replace(baseUrl, '');
+  const fragment = href.replace(baseUrl, '');
 
   if (!DIGIT_RE$2.test(fragment)) {
     return false;
@@ -6946,24 +6700,24 @@ function scoreCapLinks(linkData) {
 }
 
 function makeBaseRegex(baseUrl) {
-  return new RegExp("^".concat(baseUrl), 'i');
+  return new RegExp(`^${baseUrl}`, 'i');
 }
 
 function makeSig$1($link, linkText) {
-  return "".concat(linkText || $link.text(), " ").concat($link.attr('class') || '', " ").concat($link.attr('id') || '');
+  return `${linkText || $link.text()} ${$link.attr('class') || ''} ${$link.attr('id') || ''}`;
 }
 
-function scoreLinks(_ref) {
-  var links = _ref.links,
-      articleUrl = _ref.articleUrl,
-      baseUrl = _ref.baseUrl,
-      parsedUrl = _ref.parsedUrl,
-      $ = _ref.$,
-      _ref$previousUrls = _ref.previousUrls,
-      previousUrls = _ref$previousUrls === void 0 ? [] : _ref$previousUrls;
+function scoreLinks({
+  links,
+  articleUrl,
+  baseUrl,
+  parsedUrl,
+  $,
+  previousUrls = []
+}) {
   parsedUrl = parsedUrl || URL.parse(articleUrl);
-  var baseRegex = makeBaseRegex(baseUrl);
-  var isWp = isWordpress($); // Loop through all links, looking for hints that they may be next-page
+  const baseRegex = makeBaseRegex(baseUrl);
+  const isWp = isWordpress($); // Loop through all links, looking for hints that they may be next-page
   // links. Things like having "page" in their textContent, className or
   // id, or being a child of a node with a page-y className or id.
   //
@@ -6971,16 +6725,16 @@ function scoreLinks(_ref) {
   // looks most like the next page link, as long as its score is strong
   // enough to have decent confidence.
 
-  var scoredPages = links.reduce(function (possiblePages, link) {
+  const scoredPages = links.reduce((possiblePages, link) => {
     // Remove any anchor data since we don't do a good job
     // standardizing URLs (it's hard), we're going to do
     // some checking with and without a trailing slash
-    var attrs = getAttrs(link); // if href is undefined, return
+    const attrs = getAttrs(link); // if href is undefined, return
 
     if (!attrs.href) return possiblePages;
-    var href = removeAnchor(attrs.href);
-    var $link = $(link);
-    var linkText = $link.text();
+    const href = removeAnchor(attrs.href);
+    const $link = $(link);
+    const linkText = $link.text();
 
     if (!shouldScore(href, articleUrl, baseUrl, parsedUrl, linkText, previousUrls)) {
       return possiblePages;
@@ -6990,17 +6744,17 @@ function scoreLinks(_ref) {
     if (!possiblePages[href]) {
       possiblePages[href] = {
         score: 0,
-        linkText: linkText,
-        href: href
+        linkText,
+        href
       };
     } else {
-      possiblePages[href].linkText = "".concat(possiblePages[href].linkText, "|").concat(linkText);
+      possiblePages[href].linkText = `${possiblePages[href].linkText}|${linkText}`;
     }
 
-    var possiblePage = possiblePages[href];
-    var linkData = makeSig$1($link, linkText);
-    var pageNum = pageNumFromUrl(href);
-    var score = scoreBaseUrl(href, baseRegex);
+    const possiblePage = possiblePages[href];
+    const linkData = makeSig$1($link, linkText);
+    const pageNum = pageNumFromUrl(href);
+    let score = scoreBaseUrl(href, baseRegex);
     score += scoreNextLinkText(linkData);
     score += scoreCapLinks(linkData);
     score += scorePrevLink(linkData);
@@ -7017,31 +6771,31 @@ function scoreLinks(_ref) {
 
 // for multi-page articles
 
-var GenericNextPageUrlExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        url = _ref.url,
-        parsedUrl = _ref.parsedUrl,
-        _ref$previousUrls = _ref.previousUrls,
-        previousUrls = _ref$previousUrls === void 0 ? [] : _ref$previousUrls;
+const GenericNextPageUrlExtractor = {
+  extract({
+    $,
+    url,
+    parsedUrl,
+    previousUrls = []
+  }) {
     parsedUrl = parsedUrl || URL.parse(url);
-    var articleUrl = removeAnchor(url);
-    var baseUrl = articleBaseUrl(url, parsedUrl);
-    var links = $('a[href]').toArray();
-    var scoredLinks = scoreLinks({
-      links: links,
-      articleUrl: articleUrl,
-      baseUrl: baseUrl,
-      parsedUrl: parsedUrl,
-      $: $,
-      previousUrls: previousUrls
+    const articleUrl = removeAnchor(url);
+    const baseUrl = articleBaseUrl(url, parsedUrl);
+    const links = $('a[href]').toArray();
+    const scoredLinks = scoreLinks({
+      links,
+      articleUrl,
+      baseUrl,
+      parsedUrl,
+      $,
+      previousUrls
     }); // If no links were scored, return null
 
     if (!scoredLinks) return null; // now that we've scored all possible pages,
     // find the biggest one.
 
-    var topPage = _Reflect$ownKeys(scoredLinks).reduce(function (acc, link) {
-      var scoredLink = scoredLinks[link];
+    const topPage = _Reflect$ownKeys(scoredLinks).reduce((acc, link) => {
+      const scoredLink = scoredLinks[link];
       return scoredLink.score > acc.score ? scoredLink : acc;
     }, {
       score: -100
@@ -7055,39 +6809,43 @@ var GenericNextPageUrlExtractor = {
 
     return null;
   }
+
 };
 
-var CANONICAL_META_SELECTORS = ['og:url'];
+const CANONICAL_META_SELECTORS = ['og:url'];
 
 function parseDomain(url) {
-  var parsedUrl = URL.parse(url);
-  var hostname = parsedUrl.hostname;
+  const parsedUrl = URL.parse(url);
+  const {
+    hostname
+  } = parsedUrl;
   return hostname;
 }
 
 function result(url) {
   return {
-    url: url,
+    url,
     domain: parseDomain(url)
   };
 }
 
-var GenericUrlExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        url = _ref.url,
-        metaCache = _ref.metaCache;
-    var $canonical = $('link[rel=canonical]');
+const GenericUrlExtractor = {
+  extract({
+    $,
+    url,
+    metaCache
+  }) {
+    const $canonical = $('link[rel=canonical]');
 
     if ($canonical.length !== 0) {
-      var href = $canonical.attr('href');
+      const href = $canonical.attr('href');
 
       if (href) {
         return result(href);
       }
     }
 
-    var metaUrl = extractFromMeta$$1($, CANONICAL_META_SELECTORS, metaCache);
+    const metaUrl = extractFromMeta$$1($, CANONICAL_META_SELECTORS, metaCache);
 
     if (metaUrl) {
       return result(metaUrl);
@@ -7095,46 +6853,50 @@ var GenericUrlExtractor = {
 
     return result(url);
   }
+
 };
 
-var EXCERPT_META_SELECTORS = ['og:description', 'twitter:description'];
+const EXCERPT_META_SELECTORS = ['og:description', 'twitter:description'];
 
-function clean$2(content, $) {
-  var maxLength = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 200;
+function clean$2(content, $, maxLength = 200) {
   content = content.replace(/[\s\n]+/g, ' ').trim();
   return ellipsize(content, maxLength, {
     ellipse: '&hellip;'
   });
 }
-var GenericExcerptExtractor = {
-  extract: function extract(_ref) {
-    var $ = _ref.$,
-        content = _ref.content,
-        metaCache = _ref.metaCache;
-    var excerpt = extractFromMeta$$1($, EXCERPT_META_SELECTORS, metaCache);
+const GenericExcerptExtractor = {
+  extract({
+    $,
+    content,
+    metaCache
+  }) {
+    const excerpt = extractFromMeta$$1($, EXCERPT_META_SELECTORS, metaCache);
 
     if (excerpt) {
       return clean$2(stripTags(excerpt, $));
     } // Fall back to excerpting from the extracted content
 
 
-    var maxLength = 200;
-    var shortContent = content.slice(0, maxLength * 5);
+    const maxLength = 200;
+    const shortContent = content.slice(0, maxLength * 5);
     return clean$2($(shortContent).text(), $, maxLength);
   }
+
 };
 
-var GenericWordCountExtractor = {
-  extract: function extract(_ref) {
-    var content = _ref.content;
-    var $ = cheerio.load(content);
-    var $content = $('div').first();
-    var text = normalizeSpaces($content.text());
+const GenericWordCountExtractor = {
+  extract({
+    content
+  }) {
+    const $ = cheerio.load(content);
+    const $content = $('div').first();
+    const text = normalizeSpaces($content.text());
     return text.split(/\s/).length;
   }
+
 };
 
-var GenericExtractor = {
+const GenericExtractor = {
   // This extractor is the default for all domains
   domain: '*',
   title: GenericTitleExtractor.extract,
@@ -7147,106 +6909,109 @@ var GenericExtractor = {
   url_and_domain: GenericUrlExtractor.extract,
   excerpt: GenericExcerptExtractor.extract,
   word_count: GenericWordCountExtractor.extract,
-  direction: function direction(_ref) {
-    var title = _ref.title;
-    return stringDirection.getDirection(title);
-  },
-  extract: function extract(options) {
-    var html = options.html,
-        $ = options.$;
+  direction: ({
+    title
+  }) => stringDirection.getDirection(title),
+
+  extract(options) {
+    const {
+      html,
+      $
+    } = options;
 
     if (html && !$) {
-      var loaded = cheerio.load(html);
+      const loaded = cheerio.load(html);
       options.$ = loaded;
     }
 
-    var title = this.title(options);
-    var date_published = this.date_published(options);
-    var author = this.author(options);
-    var content = this.content(_objectSpread({}, options, {
-      title: title
-    }));
-    var lead_image_url = this.lead_image_url(_objectSpread({}, options, {
-      content: content
-    }));
-    var dek = this.dek(_objectSpread({}, options, {
-      content: content
-    }));
-    var next_page_url = this.next_page_url(options);
-    var excerpt = this.excerpt(_objectSpread({}, options, {
-      content: content
-    }));
-    var word_count = this.word_count(_objectSpread({}, options, {
-      content: content
-    }));
-    var direction = this.direction({
-      title: title
+    const title = this.title(options);
+    const date_published = this.date_published(options);
+    const author = this.author(options);
+    const content = this.content({ ...options,
+      title
     });
-
-    var _this$url_and_domain = this.url_and_domain(options),
-        url = _this$url_and_domain.url,
-        domain = _this$url_and_domain.domain;
-
+    const lead_image_url = this.lead_image_url({ ...options,
+      content
+    });
+    const dek = this.dek({ ...options,
+      content
+    });
+    const next_page_url = this.next_page_url(options);
+    const excerpt = this.excerpt({ ...options,
+      content
+    });
+    const word_count = this.word_count({ ...options,
+      content
+    });
+    const direction = this.direction({
+      title
+    });
+    const {
+      url,
+      domain
+    } = this.url_and_domain(options);
     return {
-      title: title,
-      author: author,
+      title,
+      author,
       date_published: date_published || null,
-      dek: dek,
-      lead_image_url: lead_image_url,
-      content: content,
-      next_page_url: next_page_url,
-      url: url,
-      domain: domain,
-      excerpt: excerpt,
-      word_count: word_count,
-      direction: direction
+      dek,
+      lead_image_url,
+      content,
+      next_page_url,
+      url,
+      domain,
+      excerpt,
+      word_count,
+      direction
     };
   }
+
 };
 
-var Detectors = {
+const Detectors = {
   'meta[name="al:ios:app_name"][value="Medium"]': MediumExtractor,
   'meta[name="generator"][value="blogger"]': BloggerExtractor
 };
 function detectByHtml($) {
-  var selector = _Reflect$ownKeys(Detectors).find(function (s) {
-    return $(s).length > 0;
-  });
+  const selector = _Reflect$ownKeys(Detectors).find(s => $(s).length > 0);
 
   return Detectors[selector];
 }
 
 function getExtractor(url, parsedUrl, $) {
   parsedUrl = parsedUrl || URL.parse(url);
-  var _parsedUrl = parsedUrl,
-      hostname = _parsedUrl.hostname;
-  var baseDomain = hostname.split('.').slice(-2).join('.');
+  const {
+    hostname
+  } = parsedUrl;
+  const baseDomain = hostname.split('.').slice(-2).join('.');
   return apiExtractors[hostname] || apiExtractors[baseDomain] || Extractors[hostname] || Extractors[baseDomain] || detectByHtml($) || GenericExtractor;
 }
 
-function cleanBySelectors($content, $, _ref) {
-  var clean = _ref.clean;
+function cleanBySelectors($content, $, {
+  clean
+}) {
   if (!clean) return $content;
   $(clean.join(','), $content).remove();
   return $content;
 } // Transform matching elements
 
-function transformElements($content, $, _ref2) {
-  var transforms = _ref2.transforms;
+function transformElements($content, $, {
+  transforms
+}) {
   if (!transforms) return $content;
 
-  _Reflect$ownKeys(transforms).forEach(function (key) {
-    var $matches = $(key, $content);
-    var value = transforms[key]; // If value is a string, convert directly
+  _Reflect$ownKeys(transforms).forEach(key => {
+    const $matches = $(key, $content);
+    const value = transforms[key]; // If value is a string, convert directly
 
     if (typeof value === 'string') {
-      $matches.each(function (index, node) {
+      $matches.each((index, node) => {
         convertNodeTo$$1($(node), $, transforms[key]);
       });
     } else if (typeof value === 'function') {
       // If value is function, apply function to node
-      $matches.each(function (index, node) {
-        var result = value($(node), $); // If function returns a string, convert node to that value
+      $matches.each((index, node) => {
+        const result = value($(node), $); // If function returns a string, convert node to that value
 
         if (typeof result === 'string') {
           convertNodeTo$$1($(node), $, result);
@@ -7259,18 +7024,13 @@ function transformElements($content, $, _ref2) {
 }
 
 function findMatchingSelector($, selectors, extractHtml, allowMultiple) {
-  return selectors.find(function (selector) {
+  return selectors.find(selector => {
     if (_Array$isArray(selector)) {
       if (extractHtml) {
-        return selector.reduce(function (acc, s) {
-          return acc && $(s).length > 0;
-        }, true);
+        return selector.reduce((acc, s) => acc && $(s).length > 0, true);
       }
 
-      var _selector = _slicedToArray(selector, 2),
-          s = _selector[0],
-          attr = _selector[1];
-
+      const [s, attr] = selector;
       return (allowMultiple || !allowMultiple && $(s).length === 1) && $(s).attr(attr) && $(s).attr(attr).trim() !== '';
     }
 
@@ -7279,21 +7039,23 @@ function findMatchingSelector($, selectors, extractHtml, allowMultiple) {
 }
 
 function select(opts) {
-  var $ = opts.$,
-      type = opts.type,
-      extractionOpts = opts.extractionOpts,
-      _opts$extractHtml = opts.extractHtml,
-      extractHtml = _opts$extractHtml === void 0 ? false : _opts$extractHtml; // Skip if there's not extraction for this type
+  const {
+    $,
+    type,
+    extractionOpts,
+    extractHtml = false
+  } = opts; // Skip if there's not extraction for this type
 
   if (!extractionOpts) return null; // If a string is hardcoded for a type (e.g., Wikipedia
   // contributors), return the string
 
   if (typeof extractionOpts === 'string') return extractionOpts;
-  var selectors = extractionOpts.selectors,
-      _extractionOpts$defau = extractionOpts.defaultCleaner,
-      defaultCleaner = _extractionOpts$defau === void 0 ? true : _extractionOpts$defau,
-      allowMultiple = extractionOpts.allowMultiple;
-  var matchingSelector = findMatchingSelector($, selectors, extractHtml, allowMultiple);
+  const {
+    selectors,
+    defaultCleaner = true,
+    allowMultiple
+  } = extractionOpts;
+  const matchingSelector = findMatchingSelector($, selectors, extractHtml, allowMultiple);
   if (!matchingSelector) return null;
 
   function transformAndClean($node) {
@@ -7306,15 +7068,15 @@ function select(opts) {
   function selectHtml() {
     // If the selector type requests html as its return type
     // transform and clean the element with provided selectors
-    var $content; // If matching selector is an array, we're considering this a
+    let $content; // If matching selector is an array, we're considering this a
     // multi-match selection, which allows the parser to choose several
     // selectors to include in the result. Note that all selectors in the
     // array must match in order for this selector to trigger
 
     if (_Array$isArray(matchingSelector)) {
       $content = $(matchingSelector.join(','));
-      var $wrapper = $('<div></div>');
-      $content.each(function (_, element) {
+      const $wrapper = $('<div></div>');
+      $content.each((_, element) => {
         $wrapper.append(element);
       });
       $content = $wrapper;
@@ -7328,15 +7090,13 @@ function select(opts) {
     $content = transformAndClean($content);
 
     if (Cleaners[type]) {
-      Cleaners[type]($content, _objectSpread({}, opts, {
-        defaultCleaner: defaultCleaner
-      }));
+      Cleaners[type]($content, { ...opts,
+        defaultCleaner
+      });
     }
 
     if (allowMultiple) {
-      return $content.children().toArray().map(function (el) {
-        return $.html($(el));
-      });
+      return $content.children().toArray().map(el => $.html($(el)));
     }
 
     return $.html($content);
@@ -7346,48 +7106,44 @@ function select(opts) {
     return selectHtml(matchingSelector);
   }
 
-  var $match;
-  var result; // if selector is an array (e.g., ['img', 'src']),
+  let $match;
+  let result; // if selector is an array (e.g., ['img', 'src']),
   // extract the attr
 
   if (_Array$isArray(matchingSelector)) {
-    var _matchingSelector = _slicedToArray(matchingSelector, 3),
-        selector = _matchingSelector[0],
-        attr = _matchingSelector[1],
-        transform = _matchingSelector[2];
-
+    const [selector, attr, transform] = matchingSelector;
     $match = $(selector);
     $match = transformAndClean($match);
-    result = $match.map(function (_, el) {
-      var item = $(el).attr(attr).trim();
+    result = $match.map((_, el) => {
+      const item = $(el).attr(attr).trim();
       return transform ? transform(item) : item;
     });
   } else {
     $match = $(matchingSelector);
     $match = transformAndClean($match);
-    result = $match.map(function (_, el) {
-      return $(el).text().trim();
-    });
+    result = $match.map((_, el) => $(el).text().trim());
   }
 
   result = _Array$isArray(result.toArray()) && allowMultiple ? result.toArray() : result[0]; // Allow custom extractor to skip default cleaner
   // for this type; defaults to true
 
   if (defaultCleaner && Cleaners[type]) {
-    return Cleaners[type](result, _objectSpread({}, opts, extractionOpts));
+    return Cleaners[type](result, { ...opts,
+      ...extractionOpts
+    });
   }
 
   return result;
 }
 function selectExtendedTypes(extend, opts) {
-  var results = {};
+  const results = {};
 
-  _Reflect$ownKeys(extend).forEach(function (t) {
+  _Reflect$ownKeys(extend).forEach(t => {
     if (!results[t]) {
-      results[t] = select(_objectSpread({}, opts, {
+      results[t] = select({ ...opts,
         type: t,
         extractionOpts: extend[t]
-      }));
+      });
     }
   });
 
@@ -7395,13 +7151,14 @@ function selectExtendedTypes(extend, opts) {
 }
 
 function extractResult(opts) {
-  var type = opts.type,
-      extractor = opts.extractor,
-      _opts$fallback = opts.fallback,
-      fallback = _opts$fallback === void 0 ? true : _opts$fallback;
-  var result = select(_objectSpread({}, opts, {
+  const {
+    type,
+    extractor,
+    fallback = true
+  } = opts;
+  const result = select({ ...opts,
     extractionOpts: extractor[type]
-  })); // If custom parser succeeds, return the result
+  }); // If custom parser succeeds, return the result
 
   if (result) {
     return result;
@@ -7413,330 +7170,244 @@ function extractResult(opts) {
   return null;
 }
 
-var RootExtractor = {
-  extract: function extract() {
-    var extractor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : GenericExtractor;
-    var opts = arguments.length > 1 ? arguments[1] : undefined;
-    var _opts = opts,
-        contentOnly = _opts.contentOnly,
-        extractedTitle = _opts.extractedTitle; // This is the generic extractor. Run its extract method
+const RootExtractor = {
+  extract(extractor = GenericExtractor, opts) {
+    const {
+      contentOnly,
+      extractedTitle
+    } = opts; // This is the generic extractor. Run its extract method
 
     if (extractor.domain === '*') return extractor.extract(opts);
-    opts = _objectSpread({}, opts, {
-      extractor: extractor
-    });
+    opts = { ...opts,
+      extractor
+    };
 
     if (contentOnly) {
-      var _content = extractResult(_objectSpread({}, opts, {
+      const content = extractResult({ ...opts,
         type: 'content',
         extractHtml: true,
         title: extractedTitle
-      }));
-
+      });
       return {
-        content: _content
+        content
       };
     }
 
-    var title = extractResult(_objectSpread({}, opts, {
+    const title = extractResult({ ...opts,
       type: 'title'
-    }));
-    var date_published = extractResult(_objectSpread({}, opts, {
+    });
+    const date_published = extractResult({ ...opts,
       type: 'date_published'
-    }));
-    var author = extractResult(_objectSpread({}, opts, {
+    });
+    const author = extractResult({ ...opts,
       type: 'author'
-    }));
-    var next_page_url = extractResult(_objectSpread({}, opts, {
+    });
+    const next_page_url = extractResult({ ...opts,
       type: 'next_page_url'
-    }));
-    var content = extractResult(_objectSpread({}, opts, {
+    });
+    const content = extractResult({ ...opts,
       type: 'content',
       extractHtml: true,
-      title: title
-    }));
-    var lead_image_url = extractResult(_objectSpread({}, opts, {
+      title
+    });
+    const lead_image_url = extractResult({ ...opts,
       type: 'lead_image_url',
-      content: content
-    }));
-    var excerpt = extractResult(_objectSpread({}, opts, {
+      content
+    });
+    const excerpt = extractResult({ ...opts,
       type: 'excerpt',
-      content: content
-    }));
-    var dek = extractResult(_objectSpread({}, opts, {
+      content
+    });
+    const dek = extractResult({ ...opts,
       type: 'dek',
-      content: content,
-      excerpt: excerpt
-    }));
-    var word_count = extractResult(_objectSpread({}, opts, {
+      content,
+      excerpt
+    });
+    const word_count = extractResult({ ...opts,
       type: 'word_count',
-      content: content
-    }));
-    var direction = extractResult(_objectSpread({}, opts, {
+      content
+    });
+    const direction = extractResult({ ...opts,
       type: 'direction',
-      title: title
-    }));
-
-    var _ref3 = extractResult(_objectSpread({}, opts, {
+      title
+    });
+    const {
+      url,
+      domain
+    } = extractResult({ ...opts,
       type: 'url_and_domain'
-    })) || {
+    }) || {
       url: null,
       domain: null
-    },
-        url = _ref3.url,
-        domain = _ref3.domain;
-
-    var extendedResults = {};
+    };
+    let extendedResults = {};
 
     if (extractor.extend) {
       extendedResults = selectExtendedTypes(extractor.extend, opts);
     }
 
-    return _objectSpread({
-      title: title,
-      content: content,
-      author: author,
-      date_published: date_published,
-      lead_image_url: lead_image_url,
-      dek: dek,
-      next_page_url: next_page_url,
-      url: url,
-      domain: domain,
-      excerpt: excerpt,
-      word_count: word_count,
-      direction: direction
-    }, extendedResults);
+    return {
+      title,
+      content,
+      author,
+      date_published,
+      lead_image_url,
+      dek,
+      next_page_url,
+      url,
+      domain,
+      excerpt,
+      word_count,
+      direction,
+      ...extendedResults
+    };
   }
+
 };
 
-function collectAllPages(_x) {
-  return _collectAllPages.apply(this, arguments);
+async function collectAllPages({
+  next_page_url,
+  html,
+  $,
+  metaCache,
+  result,
+  Extractor,
+  title,
+  url
+}) {
+  // At this point, we've fetched just the first page
+  let pages = 1;
+  const previousUrls = [removeAnchor(url)]; // If we've gone over 26 pages, something has
+  // likely gone wrong.
+
+  while (next_page_url && pages < 26) {
+    pages += 1; // eslint-disable-next-line no-await-in-loop
+
+    $ = await Resource.create(next_page_url);
+    html = $.html();
+    const extractorOpts = {
+      url: next_page_url,
+      html,
+      $,
+      metaCache,
+      contentOnly: true,
+      extractedTitle: title,
+      previousUrls
+    };
+    const nextPageResult = RootExtractor.extract(Extractor, extractorOpts);
+    previousUrls.push(next_page_url);
+    result = { ...result,
+      content: `${result.content}<hr><h4>Page ${pages}</h4>${nextPageResult.content}`
+    }; // eslint-disable-next-line prefer-destructuring
+
+    next_page_url = nextPageResult.next_page_url;
+  }
+
+  const word_count = GenericExtractor.word_count({
+    content: `<div>${result.content}</div>`
+  });
+  return { ...result,
+    total_pages: pages,
+    pages_rendered: pages,
+    word_count
+  };
 }
 
-function _collectAllPages() {
-  _collectAllPages = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(_ref) {
-    var next_page_url, html, $, metaCache, result, Extractor, title, url, pages, previousUrls, extractorOpts, nextPageResult, word_count;
-    return _regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            next_page_url = _ref.next_page_url, html = _ref.html, $ = _ref.$, metaCache = _ref.metaCache, result = _ref.result, Extractor = _ref.Extractor, title = _ref.title, url = _ref.url;
-            // At this point, we've fetched just the first page
-            pages = 1;
-            previousUrls = [removeAnchor(url)]; // If we've gone over 26 pages, something has
-            // likely gone wrong.
+const Mercury = {
+  parse: async (url, {
+    html,
+    ...opts
+  } = {}) => {
+    const {
+      fetchAllPages = true,
+      fallback = true,
+      contentType = 'html',
+      headers = {},
+      extend
+    } = opts;
+    const parsedUrl = URL.parse(url);
 
-          case 3:
-            if (!(next_page_url && pages < 26)) {
-              _context.next = 16;
-              break;
-            }
-
-            pages += 1; // eslint-disable-next-line no-await-in-loop
-
-            _context.next = 7;
-            return Resource.create(next_page_url);
-
-          case 7:
-            $ = _context.sent;
-            html = $.html();
-            extractorOpts = {
-              url: next_page_url,
-              html: html,
-              $: $,
-              metaCache: metaCache,
-              contentOnly: true,
-              extractedTitle: title,
-              previousUrls: previousUrls
-            };
-            nextPageResult = RootExtractor.extract(Extractor, extractorOpts);
-            previousUrls.push(next_page_url);
-            result = _objectSpread({}, result, {
-              content: "".concat(result.content, "<hr><h4>Page ").concat(pages, "</h4>").concat(nextPageResult.content)
-            }); // eslint-disable-next-line prefer-destructuring
-
-            next_page_url = nextPageResult.next_page_url;
-            _context.next = 3;
-            break;
-
-          case 16:
-            word_count = GenericExtractor.word_count({
-              content: "<div>".concat(result.content, "</div>")
-            });
-            return _context.abrupt("return", _objectSpread({}, result, {
-              total_pages: pages,
-              pages_rendered: pages,
-              word_count: word_count
-            }));
-
-          case 18:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-  return _collectAllPages.apply(this, arguments);
-}
-
-var Mercury = {
-  parse: function () {
-    var _parse = _asyncToGenerator(
-    /*#__PURE__*/
-    _regeneratorRuntime.mark(function _callee(url) {
-      var _ref,
-          html,
-          opts,
-          _opts$fetchAllPages,
-          fetchAllPages,
-          _opts$fallback,
-          fallback,
-          _opts$contentType,
-          contentType,
-          _opts$headers,
-          headers,
-          extend,
-          parsedUrl,
-          $,
-          Extractor,
-          metaCache,
-          extendedTypes,
-          result,
-          _result,
-          title,
-          next_page_url,
-          turndownService,
-          _args = arguments;
-
-      return _regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _ref = _args.length > 1 && _args[1] !== undefined ? _args[1] : {}, html = _ref.html, opts = _objectWithoutProperties(_ref, ["html"]);
-              _opts$fetchAllPages = opts.fetchAllPages, fetchAllPages = _opts$fetchAllPages === void 0 ? true : _opts$fetchAllPages, _opts$fallback = opts.fallback, fallback = _opts$fallback === void 0 ? true : _opts$fallback, _opts$contentType = opts.contentType, contentType = _opts$contentType === void 0 ? 'html' : _opts$contentType, _opts$headers = opts.headers, headers = _opts$headers === void 0 ? {} : _opts$headers, extend = opts.extend;
-              parsedUrl = URL.parse(url);
-
-              if (validateUrl(parsedUrl)) {
-                _context.next = 5;
-                break;
-              }
-
-              return _context.abrupt("return", {
-                error: true,
-                message: 'The url parameter passed does not look like a valid URL. Please check your URL and try again.'
-              });
-
-            case 5:
-              _context.next = 7;
-              return Resource.create(url, html, parsedUrl, headers);
-
-            case 7:
-              $ = _context.sent;
-
-              if (!$.failed) {
-                _context.next = 10;
-                break;
-              }
-
-              return _context.abrupt("return", $);
-
-            case 10:
-              Extractor = getExtractor(url, parsedUrl, $); // console.log(`Using extractor for ${Extractor.domain}`);
-              // if html still has not been set (i.e., url passed to Mercury.parse),
-              // set html from the response of Resource.create
-
-              if (!html) {
-                html = $.html();
-              } // Cached value of every meta name in our document.
-              // Used when extracting title/author/date_published/dek
-
-
-              metaCache = $('meta').map(function (_, node) {
-                return $(node).attr('name');
-              }).toArray();
-              extendedTypes = {};
-
-              if (extend) {
-                extendedTypes = selectExtendedTypes(extend, {
-                  $: $,
-                  url: url,
-                  html: html
-                });
-              }
-
-              result = RootExtractor.extract(Extractor, {
-                url: url,
-                html: html,
-                $: $,
-                metaCache: metaCache,
-                parsedUrl: parsedUrl,
-                fallback: fallback,
-                contentType: contentType
-              });
-              _result = result, title = _result.title, next_page_url = _result.next_page_url; // Fetch more pages if next_page_url found
-
-              if (!(fetchAllPages && next_page_url)) {
-                _context.next = 23;
-                break;
-              }
-
-              _context.next = 20;
-              return collectAllPages({
-                Extractor: Extractor,
-                next_page_url: next_page_url,
-                html: html,
-                $: $,
-                metaCache: metaCache,
-                result: result,
-                title: title,
-                url: url
-              });
-
-            case 20:
-              result = _context.sent;
-              _context.next = 24;
-              break;
-
-            case 23:
-              result = _objectSpread({}, result, {
-                total_pages: 1,
-                rendered_pages: 1
-              });
-
-            case 24:
-              if (contentType === 'markdown') {
-                turndownService = new TurndownService();
-                result.content = turndownService.turndown(result.content);
-              } else if (contentType === 'text') {
-                result.content = $.text($(result.content));
-              }
-
-              return _context.abrupt("return", _objectSpread({}, result, extendedTypes));
-
-            case 26:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function parse(_x) {
-      return _parse.apply(this, arguments);
+    if (!validateUrl(parsedUrl)) {
+      return {
+        error: true,
+        message: 'The url parameter passed does not look like a valid URL. Please check your URL and try again.'
+      };
     }
 
-    return parse;
-  }(),
+    const $ = await Resource.create(url, html, parsedUrl, headers); // If we found an error creating the resource, return that error
+
+    if ($.failed) {
+      return $;
+    }
+
+    const Extractor = getExtractor(url, parsedUrl, $); // console.log(`Using extractor for ${Extractor.domain}`);
+    // if html still has not been set (i.e., url passed to Mercury.parse),
+    // set html from the response of Resource.create
+
+    if (!html) {
+      html = $.html();
+    } // Cached value of every meta name in our document.
+    // Used when extracting title/author/date_published/dek
+
+
+    const metaCache = $('meta').map((_, node) => $(node).attr('name')).toArray();
+    let extendedTypes = {};
+
+    if (extend) {
+      extendedTypes = selectExtendedTypes(extend, {
+        $,
+        url,
+        html
+      });
+    }
+
+    let result = RootExtractor.extract(Extractor, {
+      url,
+      html,
+      $,
+      metaCache,
+      parsedUrl,
+      fallback,
+      contentType
+    });
+    const {
+      title,
+      next_page_url
+    } = result; // Fetch more pages if next_page_url found
+
+    if (fetchAllPages && next_page_url) {
+      result = await collectAllPages({
+        Extractor,
+        next_page_url,
+        html,
+        $,
+        metaCache,
+        result,
+        title,
+        url
+      });
+    } else {
+      result = { ...result,
+        total_pages: 1,
+        rendered_pages: 1
+      };
+    }
+
+    if (contentType === 'markdown') {
+      const turndownService = new TurndownService();
+      result.content = turndownService.turndown(result.content);
+    } else if (contentType === 'text') {
+      result.content = $.text($(result.content));
+    }
+
+    return { ...result,
+      ...extendedTypes
+    };
+  },
   // A convenience method for getting a resource
   // to work with, e.g., for custom extractor generator
-  fetchResource: function fetchResource(url) {
-    return Resource.create(url);
-  },
-  addExtractor: function addExtractor$$1(extractor) {
-    return addExtractor(extractor);
-  }
+  fetchResource: url => Resource.create(url),
+  addExtractor: extractor => addExtractor(extractor)
 };
 
 module.exports = Mercury;
