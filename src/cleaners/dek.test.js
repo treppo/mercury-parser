@@ -1,4 +1,3 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
 import cleanDek from './dek';

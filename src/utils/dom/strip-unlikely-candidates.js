@@ -1,4 +1,4 @@
-import { CANDIDATES_WHITELIST, CANDIDATES_BLACKLIST } from './constants';
+import { CANDIDATES_BLACKLIST, CANDIDATES_WHITELIST } from './constants';
 
 export default function stripUnlikelyCandidates($) {
   //  Loop through the provided document and remove any non-link nodes

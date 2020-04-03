@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import scoreSimilarity from './score-similarity';
 
 describe('scoreSimilarity(score, articleUrl, href)', () => {

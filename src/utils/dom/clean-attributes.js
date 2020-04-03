@@ -1,4 +1,4 @@
-import { WHITELIST_ATTRS_RE, KEEP_CLASS } from './constants';
+import { KEEP_CLASS, WHITELIST_ATTRS_RE } from './constants';
 import getAttrs from './get-attrs';
 import setAttrs from './set-attrs';
 

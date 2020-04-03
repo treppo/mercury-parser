@@ -1,10 +1,9 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
 import { assertClean } from 'test-helpers';
 import RootExtractor, {
-  select,
   cleanBySelectors,
+  select,
   transformElements,
 } from './root-extractor';
 

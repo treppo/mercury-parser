@@ -40,9 +40,7 @@ export default async function collectAllPages({
     previousUrls.push(next_page_url);
     result = {
       ...result,
-      content: `${result.content}<hr><h4>Page ${pages}</h4>${
-        nextPageResult.content
-      }`,
+      content: `${result.content}<hr><h4>Page ${pages}</h4>${nextPageResult.content}`,
     };
 
     // eslint-disable-next-line prefer-destructuring

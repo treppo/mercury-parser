@@ -4,11 +4,11 @@ import {
   cleanHOnes,
   cleanImages,
   cleanTags,
+  makeLinksAbsolute,
+  markToKeep,
   removeEmpty,
   rewriteTopLevel,
-  markToKeep,
   stripJunkTags,
-  makeLinksAbsolute,
 } from 'utils/dom';
 
 // Clean our article content, returning a new, cleaned node.

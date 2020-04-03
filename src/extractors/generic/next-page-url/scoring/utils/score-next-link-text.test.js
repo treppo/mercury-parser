@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import scoreNextLinkText from './score-next-link-text';
 
 describe('scoreNextLinkText(linkData)', () => {

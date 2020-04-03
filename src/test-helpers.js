@@ -1,5 +1,4 @@
-import assert from 'assert';
-import nock from 'nock'; // eslint-disable-line import/no-extraneous-dependencies
+import nock from 'nock';
 import path from 'path';
 
 // const fs = require('fs');
@@ -29,7 +28,7 @@ export function record(name, options = {}) {
     before: () => {
       if (!has_fixtures) {
         try {
-          require(`../${fp}`); // eslint-disable-line global-require, import/no-dynamic-require, max-len
+          require(`../${fp}`);
           has_fixtures = true;
         } catch (e) {
           nock.recorder.rec({

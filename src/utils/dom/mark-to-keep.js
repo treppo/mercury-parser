@@ -1,6 +1,6 @@
 import URL from 'url';
 
-import { KEEP_SELECTORS, KEEP_CLASS } from './constants';
+import { KEEP_CLASS, KEEP_SELECTORS } from './constants';
 
 export default function markToKeep(article, $, url, tags = []) {
   if (tags.length === 0) {

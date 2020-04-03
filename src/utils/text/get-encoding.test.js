@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import getEncoding from './get-encoding';
 
 // A shim is used /src/shims/iconv-lite.js to decrease load size

@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import { scoreCommas } from './index';
 
 describe('Scoring utils', () => {

@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import scoreExtraneousLinks from './score-extraneous-links';
 
 describe('scoreExtraneousLinks(href)', () => {

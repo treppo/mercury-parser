@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import addExtractor from './add-extractor';
 
 describe('addExtractor(extractor)', () => {

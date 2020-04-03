@@ -1,7 +1,6 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
-import { setScore, getScore } from './index';
+import { getScore, setScore } from './index';
 
 describe('Scoring utils', () => {
   describe('setScore(node, $, amount)', () => {

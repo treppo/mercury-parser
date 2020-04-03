@@ -7,12 +7,12 @@ import {
 } from './constants';
 
 import {
-  scoreImageUrl,
   scoreAttr,
-  scoreByParents,
-  scoreBySibling,
   scoreByDimensions,
+  scoreByParents,
   scoreByPosition,
+  scoreBySibling,
+  scoreImageUrl,
 } from './score-image';
 
 // Given a resource, try to find the lead image URL from within

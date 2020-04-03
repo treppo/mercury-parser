@@ -3,8 +3,8 @@ import { extractFromMeta, extractFromSelectors } from 'utils/dom';
 
 import {
   STRONG_TITLE_META_TAGS,
-  WEAK_TITLE_META_TAGS,
   STRONG_TITLE_SELECTORS,
+  WEAK_TITLE_META_TAGS,
   WEAK_TITLE_SELECTORS,
 } from './constants';
 

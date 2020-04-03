@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import extractFromUrl from './extract-from-url';
 
 describe('extractFromUrl(url)', () => {

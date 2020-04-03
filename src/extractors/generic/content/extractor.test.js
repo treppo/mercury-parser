@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import { clean } from 'test-helpers';
 
 import GenericContentExtractor from './extractor';

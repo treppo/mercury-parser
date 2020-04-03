@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import scorePrevLink from './score-prev-link';
 
 describe('scorePrevLink(linkData)', () => {

@@ -1,20 +1,19 @@
 import moment from 'moment-timezone';
 import parseFormat from 'moment-parseformat';
+import {
+  CLEAN_DATE_STRING_RE,
+  MS_DATE_STRING,
+  SEC_DATE_STRING,
+  SPLIT_DATE_STRING,
+  TIME_AGO_STRING,
+  TIME_MERIDIAN_DOTS_RE,
+  TIME_MERIDIAN_SPACE_RE,
+  TIME_NOW_STRING,
+  TIME_WITH_OFFSET_RE,
+} from './constants';
 // Is there a compelling reason to use moment here?
 // Mostly only being used for the isValid() method,
 // but could just check for 'Invalid Date' string.
-
-import {
-  MS_DATE_STRING,
-  SEC_DATE_STRING,
-  CLEAN_DATE_STRING_RE,
-  SPLIT_DATE_STRING,
-  TIME_AGO_STRING,
-  TIME_NOW_STRING,
-  TIME_MERIDIAN_SPACE_RE,
-  TIME_MERIDIAN_DOTS_RE,
-  TIME_WITH_OFFSET_RE,
-} from './constants';
 
 export function cleanDateString(dateString) {
   return (dateString.match(SPLIT_DATE_STRING) || [])

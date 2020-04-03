@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { getEncoding } from 'utils/text';
 
 import { record } from 'test-helpers';

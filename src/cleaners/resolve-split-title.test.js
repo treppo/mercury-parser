@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import resolveSplitTitle from './resolve-split-title';
 
 describe('resolveSplitTitle(text)', () => {

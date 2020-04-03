@@ -1,6 +1,6 @@
 import { getAttrs } from 'utils/dom';
 
-import { IS_LINK, IS_IMAGE, IS_SRCSET } from './constants';
+import { IS_IMAGE, IS_LINK, IS_SRCSET } from './constants';
 
 // Convert all instances of images with potentially
 // lazy loaded images into normal images.

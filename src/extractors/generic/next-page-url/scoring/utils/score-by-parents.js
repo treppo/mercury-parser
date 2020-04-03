@@ -1,8 +1,8 @@
 import { range } from 'utils';
 import {
   NEGATIVE_SCORE_RE,
-  POSITIVE_SCORE_RE,
   PAGE_RE,
+  POSITIVE_SCORE_RE,
 } from 'utils/dom/constants';
 import { EXTRANEOUS_LINK_HINTS_RE } from '../constants';
 

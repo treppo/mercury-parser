@@ -1,7 +1,7 @@
 import {
   NEGATIVE_SCORE_RE,
-  POSITIVE_SCORE_RE,
   PHOTO_HINTS_RE,
+  POSITIVE_SCORE_RE,
   READABILITY_ASSET,
 } from './constants';
 

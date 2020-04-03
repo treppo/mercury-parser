@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import articleBaseUrl from './article-base-url';
 
 describe('articleBaseUrl(url, parsedUrl)', () => {

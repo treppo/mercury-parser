@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import { MockDomNode } from 'test-helpers';
 import setAttr from './set-attr';
 

@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import removeAnchor from './remove-anchor';
 
 describe('removeAnchor(url)', () => {

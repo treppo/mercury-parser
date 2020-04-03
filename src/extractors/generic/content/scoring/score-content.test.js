@@ -1,9 +1,8 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
 import HTML from './fixtures/html';
 
-import { scoreContent, getScore } from './index';
+import { getScore, scoreContent } from './index';
 
 const fs = require('fs');
 

@@ -1,7 +1,7 @@
 {
   "parser": "babel-eslint",
   "extends": ["prettier"],
-  "plugins": ["babel", "import"],
+  "plugins": ["babel"],
   "globals": {
     "describe": true,
     "it": true,
@@ -22,8 +22,7 @@
     "no-multiple-empty-lines": [
       "error",
       { "max": 1, "maxEOF": 0, "maxBOF": 0 }
-    ],
-    "import/no-unresolved": 2
+    ]
   },
   "settings": {
     "import/resolver": {

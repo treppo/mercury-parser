@@ -1,4 +1,3 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
 import convertLazyLoadedImages from './convert-lazy-loaded-images';

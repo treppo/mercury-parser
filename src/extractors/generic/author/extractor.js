@@ -2,8 +2,8 @@ import { cleanAuthor } from 'cleaners';
 import { extractFromMeta, extractFromSelectors } from 'utils/dom';
 
 import {
-  AUTHOR_META_TAGS,
   AUTHOR_MAX_LENGTH,
+  AUTHOR_META_TAGS,
   AUTHOR_SELECTORS,
   BYLINE_SELECTORS_RE,
 } from './constants';

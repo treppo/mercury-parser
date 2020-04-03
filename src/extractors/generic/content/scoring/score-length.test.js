@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import { scoreLength } from './index';
 
 describe('Scoring utils', () => {

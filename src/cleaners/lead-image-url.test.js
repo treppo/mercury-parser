@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import clean from './lead-image-url';
 
 describe('clean(leadImageUrl)', () => {

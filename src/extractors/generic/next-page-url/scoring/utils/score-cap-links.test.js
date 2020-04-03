@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import scoreCapLinks from './score-cap-links';
 
 describe('scoreCapLinks(linkData)', () => {

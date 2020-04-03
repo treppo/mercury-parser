@@ -1,8 +1,8 @@
 import {
-  POSITIVE_LEAD_IMAGE_URL_HINTS_RE,
-  NEGATIVE_LEAD_IMAGE_URL_HINTS_RE,
   GIF_RE,
   JPG_RE,
+  NEGATIVE_LEAD_IMAGE_URL_HINTS_RE,
+  POSITIVE_LEAD_IMAGE_URL_HINTS_RE,
 } from './constants';
 
 import { PHOTO_HINTS_RE } from '../content/scoring/constants';

@@ -1,13 +1,12 @@
-import assert from 'assert';
 import cheerio from 'cheerio';
 
 import {
-  scoreImageUrl,
   scoreAttr,
-  scoreByParents,
-  scoreBySibling,
   scoreByDimensions,
+  scoreByParents,
   scoreByPosition,
+  scoreBySibling,
+  scoreImageUrl,
 } from './score-image';
 
 describe('scoreImageUrlUrl(url)', () => {

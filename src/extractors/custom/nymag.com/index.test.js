@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import Mercury from 'mercury';
 
 const fs = require('fs');

@@ -1,4 +1,3 @@
-import assert from 'assert';
 import URL from 'url';
 
 import { record } from 'test-helpers';

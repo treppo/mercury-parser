@@ -1,5 +1,4 @@
 import cheerio from 'cheerio';
-import assert from 'assert';
 
 import { assertClean } from 'test-helpers';
 

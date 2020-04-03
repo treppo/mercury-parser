@@ -1,19 +1,19 @@
 import URL from 'url';
 
 import { getAttrs, isWordpress } from 'utils/dom';
-import { removeAnchor, pageNumFromUrl } from 'utils/text';
+import { pageNumFromUrl, removeAnchor } from 'utils/text';
 
 import {
-  scoreSimilarity,
-  scoreLinkText,
-  scorePageInLink,
-  scoreExtraneousLinks,
-  scoreByParents,
-  scorePrevLink,
-  shouldScore,
   scoreBaseUrl,
+  scoreByParents,
   scoreCapLinks,
+  scoreExtraneousLinks,
+  scoreLinkText,
   scoreNextLinkText,
+  scorePageInLink,
+  scorePrevLink,
+  scoreSimilarity,
+  shouldScore,
 } from './utils';
 
 export function makeBaseRegex(baseUrl) {
@@ -21,9 +21,9 @@ export function makeBaseRegex(baseUrl) {
 }
 
 function makeSig($link, linkText) {
-  return `${linkText || $link.text()} ${$link.attr('class') || ''} ${$link.attr(
-    'id'
-  ) || ''}`;
+  return `${linkText || $link.text()} ${$link.attr('class') || ''} ${
+    $link.attr('id') || ''
+  }`;
 }
 
 export default function scoreLinks({
@@ -72,9 +72,9 @@ export default function scoreLinks({
         href,
       };
     } else {
-      possiblePages[href].linkText = `${
-        possiblePages[href].linkText
-      }|${linkText}`;
+      possiblePages[
+        href
+      ].linkText = `${possiblePages[href].linkText}|${linkText}`;
     }
 
     const possiblePage = possiblePages[href];

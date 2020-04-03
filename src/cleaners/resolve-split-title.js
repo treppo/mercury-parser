@@ -1,7 +1,7 @@
 import URL from 'url';
 import wuzzy from 'wuzzy';
 
-import { TITLE_SPLITTERS_RE, DOMAIN_ENDINGS_RE } from './constants';
+import { DOMAIN_ENDINGS_RE, TITLE_SPLITTERS_RE } from './constants';
 
 function extractBreadcrumbTitle(splitTitle, text) {
   // This must be a very breadcrumbed title, like:
@@ -68,10 +68,7 @@ function cleanDomainFromTitle(splitTitle, url) {
     return splitTitle.slice(2).join('');
   }
 
-  const endSlug = splitTitle
-    .slice(-1)[0]
-    .toLowerCase()
-    .replace(' ', '');
+  const endSlug = splitTitle.slice(-1)[0].toLowerCase().replace(' ', '');
   const endSlugRatio = wuzzy.levenshtein(endSlug, nakedDomain);
 
   if (endSlugRatio > 0.4 && endSlug.length >= 5) {

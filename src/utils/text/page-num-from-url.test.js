@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import pageNumFromUrl from './page-num-from-url';
 
 describe('pageNumFromUrl(url)', () => {

@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import mergeSupportedDomains from './merge-supported-domains';
 
 describe('mergeSupportedDomains(extractor, domains)', () => {

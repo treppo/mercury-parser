@@ -1,4 +1,3 @@
-import assert from 'assert';
 import excerptContent from './excerpt-content';
 
 describe('excerptContent(content, words)', () => {

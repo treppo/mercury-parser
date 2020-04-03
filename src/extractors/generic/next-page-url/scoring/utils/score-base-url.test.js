@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import scoreBaseUrl from './score-base-url';
 import { makeBaseRegex } from '../score-links';
 
