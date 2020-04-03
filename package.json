@@ -20,14 +20,9 @@
     "content"
   ],
   "files": [
-    "dist",
-    "cli.js",
-    "src/shims/"
+    "dist"
   ],
   "main": "./dist/mercury.js",
-  "bin": {
-    "mercury-parser": "./cli.js"
-  },
   "scripts": {
     "lint": "eslint . --fix",
     "lint:ci": "remark . && eslint .",
@@ -94,8 +89,7 @@
     "string-direction": "^0.1.2",
     "turndown": "^5.0.3",
     "valid-url": "^1.0.9",
-    "wuzzy": "^0.1.4",
-    "yargs-parser": "^14.0.0"
+    "wuzzy": "^0.1.4"
   },
   "husky": {
     "hooks": {
@@ -116,7 +110,6 @@
   },
   "greenkeeper": {
     "ignore": [
-      "jasmine-core",
       "rollup-plugin-node-resolve",
       "eslint-import-resolver-babel-module",
       "jest",

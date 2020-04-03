@@ -7598,7 +7598,6 @@ var Mercury = {
           _opts$headers,
           headers,
           extend,
-          customExtractor,
           parsedUrl,
           $,
           Extractor,
@@ -7616,7 +7615,7 @@ var Mercury = {
           switch (_context.prev = _context.next) {
             case 0:
               _ref = _args.length > 1 && _args[1] !== undefined ? _args[1] : {}, html = _ref.html, opts = _objectWithoutProperties(_ref, ["html"]);
-              _opts$fetchAllPages = opts.fetchAllPages, fetchAllPages = _opts$fetchAllPages === void 0 ? true : _opts$fetchAllPages, _opts$fallback = opts.fallback, fallback = _opts$fallback === void 0 ? true : _opts$fallback, _opts$contentType = opts.contentType, contentType = _opts$contentType === void 0 ? 'html' : _opts$contentType, _opts$headers = opts.headers, headers = _opts$headers === void 0 ? {} : _opts$headers, extend = opts.extend, customExtractor = opts.customExtractor;
+              _opts$fetchAllPages = opts.fetchAllPages, fetchAllPages = _opts$fetchAllPages === void 0 ? true : _opts$fetchAllPages, _opts$fallback = opts.fallback, fallback = _opts$fallback === void 0 ? true : _opts$fallback, _opts$contentType = opts.contentType, contentType = _opts$contentType === void 0 ? 'html' : _opts$contentType, _opts$headers = opts.headers, headers = _opts$headers === void 0 ? {} : _opts$headers, extend = opts.extend;
               parsedUrl = URL.parse(url);
 
               if (validateUrl(parsedUrl)) {
@@ -7644,11 +7643,6 @@ var Mercury = {
               return _context.abrupt("return", $);
 
             case 10:
-              // Add custom extractor via cli.
-              if (customExtractor) {
-                addExtractor(customExtractor);
-              }
-
               Extractor = getExtractor(url, parsedUrl, $); // console.log(`Using extractor for ${Extractor.domain}`);
               // if html still has not been set (i.e., url passed to Mercury.parse),
               // set html from the response of Resource.create
@@ -7684,11 +7678,11 @@ var Mercury = {
               _result = result, title = _result.title, next_page_url = _result.next_page_url; // Fetch more pages if next_page_url found
 
               if (!(fetchAllPages && next_page_url)) {
-                _context.next = 24;
+                _context.next = 23;
                 break;
               }
 
-              _context.next = 21;
+              _context.next = 20;
               return collectAllPages({
                 Extractor: Extractor,
                 next_page_url: next_page_url,
@@ -7700,18 +7694,18 @@ var Mercury = {
                 url: url
               });
 
-            case 21:
+            case 20:
               result = _context.sent;
-              _context.next = 25;
+              _context.next = 24;
               break;
 
-            case 24:
+            case 23:
               result = _objectSpread({}, result, {
                 total_pages: 1,
                 rendered_pages: 1
               });
 
-            case 25:
+            case 24:
               if (contentType === 'markdown') {
                 turndownService = new TurndownService();
                 result.content = turndownService.turndown(result.content);
@@ -7721,7 +7715,7 @@ var Mercury = {
 
               return _context.abrupt("return", _objectSpread({}, result, extendedTypes));
 
-            case 27:
+            case 26:
             case "end":
               return _context.stop();
           }

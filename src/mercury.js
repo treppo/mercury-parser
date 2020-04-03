@@ -9,14 +9,13 @@ import RootExtractor, { selectExtendedTypes } from 'extractors/root-extractor';
 import collectAllPages from 'extractors/collect-all-pages';
 
 const Mercury = {
-  async parse(url, { html, ...opts } = {}) {
+  parse: async (url, { html, ...opts } = {}) => {
     const {
       fetchAllPages = true,
       fallback = true,
       contentType = 'html',
       headers = {},
       extend,
-      customExtractor,
     } = opts;
 
     const parsedUrl = URL.parse(url);
@@ -34,11 +33,6 @@ const Mercury = {
     // If we found an error creating the resource, return that error
     if ($.failed) {
       return $;
-    }
-
-    // Add custom extractor via cli.
-    if (customExtractor) {
-      addCustomExtractor(customExtractor);
     }
 
     const Extractor = getExtractor(url, parsedUrl, $);
@@ -105,13 +99,9 @@ const Mercury = {
 
   // A convenience method for getting a resource
   // to work with, e.g., for custom extractor generator
-  fetchResource(url) {
-    return Resource.create(url);
-  },
+  fetchResource: url => Resource.create(url),
 
-  addExtractor(extractor) {
-    return addCustomExtractor(extractor);
-  },
+  addExtractor: extractor => addCustomExtractor(extractor),
 };
 
 export default Mercury;
