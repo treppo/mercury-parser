@@ -6,23 +6,14 @@ var URL = _interopDefault(require('url'));
 var TurndownService = _interopDefault(require('turndown'));
 var cheerio = _interopDefault(require('cheerio'));
 var iconv = _interopDefault(require('iconv-lite'));
-var _parseInt = _interopDefault(require('@babel/runtime-corejs2/core-js/parse-int'));
-var _Promise = _interopDefault(require('@babel/runtime-corejs2/core-js/promise'));
 var request = _interopDefault(require('postman-request'));
-var _Reflect$ownKeys = _interopDefault(require('@babel/runtime-corejs2/core-js/reflect/own-keys'));
-var _parseFloat = _interopDefault(require('@babel/runtime-corejs2/core-js/parse-float'));
-var _Set = _interopDefault(require('@babel/runtime-corejs2/core-js/set'));
-var _Object$assign = _interopDefault(require('@babel/runtime-corejs2/core-js/object/assign'));
-var _Object$keys = _interopDefault(require('@babel/runtime-corejs2/core-js/object/keys'));
 var stringDirection = _interopDefault(require('string-direction'));
 var validUrl = _interopDefault(require('valid-url'));
 var moment = _interopDefault(require('moment-timezone'));
 var parseFormat = _interopDefault(require('moment-parseformat'));
 var wuzzy = _interopDefault(require('wuzzy'));
 var difflib = _interopDefault(require('difflib'));
-var _Array$from = _interopDefault(require('@babel/runtime-corejs2/core-js/array/from'));
 var ellipsize = _interopDefault(require('ellipsize'));
-var _Array$isArray = _interopDefault(require('@babel/runtime-corejs2/core-js/array/is-array'));
 
 const NORMALIZE_RE = /\s{2,}(?![^<>]*<\/(pre|code|textarea)>)/g;
 function normalizeSpaces(text) {
@@ -70,10 +61,8 @@ const DEFAULT_ENCODING = 'utf-8';
 function pageNumFromUrl(url) {
   const matches = url.match(PAGE_IN_HREF_RE);
   if (!matches) return null;
-
-  const pageNum = _parseInt(matches[6], 10); // Return pageNum < 100, otherwise
+  const pageNum = parseInt(matches[6], 10); // Return pageNum < 100, otherwise
   // return null
-
 
   return pageNum < 100 ? pageNum : null;
 }
@@ -193,7 +182,7 @@ const BAD_CONTENT_TYPES_RE = new RegExp(`^(${BAD_CONTENT_TYPES.join('|')})$`, 'i
 const MAX_CONTENT_LENGTH = 5242880; // Turn the global proxy on or off
 
 function get(options) {
-  return new _Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     request(options, (err, response, body) => {
       if (err) {
         reject(err);
@@ -525,18 +514,15 @@ function convertNodeTo($node, $, tag = 'p') {
   }
 
   const attrs = getAttrs(node) || {};
-
-  const attribString = _Reflect$ownKeys(attrs).map(key => `${key}=${attrs[key]}`).join(' ');
-
+  const attribString = Reflect.ownKeys(attrs).map(key => `${key}=${attrs[key]}`).join(' ');
   const html = $node.contents();
   $node.replaceWith(`<${tag} ${attribString}>${html}</${tag}>`);
   return $;
 }
 
 function cleanForHeight($img, $) {
-  const height = _parseInt($img.attr('height'), 10);
-
-  const width = _parseInt($img.attr('width'), 10) || 20; // Remove images that explicitly have very small heights or
+  const height = parseInt($img.attr('height'), 10);
+  const width = parseInt($img.attr('width'), 10) || 20; // Remove images that explicitly have very small heights or
   // widths, because they are most likely shims or icons,
   // which aren't very useful for reading.
 
@@ -619,7 +605,7 @@ function cleanHOnes(article, $) {
 function removeAllButWhitelist($article, $) {
   $article.find('*').each((index, node) => {
     const attrs = getAttrs(node);
-    setAttrs(node, _Reflect$ownKeys(attrs).reduce((acc, attr) => {
+    setAttrs(node, Reflect.ownKeys(attrs).reduce((acc, attr) => {
       if (WHITELIST_ATTRS_RE.test(attr)) {
         return { ...acc,
           [attr]: attrs[attr]
@@ -739,7 +725,7 @@ function getWeight(node) {
 // the node's score attribute
 // returns null if no score set
 function getScore($node) {
-  return _parseFloat($node.attr('score')) || null;
+  return parseFloat($node.attr('score')) || null;
 }
 
 // return 1 for every comma in text
@@ -1202,7 +1188,7 @@ function absolutizeSet($, rootUrl, $content) {
         parts[0] = URL.resolve(rootUrl, parts[0]);
         return parts.join(' ');
       });
-      const absoluteUrlSet = [...new _Set(absoluteCandidates)].join(', ');
+      const absoluteUrlSet = [...new Set(absoluteCandidates)].join(', ');
       setAttr(node, 'srcset', absoluteUrlSet);
     }
   });
@@ -1357,13 +1343,12 @@ function getAttrs(node) {
   } = node;
 
   if (!attribs && attributes) {
-    const attrs = _Reflect$ownKeys(attributes).reduce((acc, index) => {
+    const attrs = Reflect.ownKeys(attributes).reduce((acc, index) => {
       const attr = attributes[index];
       if (!attr.name || !attr.value) return acc;
       acc[attr.name] = attr.value;
       return acc;
     }, {});
-
     return attrs;
   }
 
@@ -1388,7 +1373,7 @@ function setAttrs(node, attrs) {
       node.removeAttribute(node.attributes[0].name);
     }
 
-    _Reflect$ownKeys(attrs).forEach(key => {
+    Reflect.ownKeys(attrs).forEach(key => {
       node.setAttribute(key, attrs[key]);
     });
   }
@@ -1410,8 +1395,7 @@ const TAGS_TO_REMOVE = ['script', 'style', 'form'].join(',');
 function convertLazyLoadedImages($) {
   $('img').each((_, img) => {
     const attrs = getAttrs(img);
-
-    _Reflect$ownKeys(attrs).forEach(attr => {
+    Reflect.ownKeys(attrs).forEach(attr => {
       const value = attrs[attr];
 
       if (attr !== 'srcset' && IS_LINK.test(value) && IS_SRCSET.test(value)) {
@@ -1557,8 +1541,7 @@ function addExtractor(extractor) {
     };
   }
 
-  _Object$assign(apiExtractors, mergeSupportedDomains(extractor));
-
+  Object.assign(apiExtractors, mergeSupportedDomains(extractor));
   return apiExtractors;
 }
 
@@ -2212,8 +2195,7 @@ const MediumExtractor = {
       // Remove any smaller images that did not get caught by the generic image
       // cleaner (author photo 48px, leading sentence images 79px, etc.).
       img: $node => {
-        const width = _parseInt($node.attr('width'), 10);
-
+        const width = parseInt($node.attr('width'), 10);
         if (width < 100) $node.remove();
       }
     },
@@ -5707,7 +5689,7 @@ var CustomExtractors = /*#__PURE__*/Object.freeze({
   EpaperZeitDeExtractor: EpaperZeitDeExtractor
 });
 
-var Extractors = _Object$keys(CustomExtractors).reduce((acc, key) => {
+var Extractors = Object.keys(CustomExtractors).reduce((acc, key) => {
   const extractor = CustomExtractors[key];
   return { ...acc,
     ...mergeSupportedDomains(extractor)
@@ -5803,7 +5785,7 @@ function cleanDatePublished(dateString, {
 } = {}) {
   // If string is in milliseconds or seconds, convert to int and return
   if (MS_DATE_STRING.test(dateString) || SEC_DATE_STRING.test(dateString)) {
-    return new Date(_parseInt(dateString, 10)).toISOString();
+    return new Date(parseInt(dateString, 10)).toISOString();
   }
 
   let date = createDate(dateString, timezone, format);
@@ -5894,8 +5876,7 @@ function extractBreadcrumbTitle(splitTitle, text) {
       acc[titleText] = acc[titleText] ? acc[titleText] + 1 : 1;
       return acc;
     }, {});
-
-    const [maxTerm, termCount] = _Reflect$ownKeys(termCounts).reduce((acc, key) => {
+    const [maxTerm, termCount] = Reflect.ownKeys(termCounts).reduce((acc, key) => {
       if (acc[1] < termCounts[key]) {
         return [key, termCounts[key]];
       }
@@ -5905,7 +5886,6 @@ function extractBreadcrumbTitle(splitTitle, text) {
     // is probably the breadcrumber. Split our title on that instead.
     // Note: max_term should be <= 4 characters, so that " >> "
     // will match, but nothing longer than that.
-
 
     if (termCount >= 2 && maxTerm.length <= 4) {
       splitTitle = text.split(maxTerm);
@@ -6050,7 +6030,7 @@ const GenericContentExtractor = {
     // eslint-disable-next-line no-restricted-syntax
 
 
-    for (const key of _Reflect$ownKeys(opts).filter(k => opts[k] === true)) {
+    for (const key of Reflect.ownKeys(opts).filter(k => opts[k] === true)) {
       opts[key] = false;
       $ = cheerio.load(html);
       node = this.getContentNode($, title, url, opts);
@@ -6350,11 +6330,8 @@ function scoreBySibling($img) {
 }
 function scoreByDimensions($img) {
   let score = 0;
-
-  const width = _parseFloat($img.attr('width'));
-
-  const height = _parseFloat($img.attr('height'));
-
+  const width = parseFloat($img.attr('width'));
+  const height = parseFloat($img.attr('height'));
   const src = $img.attr('src'); // Penalty for skinny images
 
   if (width && width <= 50) {
@@ -6433,8 +6410,7 @@ const GenericLeadImageUrlExtractor = {
       score += scoreByPosition(imgs, index);
       imgScores[src] = score;
     });
-
-    const [topUrl, topScore] = _Reflect$ownKeys(imgScores).reduce((acc, key) => imgScores[key] > acc[1] ? [key, imgScores[key]] : acc, [null, 0]);
+    const [topUrl, topScore] = Reflect.ownKeys(imgScores).reduce((acc, key) => imgScores[key] > acc[1] ? [key, imgScores[key]] : acc, [null, 0]);
 
     if (topScore > 0) {
       cleanUrl = clean$1(topUrl);
@@ -6503,10 +6479,9 @@ function scoreLinkText(linkText, pageNum) {
   let score = 0;
 
   if (IS_DIGIT_RE.test(linkText.trim())) {
-    const linkTextAsNum = _parseInt(linkText, 10); // If it's the first page, we already got it on the first call.
+    const linkTextAsNum = parseInt(linkText, 10); // If it's the first page, we already got it on the first call.
     // Give it a negative score. Otherwise, up to page 10, give a
     // small bonus.
-
 
     if (linkTextAsNum < 2) {
       score = -30;
@@ -6573,8 +6548,7 @@ function scoreByParents$1($link) {
   let positiveMatch = false;
   let negativeMatch = false;
   let score = 0;
-
-  _Array$from(range(0, 4)).forEach(() => {
+  Array.from(range(0, 4)).forEach(() => {
     if ($parent.length === 0) {
       return;
     }
@@ -6599,7 +6573,6 @@ function scoreByParents$1($link) {
 
     $parent = $parent.parent();
   });
-
   return score;
 }
 
@@ -6761,7 +6734,7 @@ function scoreLinks({
     possiblePage.score = score;
     return possiblePages;
   }, {});
-  return _Reflect$ownKeys(scoredPages).length === 0 ? null : scoredPages;
+  return Reflect.ownKeys(scoredPages).length === 0 ? null : scoredPages;
 }
 
 // for multi-page articles
@@ -6789,14 +6762,13 @@ const GenericNextPageUrlExtractor = {
     if (!scoredLinks) return null; // now that we've scored all possible pages,
     // find the biggest one.
 
-    const topPage = _Reflect$ownKeys(scoredLinks).reduce((acc, link) => {
+    const topPage = Reflect.ownKeys(scoredLinks).reduce((acc, link) => {
       const scoredLink = scoredLinks[link];
       return scoredLink.score > acc.score ? scoredLink : acc;
     }, {
       score: -100
     }); // If the score is less than 50, we're not confident enough to use it,
     // so we fail.
-
 
     if (topPage.score >= 50) {
       return topPage.href;
@@ -6968,8 +6940,7 @@ const Detectors = {
   'meta[name="generator"][value="blogger"]': BloggerExtractor
 };
 function detectByHtml($) {
-  const selector = _Reflect$ownKeys(Detectors).find(s => $(s).length > 0);
-
+  const selector = Reflect.ownKeys(Detectors).find(s => $(s).length > 0);
   return Detectors[selector];
 }
 
@@ -6994,8 +6965,7 @@ function transformElements($content, $, {
   transforms
 }) {
   if (!transforms) return $content;
-
-  _Reflect$ownKeys(transforms).forEach(key => {
+  Reflect.ownKeys(transforms).forEach(key => {
     const $matches = $(key, $content);
     const value = transforms[key]; // If value is a string, convert directly
 
@@ -7014,13 +6984,12 @@ function transformElements($content, $, {
       });
     }
   });
-
   return $content;
 }
 
 function findMatchingSelector($, selectors, extractHtml, allowMultiple) {
   return selectors.find(selector => {
-    if (_Array$isArray(selector)) {
+    if (Array.isArray(selector)) {
       if (extractHtml) {
         return selector.reduce((acc, s) => acc && $(s).length > 0, true);
       }
@@ -7068,7 +7037,7 @@ function select(opts) {
     // selectors to include in the result. Note that all selectors in the
     // array must match in order for this selector to trigger
 
-    if (_Array$isArray(matchingSelector)) {
+    if (Array.isArray(matchingSelector)) {
       $content = $(matchingSelector.join(','));
       const $wrapper = $('<div></div>');
       $content.each((_, element) => {
@@ -7105,7 +7074,7 @@ function select(opts) {
   let result; // if selector is an array (e.g., ['img', 'src']),
   // extract the attr
 
-  if (_Array$isArray(matchingSelector)) {
+  if (Array.isArray(matchingSelector)) {
     const [selector, attr, transform] = matchingSelector;
     $match = $(selector);
     $match = transformAndClean($match);
@@ -7119,7 +7088,7 @@ function select(opts) {
     result = $match.map((_, el) => $(el).text().trim());
   }
 
-  result = _Array$isArray(result.toArray()) && allowMultiple ? result.toArray() : result[0]; // Allow custom extractor to skip default cleaner
+  result = Array.isArray(result.toArray()) && allowMultiple ? result.toArray() : result[0]; // Allow custom extractor to skip default cleaner
   // for this type; defaults to true
 
   if (defaultCleaner && Cleaners[type]) {
@@ -7132,8 +7101,7 @@ function select(opts) {
 }
 function selectExtendedTypes(extend, opts) {
   const results = {};
-
-  _Reflect$ownKeys(extend).forEach(t => {
+  Reflect.ownKeys(extend).forEach(t => {
     if (!results[t]) {
       results[t] = select({ ...opts,
         type: t,
@@ -7141,7 +7109,6 @@ function selectExtendedTypes(extend, opts) {
       });
     }
   });
-
   return results;
 }
 

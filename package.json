@@ -7,16 +7,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/postlight/mercury-parser.git"
+    "url": "git+https://github.com/treppo/mercury-parser.git"
   },
   "bugs": {
-    "url": "https://github.com/postlight/mercury-parser/issues"
+    "url": "https://github.com/treppo/mercury-parser/issues"
   },
   "keywords": [
     "mercury",
     "parser",
     "reader",
-    "web",
     "content"
   ],
   "files": [
@@ -37,20 +36,18 @@
     "generate-parser": "node ./dist/generate-custom-parser.js"
   },
   "engines": {
-    "node": ">=8.10"
+    "node": ">=12"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/runtime": "^7.0.0",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "@jesses/circle-github-bot": "^2.1.0",
     "@octokit/rest": "^17.1.4",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.4.2",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.2.6",
     "babel-plugin-module-alias": "^1.6.0",
-    "babel-plugin-module-resolver": "^3.1.2",
+    "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.1.0",
     "eslint-import-resolver-babel-module": "^5.1.2",
@@ -68,11 +65,9 @@
     "remark-preset-lint-recommended": "^4.0.0",
     "rollup": "^2.3.2",
     "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-commonjs": "^10.1.0"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.2.0",
     "@postlight/ci-failed-test-reporter": "^1.0",
     "cheerio": "^0.22.0",
     "difflib": "github:postlight/difflib.js",
