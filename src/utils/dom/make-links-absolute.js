@@ -1,6 +1,6 @@
 import URL from 'url';
-
-import { getAttrs, setAttr } from 'utils/dom';
+import getAttrs from './get-attrs';
+import setAttr from './set-attr';
 
 function absolutize($, rootUrl, attr) {
   const baseUrl = $('base').attr('href');
@@ -31,10 +31,7 @@ function absolutizeSet($, rootUrl, $content) {
       const absoluteCandidates = candidates.map(candidate => {
         // a candidate URL cannot start or end with a comma
         // descriptors are separated from the URLs by unescaped whitespace
-        const parts = candidate
-          .trim()
-          .replace(/,$/, '')
-          .split(/\s+/);
+        const parts = candidate.trim().replace(/,$/, '').split(/\s+/);
         parts[0] = URL.resolve(rootUrl, parts[0]);
         return parts.join(' ');
       });

@@ -406,30 +406,6 @@ function stripUnlikelyCandidates($) {
   return $;
 }
 
-// Another good candidate for refactoring/optimizing.
-// Very imperative code, I don't love it. - AP
-//  Given cheerio object, convert consecutive <br /> tags into
-//  <p /> tags instead.
-//
-//  :param $: A cheerio object
-
-function brsToPs($) {
-  let collapsing = false;
-  $('br').each((index, element) => {
-    const $element = $(element);
-    const nextElement = $element.next().get(0);
-
-    if (nextElement && nextElement.tagName.toLowerCase() === 'br') {
-      collapsing = true;
-      $element.remove();
-    } else if (collapsing) {
-      collapsing = false;
-      paragraphize(element, $, true);
-    }
-  });
-  return $;
-}
-
 // make sure it conforms to the constraints of a P tag (I.E. does
 // not contain any other block tags.)
 //
@@ -461,6 +437,63 @@ function paragraphize(node, $, br = false) {
     return $;
   }
 
+  return $;
+}
+
+// Another good candidate for refactoring/optimizing.
+// Very imperative code, I don't love it. - AP
+//  Given cheerio object, convert consecutive <br /> tags into
+//  <p /> tags instead.
+//
+//  :param $: A cheerio object
+
+function brsToPs($) {
+  let collapsing = false;
+  $('br').each((index, element) => {
+    const $element = $(element);
+    const nextElement = $element.next().get(0);
+
+    if (nextElement && nextElement.tagName.toLowerCase() === 'br') {
+      collapsing = true;
+      $element.remove();
+    } else if (collapsing) {
+      collapsing = false;
+      paragraphize(element, $, true);
+    }
+  });
+  return $;
+}
+
+function getAttrs(node) {
+  const {
+    attribs,
+    attributes
+  } = node;
+
+  if (!attribs && attributes) {
+    const attrs = Reflect.ownKeys(attributes).reduce((acc, index) => {
+      const attr = attributes[index];
+      if (!attr.name || !attr.value) return acc;
+      acc[attr.name] = attr.value;
+      return acc;
+    }, {});
+    return attrs;
+  }
+
+  return attribs;
+}
+
+function convertNodeTo($node, $, tag = 'p') {
+  const node = $node.get(0);
+
+  if (!node) {
+    return $;
+  }
+
+  const attrs = getAttrs(node) || {};
+  const attribString = Reflect.ownKeys(attrs).map(key => `${key}=${attrs[key]}`).join(' ');
+  const html = $node.contents();
+  $node.replaceWith(`<${tag} ${attribString}>${html}</${tag}>`);
   return $;
 }
 
@@ -503,20 +536,6 @@ function convertToParagraphs($) {
   $ = brsToPs($);
   $ = convertDivs($);
   $ = convertSpans($);
-  return $;
-}
-
-function convertNodeTo($node, $, tag = 'p') {
-  const node = $node.get(0);
-
-  if (!node) {
-    return $;
-  }
-
-  const attrs = getAttrs(node) || {};
-  const attribString = Reflect.ownKeys(attrs).map(key => `${key}=${attrs[key]}`).join(' ');
-  const html = $node.contents();
-  $node.replaceWith(`<${tag} ${attribString}>${html}</${tag}>`);
   return $;
 }
 
@@ -600,6 +619,22 @@ function cleanHOnes(article, $) {
   }
 
   return $;
+}
+
+function setAttrs(node, attrs) {
+  if (node.attribs) {
+    node.attribs = attrs;
+  } else if (node.attributes) {
+    while (node.attributes.length > 0) {
+      node.removeAttribute(node.attributes[0].name);
+    }
+
+    Reflect.ownKeys(attrs).forEach(key => {
+      node.setAttribute(key, attrs[key]);
+    });
+  }
+
+  return node;
 }
 
 function removeAllButWhitelist($article, $) {
@@ -788,14 +823,36 @@ function setScore($node, $, score) {
   return $node;
 }
 
-function addScore($node, $, amount) {
-  try {
-    const score = getOrInitScore($node, $) + amount;
-    setScore($node, $, score);
-  } catch (e) {// Ignoring; error occurs in scoreNode
+// just scores based on tag.
+
+function scoreNode($node) {
+  const {
+    tagName
+  } = $node.get(0); // TODO: Consider ordering by most likely.
+  // E.g., if divs are a more common tag on a page,
+  // Could save doing that regex test on every node – AP
+
+  if (PARAGRAPH_SCORE_TAGS.test(tagName)) {
+    return scoreParagraph($node);
   }
 
-  return $node;
+  if (tagName.toLowerCase() === 'div') {
+    return 5;
+  }
+
+  if (CHILD_CONTENT_TAGS.test(tagName)) {
+    return 3;
+  }
+
+  if (BAD_TAGS.test(tagName)) {
+    return -3;
+  }
+
+  if (tagName.toLowerCase() === 'th') {
+    return -5;
+  }
+
+  return 0;
 }
 
 function addToParent(node, $, score) {
@@ -828,36 +885,14 @@ function getOrInitScore($node, $, weightNodes = true) {
   return score;
 }
 
-// just scores based on tag.
-
-function scoreNode($node) {
-  const {
-    tagName
-  } = $node.get(0); // TODO: Consider ordering by most likely.
-  // E.g., if divs are a more common tag on a page,
-  // Could save doing that regex test on every node – AP
-
-  if (PARAGRAPH_SCORE_TAGS.test(tagName)) {
-    return scoreParagraph($node);
+function addScore($node, $, amount) {
+  try {
+    const score = getOrInitScore($node, $) + amount;
+    setScore($node, $, score);
+  } catch (e) {// Ignoring; error occurs in scoreNode
   }
 
-  if (tagName.toLowerCase() === 'div') {
-    return 5;
-  }
-
-  if (CHILD_CONTENT_TAGS.test(tagName)) {
-    return 3;
-  }
-
-  if (BAD_TAGS.test(tagName)) {
-    return -3;
-  }
-
-  if (tagName.toLowerCase() === 'th') {
-    return -5;
-  }
-
-  return 0;
+  return $node;
 }
 
 function convertSpans$1($node, $) {
@@ -917,6 +952,28 @@ function scoreContent($, weightNodes = true) {
   scorePs($, weightNodes);
   scorePs($, weightNodes);
   return $;
+}
+
+function textLength(text) {
+  return text.trim().replace(/\s+/g, ' ').length;
+} // Determines what percentage of the text
+// in a node is link text
+// Takes a node, returns a float
+
+function linkDensity($node) {
+  const totalTextLength = textLength($node.text());
+  const linkText = $node.find('a').text();
+  const linkLength = textLength(linkText);
+
+  if (totalTextLength > 0) {
+    return linkLength / totalTextLength;
+  }
+
+  if (totalTextLength === 0 && linkLength > 0) {
+    return 1;
+  }
+
+  return 0;
 }
 
 // it to see if any of them are decently scored. If they are, they
@@ -1159,6 +1216,16 @@ function rewriteTopLevel(article, $) {
   return $;
 }
 
+function setAttr(node, attr, val) {
+  if (node.attribs) {
+    node.attribs[attr] = val;
+  } else if (node.attributes) {
+    node.setAttribute(attr, val);
+  }
+
+  return node;
+}
+
 function absolutize($, rootUrl, attr) {
   const baseUrl = $('base').attr('href');
   $(`[${attr}]`).each((_, node) => {
@@ -1200,26 +1267,12 @@ function makeLinksAbsolute($content, $, url) {
   return $content;
 }
 
-function textLength(text) {
-  return text.trim().replace(/\s+/g, ' ').length;
-} // Determines what percentage of the text
-// in a node is link text
-// Takes a node, returns a float
-
-function linkDensity($node) {
-  const totalTextLength = textLength($node.text());
-  const linkText = $node.find('a').text();
-  const linkLength = textLength(linkText);
-
-  if (totalTextLength > 0) {
-    return linkLength / totalTextLength;
-  }
-
-  if (totalTextLength === 0 && linkLength > 0) {
-    return 1;
-  }
-
-  return 0;
+// strips all tags from a string of text
+function stripTags(text, $) {
+  // Wrapping text in html element prevents errors when text
+  // has no html
+  const cleanText = $(`<span>${text}</span>`).text();
+  return cleanText === '' ? text : cleanText;
 }
 
 // search for, find a meta tag associated.
@@ -1255,6 +1308,20 @@ function extractFromMeta($, metaNames, cachedNames, cleanTags = true) {
 
 
   return null;
+}
+
+function withinComment($node) {
+  const parents = $node.parents().toArray();
+  const commentParent = parents.find(parent => {
+    const attrs = getAttrs(parent);
+    const {
+      class: nodeClass,
+      id
+    } = attrs;
+    const classAndId = `${nodeClass} ${id}`;
+    return classAndId.includes('comment');
+  });
+  return commentParent !== undefined;
 }
 
 function isGoodNode($node, maxChildren) {
@@ -1303,28 +1370,6 @@ function extractFromSelectors($, selectors, maxChildren = 1, textOnly = true) {
   return null;
 }
 
-// strips all tags from a string of text
-function stripTags(text, $) {
-  // Wrapping text in html element prevents errors when text
-  // has no html
-  const cleanText = $(`<span>${text}</span>`).text();
-  return cleanText === '' ? text : cleanText;
-}
-
-function withinComment($node) {
-  const parents = $node.parents().toArray();
-  const commentParent = parents.find(parent => {
-    const attrs = getAttrs(parent);
-    const {
-      class: nodeClass,
-      id
-    } = attrs;
-    const classAndId = `${nodeClass} ${id}`;
-    return classAndId.includes('comment');
-  });
-  return commentParent !== undefined;
-}
-
 // Given a node, determine if it's article-like enough to return
 // param: node (a cheerio node)
 // return: boolean
@@ -1334,51 +1379,6 @@ function nodeIsSufficient($node) {
 
 function isWordpress($) {
   return $(IS_WP_SELECTOR).length > 0;
-}
-
-function getAttrs(node) {
-  const {
-    attribs,
-    attributes
-  } = node;
-
-  if (!attribs && attributes) {
-    const attrs = Reflect.ownKeys(attributes).reduce((acc, index) => {
-      const attr = attributes[index];
-      if (!attr.name || !attr.value) return acc;
-      acc[attr.name] = attr.value;
-      return acc;
-    }, {});
-    return attrs;
-  }
-
-  return attribs;
-}
-
-function setAttr(node, attr, val) {
-  if (node.attribs) {
-    node.attribs[attr] = val;
-  } else if (node.attributes) {
-    node.setAttribute(attr, val);
-  }
-
-  return node;
-}
-
-function setAttrs(node, attrs) {
-  if (node.attribs) {
-    node.attribs = attrs;
-  } else if (node.attributes) {
-    while (node.attributes.length > 0) {
-      node.removeAttribute(node.attributes[0].name);
-    }
-
-    Reflect.ownKeys(attrs).forEach(key => {
-      node.setAttribute(key, attrs[key]);
-    });
-  }
-
-  return node;
 }
 
 const IS_LINK = new RegExp('https?://', 'i');
@@ -5839,31 +5839,6 @@ function extractCleanNode(article, {
   return article;
 }
 
-function cleanTitle(title, {
-  url,
-  $
-}) {
-  // If title has |, :, or - in it, see if
-  // we can clean it up.
-  if (TITLE_SPLITTERS_RE.test(title)) {
-    title = resolveSplitTitle(title, url);
-  } // Final sanity check that we didn't get a crazy title.
-  // if (title.length > 150 || title.length < 15) {
-
-
-  if (title.length > 150) {
-    // If we did, return h1 from the document if it exists
-    const h1 = $('h1');
-
-    if (h1.length === 1) {
-      title = h1.text();
-    }
-  } // strip any html tags in the title text
-
-
-  return normalizeSpaces(stripTags(title, $).trim());
-}
-
 function extractBreadcrumbTitle(splitTitle, text) {
   // This must be a very breadcrumbed title, like:
   // The Best Gadgets on Earth : Bits : Blogs : NYTimes.com
@@ -5950,6 +5925,31 @@ function resolveSplitTitle(title, url = '') {
   // Just return it all.
 
   return title;
+}
+
+function cleanTitle(title, {
+  url,
+  $
+}) {
+  // If title has |, :, or - in it, see if
+  // we can clean it up.
+  if (TITLE_SPLITTERS_RE.test(title)) {
+    title = resolveSplitTitle(title, url);
+  } // Final sanity check that we didn't get a crazy title.
+  // if (title.length > 150 || title.length < 15) {
+
+
+  if (title.length > 150) {
+    // If we did, return h1 from the document if it exists
+    const h1 = $('h1');
+
+    if (h1.length === 1) {
+      title = h1.text();
+    }
+  } // strip any html tags in the title text
+
+
+  return normalizeSpaces(stripTags(title, $).trim());
 }
 
 const Cleaners = {

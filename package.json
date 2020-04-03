@@ -30,7 +30,7 @@
     "build:ci": "rollup -c && yarn test:build",
     "release": "yarn build",
     "build:generator": "rollup -c scripts/rollup.config.js",
-    "test": "jest --json --outputFile test-output.json && yarn build",
+    "test": "yarn lint && jest --json --outputFile test-output.json && yarn build",
     "test:build": "cd ./scripts && jest check-build.test.js",
     "watch:test": "jest --watch",
     "generate-parser": "node ./dist/generate-custom-parser.js"

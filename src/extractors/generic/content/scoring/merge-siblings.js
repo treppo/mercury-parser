@@ -1,8 +1,8 @@
-import { textLength, linkDensity } from 'utils/dom';
+import { linkDensity, textLength } from '../../../../utils/dom/link-density';
 import { hasSentenceEnd } from 'utils/text';
 
 import { NON_TOP_CANDIDATE_TAGS_RE } from './constants';
-import { getScore } from './index';
+import getScore from './get-score';
 
 // Now that we have a top_candidate, look through the siblings of
 // it to see if any of them are decently scored. If they are, they
@@ -81,10 +81,7 @@ export default function mergeSiblings($candidate, topScore, $) {
 
   if (
     wrappingDiv.children().length === 1 &&
-    wrappingDiv
-      .children()
-      .first()
-      .get(0) === $candidate.get(0)
+    wrappingDiv.children().first().get(0) === $candidate.get(0)
   ) {
     return $candidate;
   }

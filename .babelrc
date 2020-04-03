@@ -10,7 +10,6 @@
           "./cleaners": "cleaners",
           "./resource": "resource",
           "./extractors": "extractors",
-          "./test-helpers.js": "test-helpers",
           "./mercury.js": "mercury"
         }
       }
