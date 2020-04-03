@@ -1,7 +1,7 @@
 {
   "parser": "babel-eslint",
-  "extends": ["airbnb", "prettier"],
-  "plugins": ["babel"],
+  "extends": ["prettier"],
+  "plugins": ["babel", "import"],
   "globals": {
     "describe": true,
     "it": true,
@@ -23,7 +23,7 @@
       "error",
       { "max": 1, "maxEOF": 0, "maxBOF": 0 }
     ],
-    "import/no-unresolved": false
+    "import/no-unresolved": 2
   },
   "settings": {
     "import/resolver": {

@@ -108,7 +108,7 @@ describe('makeLinksAbsolute($)', () => {
       );
     });
 
-    it('does nothing when the srcset is empty or just whitespace', () => {
+    it('ignores empty srcset or srcset with just whitespace', () => {
       const html = `<div>
         <picture>
           <source srcset="" media="(max-width: 450px)">
@@ -127,7 +127,7 @@ describe('makeLinksAbsolute($)', () => {
         result,
         `<div>
         <picture>
-          <source srcset="" media="(max-width: 450px)">
+          <source srcset media="(max-width: 450px)">
           <source srcset=" ">
           <img src="http://example.com/assets/images/rhythm/076.jpg" alt="Vertical and horizontal rhythm">
         </picture>

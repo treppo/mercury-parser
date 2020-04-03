@@ -424,7 +424,7 @@ function stripUnlikelyCandidates($) {
 //
 //  :param $: A cheerio object
 
-function brsToPs$$1($) {
+function brsToPs($) {
   let collapsing = false;
   $('br').each((index, element) => {
     const $element = $(element);
@@ -481,7 +481,7 @@ function convertDivs($) {
     const convertable = $div.children(DIV_TO_P_BLOCK_TAGS).length === 0;
 
     if (convertable) {
-      convertNodeTo$$1($div, $, 'p');
+      convertNodeTo($div, $, 'p');
     }
   });
   return $;
@@ -493,7 +493,7 @@ function convertSpans($) {
     const convertable = $span.parents('p, div').length === 0;
 
     if (convertable) {
-      convertNodeTo$$1($span, $, 'p');
+      convertNodeTo($span, $, 'p');
     }
   });
   return $;
@@ -510,14 +510,14 @@ function convertSpans($) {
 //   (By-reference mutation, though. Returned just for convenience.)
 
 
-function convertToParagraphs$$1($) {
-  $ = brsToPs$$1($);
+function convertToParagraphs($) {
+  $ = brsToPs($);
   $ = convertDivs($);
   $ = convertSpans($);
   return $;
 }
 
-function convertNodeTo$$1($node, $, tag = 'p') {
+function convertNodeTo($node, $, tag = 'p') {
   const node = $node.get(0);
 
   if (!node) {
@@ -602,14 +602,14 @@ function stripJunkTags(article, $, tags = []) {
 // by the title extractor instead. If there's less than 3 of them (<3),
 // strip them. Otherwise, turn 'em into H2s.
 
-function cleanHOnes$$1(article, $) {
+function cleanHOnes(article, $) {
   const $hOnes = $('h1', article);
 
   if ($hOnes.length < 3) {
     $hOnes.each((index, node) => $(node).remove());
   } else {
     $hOnes.each((index, node) => {
-      convertNodeTo$$1($(node), $, 'h2');
+      convertNodeTo($(node), $, 'h2');
     });
   }
 
@@ -635,7 +635,7 @@ function removeAllButWhitelist($article, $) {
 } // Remove attributes like style or align
 
 
-function cleanAttributes$$1($article, $) {
+function cleanAttributes($article, $) {
   // Grabbing the parent because at this point
   // $article will be wrapped in a div which will
   // have a score set on it.
@@ -653,14 +653,14 @@ function removeEmpty($article, $) {
 // // CONTENT FETCHING CONSTANTS ////
 // for a document.
 
-const NON_TOP_CANDIDATE_TAGS$1 = ['br', 'b', 'i', 'label', 'hr', 'area', 'base', 'basefont', 'input', 'img', 'link', 'meta'];
-const NON_TOP_CANDIDATE_TAGS_RE$1 = new RegExp(`^(${NON_TOP_CANDIDATE_TAGS$1.join('|')})$`, 'i'); // A list of selectors that specify, very clearly, either hNews or other
+const NON_TOP_CANDIDATE_TAGS = ['br', 'b', 'i', 'label', 'hr', 'area', 'base', 'basefont', 'input', 'img', 'link', 'meta'];
+const NON_TOP_CANDIDATE_TAGS_RE = new RegExp(`^(${NON_TOP_CANDIDATE_TAGS.join('|')})$`, 'i'); // A list of selectors that specify, very clearly, either hNews or other
 // very content-specific style content, like Blogger templates.
 // More examples here: http://microformats.org/wiki/blog-post-formats
 
-const HNEWS_CONTENT_SELECTORS$1 = [['.hentry', '.entry-content'], ['entry', '.entry-content'], ['.entry', '.entry_content'], ['.post', '.postbody'], ['.post', '.post_body'], ['.post', '.post-body']];
-const PHOTO_HINTS$1 = ['figure', 'photo', 'image', 'caption'];
-const PHOTO_HINTS_RE$1 = new RegExp(PHOTO_HINTS$1.join('|'), 'i'); // A list of strings that denote a positive scoring for this content as being
+const HNEWS_CONTENT_SELECTORS = [['.hentry', '.entry-content'], ['entry', '.entry-content'], ['.entry', '.entry_content'], ['.post', '.postbody'], ['.post', '.post_body'], ['.post', '.post-body']];
+const PHOTO_HINTS = ['figure', 'photo', 'image', 'caption'];
+const PHOTO_HINTS_RE = new RegExp(PHOTO_HINTS.join('|'), 'i'); // A list of strings that denote a positive scoring for this content as being
 // an article container. Checked against className and id.
 //
 // TODO: Perhaps have these scale based on their odds of being quality?
@@ -670,7 +670,7 @@ const POSITIVE_SCORE_HINTS$1 = ['article', 'articlecontent', 'instapaper_body', 
 
 const POSITIVE_SCORE_RE$1 = new RegExp(POSITIVE_SCORE_HINTS$1.join('|'), 'i'); // Readability publisher-specific guidelines
 
-const READABILITY_ASSET$1 = new RegExp('entry-content-asset', 'i'); // A list of strings that denote a negative scoring for this content as being
+const READABILITY_ASSET = new RegExp('entry-content-asset', 'i'); // A list of strings that denote a negative scoring for this content as being
 // an article container. Checked against className and id.
 //
 // TODO: Perhaps have these scale based on their odds of being quality?
@@ -683,9 +683,9 @@ const NEGATIVE_SCORE_HINTS$1 = ['adbox', 'advert', 'author', 'bio', 'bookmark', 
 'scroll', 'secondary', 'share', 'shopping', 'shoutbox', 'side', 'sidebar', 'sponsor', 'stamp', 'sub', 'summary', 'tags', 'tools', 'widget']; // The above list, joined into a matching regular expression
 
 const NEGATIVE_SCORE_RE$1 = new RegExp(NEGATIVE_SCORE_HINTS$1.join('|'), 'i'); // Match a digit. Pretty clear.
-const PARAGRAPH_SCORE_TAGS$1 = new RegExp('^(p|li|span|pre)$', 'i');
-const CHILD_CONTENT_TAGS$1 = new RegExp('^(td|blockquote|ol|ul|dl)$', 'i');
-const BAD_TAGS$1 = new RegExp('^(address|form)$', 'i');
+const PARAGRAPH_SCORE_TAGS = new RegExp('^(p|li|span|pre)$', 'i');
+const CHILD_CONTENT_TAGS = new RegExp('^(td|blockquote|ol|ul|dl)$', 'i');
+const BAD_TAGS = new RegExp('^(address|form)$', 'i');
 
 function getWeight(node) {
   const classes = node.attr('class');
@@ -719,7 +719,7 @@ function getWeight(node) {
     // "try to keep photos if we can"
 
 
-    if (PHOTO_HINTS_RE$1.test(classes)) {
+    if (PHOTO_HINTS_RE.test(classes)) {
       score += 10;
     } // add 25 if class matches entry-content-asset,
     // a class apparently instructed for use in the
@@ -727,7 +727,7 @@ function getWeight(node) {
     // https://www.readability.com/developers/guidelines
 
 
-    if (READABILITY_ASSET$1.test(classes)) {
+    if (READABILITY_ASSET.test(classes)) {
       score += 25;
     }
   }
@@ -772,7 +772,7 @@ function scoreLength(textLength, tagName = 'p') {
 
 // commas, etc. Higher is better.
 
-function scoreParagraph$$1(node) {
+function scoreParagraph(node) {
   let score = 1;
   const text = node.text().trim();
   const textLength = text.length; // If this paragraph is less than 25 characters, don't count it.
@@ -802,9 +802,9 @@ function setScore($node, $, score) {
   return $node;
 }
 
-function addScore$$1($node, $, amount) {
+function addScore($node, $, amount) {
   try {
-    const score = getOrInitScore$$1($node, $) + amount;
+    const score = getOrInitScore($node, $) + amount;
     setScore($node, $, score);
   } catch (e) {// Ignoring; error occurs in scoreNode
   }
@@ -812,11 +812,11 @@ function addScore$$1($node, $, amount) {
   return $node;
 }
 
-function addToParent$$1(node, $, score) {
+function addToParent(node, $, score) {
   const parent = node.parent();
 
   if (parent) {
-    addScore$$1(parent, $, score * 0.25);
+    addScore(parent, $, score * 0.25);
   }
 
   return node;
@@ -825,45 +825,45 @@ function addToParent$$1(node, $, score) {
 // if not, initializes a score based on
 // the node's tag type
 
-function getOrInitScore$$1($node, $, weightNodes = true) {
+function getOrInitScore($node, $, weightNodes = true) {
   let score = getScore($node);
 
   if (score) {
     return score;
   }
 
-  score = scoreNode$$1($node);
+  score = scoreNode($node);
 
   if (weightNodes) {
     score += getWeight($node);
   }
 
-  addToParent$$1($node, $, score);
+  addToParent($node, $, score);
   return score;
 }
 
 // just scores based on tag.
 
-function scoreNode$$1($node) {
+function scoreNode($node) {
   const {
     tagName
   } = $node.get(0); // TODO: Consider ordering by most likely.
   // E.g., if divs are a more common tag on a page,
   // Could save doing that regex test on every node – AP
 
-  if (PARAGRAPH_SCORE_TAGS$1.test(tagName)) {
-    return scoreParagraph$$1($node);
+  if (PARAGRAPH_SCORE_TAGS.test(tagName)) {
+    return scoreParagraph($node);
   }
 
   if (tagName.toLowerCase() === 'div') {
     return 5;
   }
 
-  if (CHILD_CONTENT_TAGS$1.test(tagName)) {
+  if (CHILD_CONTENT_TAGS.test(tagName)) {
     return 3;
   }
 
-  if (BAD_TAGS$1.test(tagName)) {
+  if (BAD_TAGS.test(tagName)) {
     return -3;
   }
 
@@ -882,7 +882,7 @@ function convertSpans$1($node, $) {
 
     if (tagName === 'span') {
       // convert spans to divs
-      convertNodeTo$$1($node, $, 'div');
+      convertNodeTo($node, $, 'div');
     }
   }
 }
@@ -890,7 +890,7 @@ function convertSpans$1($node, $) {
 function addScoreTo($node, $, score) {
   if ($node) {
     convertSpans$1($node, $);
-    addScore$$1($node, $, score);
+    addScore($node, $, score);
   }
 }
 
@@ -899,15 +899,15 @@ function scorePs($, weightNodes) {
     // The raw score for this paragraph, before we add any parent/child
     // scores.
     let $node = $(node);
-    $node = setScore($node, $, getOrInitScore$$1($node, $, weightNodes));
+    $node = setScore($node, $, getOrInitScore($node, $, weightNodes));
     const $parent = $node.parent();
-    const rawScore = scoreNode$$1($node);
-    addScoreTo($parent, $, rawScore, weightNodes);
+    const rawScore = scoreNode($node);
+    addScoreTo($parent, $, rawScore);
 
     if ($parent) {
       // Add half of the individual content score to the
       // grandparent
-      addScoreTo($parent.parent(), $, rawScore / 2, weightNodes);
+      addScoreTo($parent.parent(), $, rawScore / 2);
     }
   });
   return $;
@@ -915,12 +915,12 @@ function scorePs($, weightNodes) {
 // content score, grandparents half
 
 
-function scoreContent$$1($, weightNodes = true) {
+function scoreContent($, weightNodes = true) {
   // First, look for special hNews based selectors and give them a big
   // boost, if they exist
-  HNEWS_CONTENT_SELECTORS$1.forEach(([parentSelector, childSelector]) => {
+  HNEWS_CONTENT_SELECTORS.forEach(([parentSelector, childSelector]) => {
     $(`${parentSelector} ${childSelector}`).each((index, node) => {
-      addScore$$1($(node).parent(parentSelector), $, 80);
+      addScore($(node).parent(parentSelector), $, 80);
     });
   }); // Doubling this again
   // Previous solution caused a bug
@@ -948,7 +948,7 @@ function mergeSiblings($candidate, topScore, $) {
   $candidate.parent().children().each((index, sibling) => {
     const $sibling = $(sibling); // Ignore tags like BR, HR, etc
 
-    if (NON_TOP_CANDIDATE_TAGS_RE$1.test(sibling.tagName)) {
+    if (NON_TOP_CANDIDATE_TAGS_RE.test(sibling.tagName)) {
       return null;
     }
 
@@ -1011,12 +1011,12 @@ function mergeSiblings($candidate, topScore, $) {
 
 // candidate nodes we found and find the one with the highest score.
 
-function findTopCandidate$$1($) {
+function findTopCandidate($) {
   let $candidate;
   let topScore = 0;
   $('[score]').each((index, node) => {
     // Ignore tags like BR, HR, etc
-    if (NON_TOP_CANDIDATE_TAGS_RE$1.test(node.tagName)) {
+    if (NON_TOP_CANDIDATE_TAGS_RE.test(node.tagName)) {
       return;
     }
 
@@ -1037,8 +1037,6 @@ function findTopCandidate$$1($) {
   $candidate = mergeSiblings($candidate, topScore, $);
   return $candidate;
 }
-
-// Scoring
 
 function removeUnlessContent($node, $, weight) {
   // Explicitly save entry-content-asset tags, which are
@@ -1114,7 +1112,7 @@ function removeUnlessContent($node, $, weight) {
 // Return this same doc.
 
 
-function cleanTags$$1($article, $) {
+function cleanTags($article, $) {
   $(CLEAN_CONDITIONALLY_TAGS, $article).each((index, node) => {
     const $node = $(node); // If marked to keep, skip it
 
@@ -1122,7 +1120,7 @@ function cleanTags$$1($article, $) {
     let weight = getScore($node);
 
     if (!weight) {
-      weight = getOrInitScore$$1($node, $);
+      weight = getOrInitScore($node, $);
       setScore($node, $, weight);
     } // drop node if its weight is < 0
 
@@ -1166,12 +1164,12 @@ function cleanHeaders($article, $, title = '') {
 
 // html to avoid later complications with multiple body tags.
 
-function rewriteTopLevel$$1(article, $) {
+function rewriteTopLevel(article, $) {
   // I'm not using context here because
   // it's problematic when converting the
   // top-level/root node - AP
-  $ = convertNodeTo$$1($('html'), $, 'div');
-  $ = convertNodeTo$$1($('body'), $, 'div');
+  $ = convertNodeTo($('html'), $, 'div');
+  $ = convertNodeTo($('body'), $, 'div');
   return $;
 }
 
@@ -1210,7 +1208,7 @@ function absolutizeSet($, rootUrl, $content) {
   });
 }
 
-function makeLinksAbsolute$$1($content, $, url) {
+function makeLinksAbsolute($content, $, url) {
   ['href', 'src'].forEach(attr => absolutize($, url, attr));
   absolutizeSet($, url, $content);
   return $content;
@@ -1240,7 +1238,7 @@ function linkDensity($node) {
 
 // search for, find a meta tag associated.
 
-function extractFromMeta$$1($, metaNames, cachedNames, cleanTags = true) {
+function extractFromMeta($, metaNames, cachedNames, cleanTags = true) {
   const foundNames = metaNames.filter(name => cachedNames.indexOf(name) !== -1); // eslint-disable-next-line no-restricted-syntax
 
   for (const name of foundNames) {
@@ -1281,7 +1279,7 @@ function isGoodNode($node, maxChildren) {
   } // If it looks to be within a comment, skip it.
 
 
-  if (withinComment$$1($node)) {
+  if (withinComment($node)) {
     return false;
   }
 
@@ -1291,7 +1289,7 @@ function isGoodNode($node, maxChildren) {
 // meta-information, like author, title, date published, etc.
 
 
-function extractFromSelectors$$1($, selectors, maxChildren = 1, textOnly = true) {
+function extractFromSelectors($, selectors, maxChildren = 1, textOnly = true) {
   // eslint-disable-next-line no-restricted-syntax
   for (const selector of selectors) {
     const nodes = $(selector); // If we didn't get exactly one of this selector, this may be
@@ -1327,7 +1325,7 @@ function stripTags(text, $) {
   return cleanText === '' ? text : cleanText;
 }
 
-function withinComment$$1($node) {
+function withinComment($node) {
   const parents = $node.parents().toArray();
   const commentParent = parents.find(parent => {
     const attrs = getAttrs(parent);
@@ -1397,8 +1395,6 @@ function setAttrs(node, attrs) {
 
   return node;
 }
-
-// DOM manipulation
 
 const IS_LINK = new RegExp('https?://', 'i');
 const IMAGE_RE = '.(png|gif|jpe?g)';
@@ -5573,9 +5569,8 @@ const EpaperZeitDeExtractor = {
   }
 };
 
-
-
 var CustomExtractors = /*#__PURE__*/Object.freeze({
+  __proto__: null,
   BloggerExtractor: BloggerExtractor,
   NYMagExtractor: NYMagExtractor,
   WikipediaExtractor: WikipediaExtractor,
@@ -5830,13 +5825,13 @@ function extractCleanNode(article, {
 }) {
   // Rewrite the tag name to div if it's a top level node like body or
   // html to avoid later complications with multiple body tags.
-  rewriteTopLevel$$1(article, $); // Drop small images and spacer images
+  rewriteTopLevel(article, $); // Drop small images and spacer images
   // Only do this is defaultCleaner is set to true;
   // this can sometimes be too aggressive.
 
   if (defaultCleaner) cleanImages(article, $); // Make links absolute
 
-  makeLinksAbsolute$$1(article, $, url); // Mark elements to keep that would normally be removed.
+  makeLinksAbsolute(article, $, url); // Mark elements to keep that would normally be removed.
   // E.g., stripJunkTags will remove iframes, so we're going to mark
   // YouTube/Vimeo videos as elements we want to keep.
 
@@ -5847,22 +5842,22 @@ function extractCleanNode(article, {
   // by the title extractor instead. If there's less than 3 of them (<3),
   // strip them. Otherwise, turn 'em into H2s.
 
-  cleanHOnes$$1(article, $); // Clean headers
+  cleanHOnes(article, $); // Clean headers
 
   cleanHeaders(article, $, title); // We used to clean UL's and OL's here, but it was leading to
   // too many in-article lists being removed. Consider a better
   // way to detect menus particularly and remove them.
   // Also optionally running, since it can be overly aggressive.
 
-  if (defaultCleaner) cleanTags$$1(article, $, cleanConditionally); // Remove empty paragraph nodes
+  if (defaultCleaner) cleanTags(article, $); // Remove empty paragraph nodes
 
   removeEmpty(article, $); // Remove unnecessary attributes
 
-  cleanAttributes$$1(article, $);
+  cleanAttributes(article, $);
   return article;
 }
 
-function cleanTitle$$1(title, {
+function cleanTitle(title, {
   url,
   $
 }) {
@@ -5983,7 +5978,7 @@ const Cleaners = {
   dek: cleanDek,
   date_published: cleanDatePublished,
   content: extractCleanNode,
-  title: cleanTitle$$1
+  title: cleanTitle
 };
 
 // likely to be article text.
@@ -6002,9 +5997,9 @@ function extractBestNode($, opts) {
     $ = stripUnlikelyCandidates($);
   }
 
-  $ = convertToParagraphs$$1($);
-  $ = scoreContent$$1($, opts.weightNodes);
-  const $topCandidate = findTopCandidate$$1($);
+  $ = convertToParagraphs($);
+  $ = scoreContent($, opts.weightNodes);
+  const $topCandidate = findTopCandidate($);
   return $topCandidate;
 }
 
@@ -6120,27 +6115,27 @@ const GenericTitleExtractor = {
     // First, check to see if we have a matching meta tag that we can make
     // use of that is strongly associated with the headline.
     let title;
-    title = extractFromMeta$$1($, STRONG_TITLE_META_TAGS, metaCache);
-    if (title) return cleanTitle$$1(title, {
+    title = extractFromMeta($, STRONG_TITLE_META_TAGS, metaCache);
+    if (title) return cleanTitle(title, {
       url,
       $
     }); // Second, look through our content selectors for the most likely
     // article title that is strongly associated with the headline.
 
-    title = extractFromSelectors$$1($, STRONG_TITLE_SELECTORS);
-    if (title) return cleanTitle$$1(title, {
+    title = extractFromSelectors($, STRONG_TITLE_SELECTORS);
+    if (title) return cleanTitle(title, {
       url,
       $
     }); // Third, check for weaker meta tags that may match.
 
-    title = extractFromMeta$$1($, WEAK_TITLE_META_TAGS, metaCache);
-    if (title) return cleanTitle$$1(title, {
+    title = extractFromMeta($, WEAK_TITLE_META_TAGS, metaCache);
+    if (title) return cleanTitle(title, {
       url,
       $
     }); // Last, look for weaker selector tags that may match.
 
-    title = extractFromSelectors$$1($, WEAK_TITLE_SELECTORS);
-    if (title) return cleanTitle$$1(title, {
+    title = extractFromSelectors($, WEAK_TITLE_SELECTORS);
+    if (title) return cleanTitle(title, {
       url,
       $
     }); // If no matches, return an empty string
@@ -6179,14 +6174,14 @@ const GenericAuthorExtractor = {
     let author; // First, check to see if we have a matching
     // meta tag that we can make use of.
 
-    author = extractFromMeta$$1($, AUTHOR_META_TAGS, metaCache);
+    author = extractFromMeta($, AUTHOR_META_TAGS, metaCache);
 
     if (author && author.length < AUTHOR_MAX_LENGTH) {
       return cleanAuthor(author);
     } // Second, look through our selectors looking for potential authors.
 
 
-    author = extractFromSelectors$$1($, AUTHOR_SELECTORS, 2);
+    author = extractFromSelectors($, AUTHOR_SELECTORS, 2);
 
     if (author && author.length < AUTHOR_MAX_LENGTH) {
       return cleanAuthor(author);
@@ -6237,11 +6232,11 @@ const GenericDatePublishedExtractor = {
     // that we can make use of.
     // Don't try cleaning tags from this string
 
-    datePublished = extractFromMeta$$1($, DATE_PUBLISHED_META_TAGS, metaCache, false);
+    datePublished = extractFromMeta($, DATE_PUBLISHED_META_TAGS, metaCache, false);
     if (datePublished) return cleanDatePublished(datePublished); // Second, look through our selectors looking for potential
     // date_published's.
 
-    datePublished = extractFromSelectors$$1($, DATE_PUBLISHED_SELECTORS);
+    datePublished = extractFromSelectors($, DATE_PUBLISHED_SELECTORS);
     if (datePublished) return cleanDatePublished(datePublished); // Lastly, look to see if a dately string exists in the URL
 
     datePublished = extractFromUrl(url, DATE_PUBLISHED_URL_RES);
@@ -6330,7 +6325,7 @@ function scoreByParents($img) {
   }
 
   [$parent, $gParent].forEach($node => {
-    if (PHOTO_HINTS_RE$1.test(getSig($node))) {
+    if (PHOTO_HINTS_RE.test(getSig($node))) {
       score += 15;
     }
   });
@@ -6347,7 +6342,7 @@ function scoreBySibling($img) {
     score += 25;
   }
 
-  if (PHOTO_HINTS_RE$1.test(getSig($sibling))) {
+  if (PHOTO_HINTS_RE.test(getSig($sibling))) {
     score += 15;
   }
 
@@ -6413,7 +6408,7 @@ const GenericLeadImageUrlExtractor = {
     // images usually have for things like Open Graph.
 
 
-    const imageUrl = extractFromMeta$$1($, LEAD_IMAGE_URL_META_TAGS, metaCache, false);
+    const imageUrl = extractFromMeta($, LEAD_IMAGE_URL_META_TAGS, metaCache, false);
 
     if (imageUrl) {
       cleanUrl = clean$1(imageUrl);
@@ -6541,25 +6536,25 @@ function scorePageInLink(pageNum, isWp) {
   return 0;
 }
 
-const DIGIT_RE$2 = /\d/; // A list of words that, if found in link text or URLs, likely mean that
+const DIGIT_RE = /\d/; // A list of words that, if found in link text or URLs, likely mean that
 // this link is not a next page link.
 
-const EXTRANEOUS_LINK_HINTS$1 = ['print', 'archive', 'comment', 'discuss', 'e-mail', 'email', 'share', 'reply', 'all', 'login', 'sign', 'single', 'adx', 'entry-unrelated'];
-const EXTRANEOUS_LINK_HINTS_RE$1 = new RegExp(EXTRANEOUS_LINK_HINTS$1.join('|'), 'i'); // Match any link text/classname/id that looks like it could mean the next
+const EXTRANEOUS_LINK_HINTS = ['print', 'archive', 'comment', 'discuss', 'e-mail', 'email', 'share', 'reply', 'all', 'login', 'sign', 'single', 'adx', 'entry-unrelated'];
+const EXTRANEOUS_LINK_HINTS_RE = new RegExp(EXTRANEOUS_LINK_HINTS.join('|'), 'i'); // Match any link text/classname/id that looks like it could mean the next
 // page. Things like: next, continue, >, >>, » but not >|, »| as those can
 // mean last page.
 
-const NEXT_LINK_TEXT_RE$1 = new RegExp('(next|weiter|continue|>([^|]|$)|»([^|]|$))', 'i'); // Match any link text/classname/id that looks like it is an end link: things
+const NEXT_LINK_TEXT_RE = new RegExp('(next|weiter|continue|>([^|]|$)|»([^|]|$))', 'i'); // Match any link text/classname/id that looks like it is an end link: things
 // like "first", "last", "end", etc.
 
-const CAP_LINK_TEXT_RE$1 = new RegExp('(first|last|end)', 'i'); // Match any link text/classname/id that looks like it means the previous
+const CAP_LINK_TEXT_RE = new RegExp('(first|last|end)', 'i'); // Match any link text/classname/id that looks like it means the previous
 // page.
 
-const PREV_LINK_TEXT_RE$1 = new RegExp('(prev|earl|old|new|<|«)', 'i'); // Match any phrase that looks like it could be page, or paging, or pagination
+const PREV_LINK_TEXT_RE = new RegExp('(prev|earl|old|new|<|«)', 'i'); // Match any phrase that looks like it could be page, or paging, or pagination
 
 function scoreExtraneousLinks(href) {
   // If the URL itself contains extraneous values, give a penalty.
-  if (EXTRANEOUS_LINK_HINTS_RE$1.test(href)) {
+  if (EXTRANEOUS_LINK_HINTS_RE.test(href)) {
     return -25;
   }
 
@@ -6584,7 +6579,7 @@ function scoreByParents$1($link) {
       return;
     }
 
-    const parentData = makeSig($parent, ' '); // If we have 'page' or 'paging' in our data, that's a good
+    const parentData = makeSig($parent); // If we have 'page' or 'paging' in our data, that's a good
     // sign. Add a bonus.
 
     if (!positiveMatch && PAGE_RE.test(parentData)) {
@@ -6595,7 +6590,7 @@ function scoreByParents$1($link) {
     // a bad sign. Give a penalty.
 
 
-    if (!negativeMatch && NEGATIVE_SCORE_RE.test(parentData) && EXTRANEOUS_LINK_HINTS_RE$1.test(parentData)) {
+    if (!negativeMatch && NEGATIVE_SCORE_RE.test(parentData) && EXTRANEOUS_LINK_HINTS_RE.test(parentData)) {
       if (!POSITIVE_SCORE_RE.test(parentData)) {
         negativeMatch = true;
         score -= 25;
@@ -6611,7 +6606,7 @@ function scoreByParents$1($link) {
 function scorePrevLink(linkData) {
   // If the link has something like "previous", its definitely
   // an old link, skip it.
-  if (PREV_LINK_TEXT_RE$1.test(linkData)) {
+  if (PREV_LINK_TEXT_RE.test(linkData)) {
     return -200;
   }
 
@@ -6645,13 +6640,13 @@ function shouldScore(href, articleUrl, baseUrl, parsedUrl, linkText, previousUrl
 
   const fragment = href.replace(baseUrl, '');
 
-  if (!DIGIT_RE$2.test(fragment)) {
+  if (!DIGIT_RE.test(fragment)) {
     return false;
   } // This link has extraneous content (like "comment") in its link
   // text, so we skip it.
 
 
-  if (EXTRANEOUS_LINK_HINTS_RE$1.test(linkText)) {
+  if (EXTRANEOUS_LINK_HINTS_RE.test(linkText)) {
     return false;
   } // Next page link text is never long, skip if it is too long.
 
@@ -6677,7 +6672,7 @@ function scoreBaseUrl(href, baseRegex) {
 
 function scoreNextLinkText(linkData) {
   // Things like "next", ">>", etc.
-  if (NEXT_LINK_TEXT_RE$1.test(linkData)) {
+  if (NEXT_LINK_TEXT_RE.test(linkData)) {
     return 50;
   }
 
@@ -6686,12 +6681,12 @@ function scoreNextLinkText(linkData) {
 
 function scoreCapLinks(linkData) {
   // Cap links are links like "last", etc.
-  if (CAP_LINK_TEXT_RE$1.test(linkData)) {
+  if (CAP_LINK_TEXT_RE.test(linkData)) {
     // If we found a link like "last", but we've already seen that
     // this link is also "next", it's fine. If it's not been
     // previously marked as "next", then it's probably bad.
     // Penalize.
-    if (NEXT_LINK_TEXT_RE$1.test(linkData)) {
+    if (NEXT_LINK_TEXT_RE.test(linkData)) {
       return -65;
     }
   }
@@ -6845,7 +6840,7 @@ const GenericUrlExtractor = {
       }
     }
 
-    const metaUrl = extractFromMeta$$1($, CANONICAL_META_SELECTORS, metaCache);
+    const metaUrl = extractFromMeta($, CANONICAL_META_SELECTORS, metaCache);
 
     if (metaUrl) {
       return result(metaUrl);
@@ -6870,7 +6865,7 @@ const GenericExcerptExtractor = {
     content,
     metaCache
   }) {
-    const excerpt = extractFromMeta$$1($, EXCERPT_META_SELECTORS, metaCache);
+    const excerpt = extractFromMeta($, EXCERPT_META_SELECTORS, metaCache);
 
     if (excerpt) {
       return clean$2(stripTags(excerpt, $));
@@ -7006,7 +7001,7 @@ function transformElements($content, $, {
 
     if (typeof value === 'string') {
       $matches.each((index, node) => {
-        convertNodeTo$$1($(node), $, transforms[key]);
+        convertNodeTo($(node), $, transforms[key]);
       });
     } else if (typeof value === 'function') {
       // If value is function, apply function to node
@@ -7014,7 +7009,7 @@ function transformElements($content, $, {
         const result = value($(node), $); // If function returns a string, convert node to that value
 
         if (typeof result === 'string') {
-          convertNodeTo$$1($(node), $, result);
+          convertNodeTo($(node), $, result);
         }
       });
     }
@@ -7059,7 +7054,7 @@ function select(opts) {
   if (!matchingSelector) return null;
 
   function transformAndClean($node) {
-    makeLinksAbsolute$$1($node, $, opts.url || '');
+    makeLinksAbsolute($node, $, opts.url || '');
     cleanBySelectors($node, $, extractionOpts);
     transformElements($node, $, extractionOpts);
     return $node;
@@ -7103,7 +7098,7 @@ function select(opts) {
   }
 
   if (extractHtml) {
-    return selectHtml(matchingSelector);
+    return selectHtml();
   }
 
   let $match;
@@ -7411,3 +7406,4 @@ const Mercury = {
 };
 
 module.exports = Mercury;
+//# sourceMappingURL=mercury.js.map
