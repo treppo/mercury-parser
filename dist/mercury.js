@@ -5758,9 +5758,6 @@ function cleanDek(dek, {
   return normalizeSpaces(dekText.trim());
 }
 
-// Mostly only being used for the isValid() method,
-// but could just check for 'Invalid Date' string.
-
 function cleanDateString(dateString) {
   return (dateString.match(SPLIT_DATE_STRING) || []).join(' ').replace(TIME_MERIDIAN_DOTS_RE, 'm').replace(TIME_MERIDIAN_SPACE_RE, '$1 $2 $3').replace(CLEAN_DATE_STRING_RE, '$1').trim();
 }
